@@ -3,13 +3,11 @@ package de.pawcode.cardstore.ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Delete
@@ -18,26 +16,37 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.lightspark.composeqr.QrCodeView
 import de.pawcode.cardstore.data.entities.Card
+import de.pawcode.cardstore.data.entities.EXAMPLE_CARD
+import de.pawcode.cardstore.ui.modals.CardModal
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardComponent(card: Card, onEditCard: () -> Unit, onDeleteCard: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
+
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = false
+    )
+    var isQrFullscreen by rememberSaveable { mutableStateOf(false) }
 
     ElevatedCard(
         modifier = Modifier
@@ -50,6 +59,9 @@ fun CardComponent(card: Card, onEditCard: () -> Unit, onDeleteCard: () -> Unit) 
         colors = CardDefaults.cardColors(
             containerColor = Color(android.graphics.Color.parseColor(card.color))
         ),
+        onClick = {
+            isQrFullscreen = true
+        }
     ) {
         Box(
             modifier = Modifier
@@ -89,18 +101,24 @@ fun CardComponent(card: Card, onEditCard: () -> Unit, onDeleteCard: () -> Unit) 
                 .padding(8.dp)
                 .fillMaxSize()
         ) {
-            Text(card.store)
+            Text(text = card.store, style = MaterialTheme.typography.bodyLarge)
+        }
+    }
 
-            Spacer(modifier = Modifier.height(10.dp))
-
-            QrCodeView(
-                data = card.cardNumber,
-                modifier = Modifier.size(100.dp)
+    if (isQrFullscreen) {
+        ModalBottomSheet(
+            sheetState = sheetState,
+            onDismissRequest = {
+                isQrFullscreen = false
+            },
+            modifier = Modifier.safeDrawingPadding(),
+            containerColor = Color(
+                android.graphics.Color.parseColor(
+                    card.color
+                )
             )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Text(text = card.cardNumber, fontFamily = FontFamily.Monospace)
+        ) {
+            CardModal(card)
         }
     }
 }
@@ -109,12 +127,7 @@ fun CardComponent(card: Card, onEditCard: () -> Unit, onDeleteCard: () -> Unit) 
 @Composable
 fun PreviewCardComponent() {
     CardComponent(
-        card = Card(
-            id = "id",
-            store = "pawcode Development",
-            cardNumber = 1234567890.toString(),
-            color = "#4472c4"
-        ),
+        card = EXAMPLE_CARD,
         onEditCard = {},
         onDeleteCard = {}
     )

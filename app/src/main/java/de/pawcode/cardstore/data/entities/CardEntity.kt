@@ -31,3 +31,13 @@ data class Card(
      */
     val color: String
 )
+
+/**
+ * Example card used to preview components.
+ */
+val EXAMPLE_CARD: Card = Card(
+    id = "06c96a85-7dcd-4cfc-b886-2c95e8ea7c62",
+    store = "pawcode Development",
+    cardNumber = 1234567890.toString(),
+    color = "#4472c4"
+)

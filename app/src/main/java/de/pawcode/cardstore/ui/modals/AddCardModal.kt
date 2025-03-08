@@ -1,9 +1,7 @@
 package de.pawcode.cardstore.ui.modals
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,9 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -31,7 +29,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.input.ImeAction
@@ -40,6 +37,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.pawcode.cardstore.data.entities.Card
+import de.pawcode.cardstore.data.entities.EXAMPLE_CARD
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -86,7 +84,7 @@ fun AddCardModal(
                 onClick = {
                     onAddCard(
                         Card(
-                            id = Uuid.random().toString(),
+                            id = card?.id ?: Uuid.random().toString(),
                             store = store,
                             cardNumber = cardNumber,
                             color = String.format("#%06X", 0xFFFFFF and color.toArgb())
@@ -113,7 +111,7 @@ fun AddCardModal(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 autoCorrectEnabled = true,
-                capitalization = KeyboardCapitalization.Words,
+                capitalization = KeyboardCapitalization.Sentences,
                 imeAction = ImeAction.Next
             )
         )
@@ -133,12 +131,18 @@ fun AddCardModal(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(color)
-            )
+            Button(
+                colors = ButtonColors(
+                    containerColor = color,
+                    contentColor = color,
+                    disabledContainerColor = color,
+                    disabledContentColor = color
+                ),
+                modifier = Modifier.size(40.dp),
+                onClick = {
+                    isColorPicketModalOpen = true
+                },
+            ) {}
 
             OutlinedButton(onClick = {
                 isColorPicketModalOpen = true
@@ -172,7 +176,10 @@ fun AddCardModal(
 @Preview
 @Composable
 fun PreviewAddCardModal() {
-    AddCardModal(onAddCard = {
-        /* no-op */
-    })
+    AddCardModal(
+        card = EXAMPLE_CARD,
+        onAddCard = {
+            /* no-op */
+        }
+    )
 }

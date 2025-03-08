@@ -9,6 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.pawcode.cardstore.data.entities.Card
+import de.pawcode.cardstore.data.entities.EXAMPLE_CARD
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Composable
 fun CardsListComponent(
@@ -32,29 +35,15 @@ fun CardsListComponent(
     }
 }
 
+@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 fun PreviewCardsListComponent() {
     CardsListComponent(
         cards = listOf(
-            Card(
-                id = "1",
-                store = "Amazon",
-                cardNumber = "1234 5678 9012 3456",
-                color = "#FF0000"
-            ),
-            Card(
-                id = "2",
-                store = "Google",
-                cardNumber = "1234 5678 9012 3456",
-                color = "#00FF00"
-            ),
-            Card(
-                id = "3",
-                store = "Apple",
-                cardNumber = "1234 5678 9012 3456",
-                color = "#0000FF"
-            )
+            EXAMPLE_CARD,
+            EXAMPLE_CARD.copy(id = Uuid.random().toString()),
+            EXAMPLE_CARD.copy(id = Uuid.random().toString())
         ),
         onEditCard = {},
         onDeleteCard = {}
