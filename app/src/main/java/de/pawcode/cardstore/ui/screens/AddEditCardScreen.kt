@@ -1,0 +1,144 @@
+package de.pawcode.cardstore.ui.screens
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import de.pawcode.cardstore.data.database.CardEntity
+import de.pawcode.cardstore.data.services.SnackbarService
+import de.pawcode.cardstore.ui.viewmodels.CardViewModel
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+
+@OptIn(ExperimentalUuidApi::class)
+@Composable
+fun AddEditCardScreen(
+    navController: NavController, cardId: String? = null, viewModel: CardViewModel = viewModel()
+) {
+    val scope = rememberCoroutineScope()
+
+    val card = cardId?.let { viewModel.getCardById(it) }?.collectAsState(initial = null)?.value
+
+    var storeName by remember { mutableStateOf(card?.storeName ?: "") }
+    var cardNumber by remember { mutableStateOf(card?.cardNumber ?: "") }
+
+    val isValid by remember { derivedStateOf { storeName.isNotEmpty() && cardNumber.isNotEmpty() } }
+    val hasChanges by remember {
+        derivedStateOf {
+            storeName != (card?.storeName ?: "") || cardNumber != (card?.cardNumber ?: "")
+        }
+    }
+
+    Scaffold(
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = hasChanges,
+                enter = slideInVertically(initialOffsetY = { it }),
+                exit = slideOutVertically(targetOffsetY = { it })
+            ) {
+                ExtendedFloatingActionButton(
+                    onClick = {
+                        if (!isValid) {
+                            return@ExtendedFloatingActionButton
+                        }
+
+                        if (card != null) {
+                            viewModel.updateCard(
+                                card.copy(
+                                    storeName = storeName, cardNumber = cardNumber
+                                )
+                            )
+                        } else {
+                            viewModel.insertCard(
+                                CardEntity(
+                                    id = Uuid.random().toString(),
+                                    storeName = storeName,
+                                    cardNumber = cardNumber,
+                                    barcodeFormat = 0,
+                                    color = "#FFFFFF",
+                                )
+                            )
+                        }
+
+                        SnackbarService.showSnackbar(
+                            message = "Card ${if (card != null) "updated" else "saved"}",
+                            scope = scope
+                        )
+                    },
+                    text = {
+                        if (card != null) {
+                            Text("Update")
+                        } else {
+                            Text("Save")
+                        }
+                    },
+                    icon = { Icon(Icons.Filled.Save, contentDescription = "Save card") },
+                    containerColor = if (isValid) MaterialTheme.colorScheme.primary else Color.Gray,
+                    contentColor = if (isValid) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(
+                        alpha = 0.38f
+                    )
+                )
+            }
+        }) { innerPadding ->
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(16.dp)
+        ) {
+            OutlinedTextField(
+                value = storeName,
+                onValueChange = {
+                    storeName = it
+                },
+                label = { Text("Store") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    autoCorrectEnabled = true,
+                    capitalization = KeyboardCapitalization.Sentences,
+                    imeAction = ImeAction.Next
+                )
+            )
+
+            OutlinedTextField(
+                value = cardNumber,
+                onValueChange = {
+                    cardNumber = it
+                },
+                label = { Text("Card Number") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number, imeAction = ImeAction.Done
+                )
+            )
+        }
+    }
+}

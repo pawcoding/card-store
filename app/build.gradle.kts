@@ -52,6 +52,8 @@ dependencies {
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
     implementation(libs.colorpicker.compose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.material.icons.extended)
     ksp(libs.androidx.room.compiler)
     implementation(libs.compose.qr.code)
     testImplementation(libs.junit)
