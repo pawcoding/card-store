@@ -21,6 +21,13 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
         repository.updateCard(card)
     }
 
+    fun addUsage(card: CardEntity) = viewModelScope.launch {
+        card.useCount++
+        card.lastUsed = System.currentTimeMillis()
+
+        updateCard(card)
+    }
+
     fun deleteCard(card: CardEntity) = viewModelScope.launch {
         repository.deleteCard(card)
     }

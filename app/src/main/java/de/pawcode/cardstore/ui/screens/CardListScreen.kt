@@ -48,8 +48,9 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                 icon = { Icon(Icons.Filled.Add, contentDescription = "Add new card") })
         }) { innerPadding ->
         Column {
-            CardsListComponent(cards = cards, onCardClicked = {
-                showCardSheet = it
+            CardsListComponent(cards = cards, onCardClicked = { card ->
+                viewModel.addUsage(card)
+                showCardSheet = card
             }, onCardLongPressed = {
                 navController.navigate(Screen.AddEditCard.route + "?cardId=${it.id}")
             })

@@ -46,13 +46,13 @@ data class CardEntity(
      * Last used date of the card.
      */
     @ColumnInfo(name = "last_used")
-    val lastUsed: Long? = null,
+    var lastUsed: Long? = null,
 
     /**
      * Number of times the card was used.
      */
     @ColumnInfo(name = "use_count")
-    val useCount: Int = 0
+    var useCount: Int = 0
 )
 
 /**
