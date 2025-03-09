@@ -9,6 +9,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -51,31 +52,37 @@ fun AppBar(
 fun Navigation() {
     val navController = rememberNavController()
 
-    Scaffold(
-        topBar = {
-            var currentRoute = currentDestination(navController)
-            when (currentRoute?.route) {
-                Screen.CardList.route -> AppBar(title = "Card Store")
-                Screen.CardDetail.route + "/{cardId}" -> AppBar(
-                    title = "Card Detail",
-                    navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                        }
-                    })
+    Scaffold(topBar = {
+        var currentRoute = currentDestination(navController)
+        when (currentRoute?.route) {
+            Screen.CardList.route -> AppBar(title = "Card Store")
+            Screen.CardDetail.route + "/{cardId}" -> AppBar(
+                title = "Card Detail", navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                })
 
-                Screen.AddEditCard.route + "?cardId={cardId}" -> AppBar(
-                    title = "Add/Edit Card",
-                    navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                        }
-                    })
+            Screen.AddEditCard.route + "?cardId={cardId}" -> AppBar(
+                title = "Add/Edit Card", navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                })
 
-                else -> AppBar(title = "Card Store")
-            }
+            else -> AppBar(title = "Card Store")
         }
-    ) { paddingValues ->
+    }, snackbarHost = {
+        SnackbarHost(
+            hostState = SnackbarService.snackbarHostState, snackbar = { snackbarData ->
+                Snackbar(
+                    snackbarData = snackbarData,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    actionColor = MaterialTheme.colorScheme.secondary
+                )
+            })
+    }) { paddingValues ->
         NavHost(
             navController = navController,
             startDestination = Screen.CardList.route,
@@ -102,8 +109,6 @@ fun Navigation() {
                 AddEditCardScreen(navController = navController, cardId = cardId)
             }
         }
-
-        SnackbarHost(hostState = SnackbarService.snackbarHostState)
     }
 }
 
