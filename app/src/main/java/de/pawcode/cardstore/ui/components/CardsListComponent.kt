@@ -3,8 +3,10 @@ package de.pawcode.cardstore.ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -16,10 +18,12 @@ import kotlin.uuid.Uuid
 @Composable
 fun CardsListComponent(
     cards: List<CardEntity>,
+    listState: LazyGridState,
     onCardClicked: (CardEntity) -> Unit,
     onCardLongPressed: (CardEntity) -> Unit,
 ) {
     LazyVerticalGrid(
+        state = listState,
         columns = GridCells.Adaptive(minSize = 300.dp),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -45,5 +49,5 @@ fun PreviewCardsListComponent() {
             EXAMPLE_CARD,
             EXAMPLE_CARD.copy(id = Uuid.random().toString()),
             EXAMPLE_CARD.copy(id = Uuid.random().toString())
-        ), onCardClicked = {}, onCardLongPressed = {})
+        ), listState = rememberLazyGridState(), onCardClicked = {}, onCardLongPressed = {})
 }
