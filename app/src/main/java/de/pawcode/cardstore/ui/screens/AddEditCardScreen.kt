@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -43,6 +45,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.pawcode.cardstore.data.database.CardEntity
 import de.pawcode.cardstore.data.services.SnackbarService
+import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.dialogs.ColorPickerDialog
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 import kotlin.uuid.ExperimentalUuidApi
@@ -70,59 +73,66 @@ fun AddEditCardScreen(
         }
     }
 
-    Scaffold(
-        floatingActionButton = {
-            AnimatedVisibility(
-                visible = hasChanges,
-                enter = slideInVertically(initialOffsetY = { it }),
-                exit = slideOutVertically(targetOffsetY = { it })
-            ) {
-                ExtendedFloatingActionButton(
-                    onClick = {
-                        if (!isValid) {
-                            return@ExtendedFloatingActionButton
-                        }
+    Scaffold(topBar = {
+        AppBar(
+            title = if (card != null) "Edit card" else "Add card", navigationIcon = {
+                IconButton(
+                    onClick = { navController.popBackStack() }) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                }
+            })
+    }, floatingActionButton = {
+        AnimatedVisibility(
+            visible = hasChanges,
+            enter = slideInVertically(initialOffsetY = { it }),
+            exit = slideOutVertically(targetOffsetY = { it })
+        ) {
+            ExtendedFloatingActionButton(
+                onClick = {
+                    if (!isValid) {
+                        return@ExtendedFloatingActionButton
+                    }
 
-                        if (card != null) {
-                            viewModel.updateCard(
-                                card.copy(
-                                    storeName = storeName, cardNumber = cardNumber
-                                )
+                    if (card != null) {
+                        viewModel.updateCard(
+                            card.copy(
+                                storeName = storeName, cardNumber = cardNumber
                             )
-                        } else {
-                            viewModel.insertCard(
-                                CardEntity(
-                                    id = Uuid.random().toString(),
-                                    storeName = storeName,
-                                    cardNumber = cardNumber,
-                                    barcodeFormat = 0,
-                                    color = color,
-                                )
-                            )
-                        }
-
-                        SnackbarService.showSnackbar(
-                            message = "Card ${if (card != null) "updated" else "saved"}",
-                            scope = scope
                         )
-                    },
-                    text = {
-                        if (card != null) {
-                            Text("Update")
-                        } else {
-                            Text("Save")
-                        }
-                    },
-                    icon = { Icon(Icons.Filled.Save, contentDescription = "Save card") },
-                    containerColor = if (isValid) MaterialTheme.colorScheme.primary else Color.Gray,
-                    contentColor = if (isValid) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(
-                        alpha = 0.38f
+                    } else {
+                        viewModel.insertCard(
+                            CardEntity(
+                                id = Uuid.random().toString(),
+                                storeName = storeName,
+                                cardNumber = cardNumber,
+                                barcodeFormat = 0,
+                                color = color,
+                            )
+                        )
+                    }
+
+                    SnackbarService.showSnackbar(
+                        message = "Card ${if (card != null) "updated" else "saved"}", scope = scope
                     )
+                },
+                text = {
+                    if (card != null) {
+                        Text("Update")
+                    } else {
+                        Text("Save")
+                    }
+                },
+                icon = { Icon(Icons.Filled.Save, contentDescription = "Save card") },
+                containerColor = if (isValid) MaterialTheme.colorScheme.primary else Color.Gray,
+                contentColor = if (isValid) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(
+                    alpha = 0.38f
                 )
-            }
-        }) { innerPadding ->
+            )
+        }
+    }) { innerPadding ->
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(16.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(innerPadding)
         ) {
             OutlinedTextField(
                 value = storeName,

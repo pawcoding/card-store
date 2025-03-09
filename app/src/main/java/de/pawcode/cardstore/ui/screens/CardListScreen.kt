@@ -3,6 +3,7 @@ package de.pawcode.cardstore.ui.screens
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -24,6 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.pawcode.cardstore.data.database.CardEntity
 import de.pawcode.cardstore.navigation.Screen
+import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.CardsListComponent
 import de.pawcode.cardstore.ui.sheets.ViewCardSheet
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
@@ -38,16 +40,21 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     var showCardSheet by remember { mutableStateOf<CardEntity?>(null) }
     val sheetState = rememberModalBottomSheetState()
 
-    Scaffold(
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = {
-                    navController.navigate(Screen.AddEditCard.route)
-                },
-                text = { Text("Add new card") },
-                icon = { Icon(Icons.Filled.Add, contentDescription = "Add new card") })
-        }) { innerPadding ->
-        Column {
+    Scaffold(topBar = {
+        AppBar(
+            title = "Card Store"
+        )
+    }, floatingActionButton = {
+        ExtendedFloatingActionButton(
+            onClick = {
+                navController.navigate(Screen.AddEditCard.route)
+            },
+            text = { Text("Add new card") },
+            icon = { Icon(Icons.Filled.Add, contentDescription = "Add new card") })
+    }) { innerPadding ->
+        Column(
+            modifier = Modifier.padding(innerPadding)
+        ) {
             CardsListComponent(cards = cards, onCardClicked = { card ->
                 viewModel.addUsage(card)
                 showCardSheet = card
