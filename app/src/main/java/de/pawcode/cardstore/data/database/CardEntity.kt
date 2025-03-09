@@ -3,6 +3,7 @@ package de.pawcode.cardstore.data.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.simonsickle.compose.barcodes.BarcodeType
 
 /**
  * Entity representing a card.
@@ -30,7 +31,7 @@ data class CardEntity(
      * Format of the barcode.
      */
     @ColumnInfo(name = "barcode_format")
-    val barcodeFormat: Int,
+    val barcodeFormat: BarcodeType,
 
     /**
      * Color of the card (hex code).
@@ -62,7 +63,7 @@ val EXAMPLE_CARD: CardEntity = CardEntity(
     id = "06c96a85-7dcd-4cfc-b886-2c95e8ea7c62",
     storeName = "pawcode Development",
     cardNumber = "1234567890",
-    barcodeFormat = 0,
+    barcodeFormat = BarcodeType.QR_CODE,
     color = "#4472c4",
     logo = null,
     lastUsed = null,

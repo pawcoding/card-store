@@ -18,7 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
-import com.lightspark.composeqr.QrCodeView
+import com.simonsickle.compose.barcodes.Barcode
+import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.data.database.CardEntity
 import de.pawcode.cardstore.data.database.EXAMPLE_CARD
 
@@ -47,24 +48,47 @@ fun ViewCardSheet(card: CardEntity) {
             color = if (isLightColor) Color(0, 0, 0, 128) else Color(255, 255, 255, 128)
         )
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(0.7f)
-                .aspectRatio(1f)
-                .clip(MaterialTheme.shapes.medium)
-                .background(Color.White)
-                .padding(12.dp)
-        ) {
-            QrCodeView(
-                data = card.cardNumber, modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-            )
+        if (card.barcodeFormat.isValueValid(card.cardNumber)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .aspectRatio(calculateBarcodeAspectRatio(card.barcodeFormat))
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(Color.White)
+                    .padding(12.dp)
+            ) {
+                Barcode(
+                    modifier = Modifier.fillMaxWidth(),
+                    resolutionFactor = 10,
+                    value = card.cardNumber,
+                    type = card.barcodeFormat,
+                )
+            }
+        } else {
+            Text("Cannot display barcode")
         }
 
         Text(
             text = card.cardNumber, color = if (isLightColor) Color.Black else Color.White
         )
+    }
+}
+
+fun calculateBarcodeAspectRatio(barcodeType: BarcodeType): Float {
+    return when (barcodeType) {
+        BarcodeType.EAN_8 -> 3.0f / 2.0f
+        BarcodeType.UPC_E -> 3.0f / 2.0f
+        BarcodeType.EAN_13 -> 4.0f / 3.0f
+        BarcodeType.UPC_A -> 4.0f / 3.0f
+        BarcodeType.QR_CODE -> 1.0f
+        BarcodeType.CODE_39 -> 3.0f / 1.0f
+        BarcodeType.CODE_93 -> 3.0f / 1.0f
+        BarcodeType.CODE_128 -> 3.0f / 1.0f
+        BarcodeType.ITF -> 3.0f / 1.0f
+        BarcodeType.PDF_417 -> 4.0f / 1.0f
+        BarcodeType.CODABAR -> 3.0f / 1.0f
+        BarcodeType.DATA_MATRIX -> 1.0f
+        BarcodeType.AZTEC -> 1.0f
     }
 }
 

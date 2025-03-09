@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -43,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.data.database.CardEntity
 import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.ui.components.AppBar
@@ -51,7 +57,7 @@ import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditCardScreen(
     navController: NavController, cardId: String? = null, viewModel: CardViewModel = viewModel()
@@ -61,15 +67,19 @@ fun AddEditCardScreen(
 
     val card = cardId?.let { viewModel.getCardById(it) }?.collectAsState(initial = null)?.value
 
+    var barcodeFormatExpanded by remember { mutableStateOf(false) }
+
     var storeName by remember { mutableStateOf(card?.storeName ?: "") }
     var cardNumber by remember { mutableStateOf(card?.cardNumber ?: "") }
+    var barcodeFormat by remember { mutableStateOf(card?.barcodeFormat ?: BarcodeType.QR_CODE) }
     var color by remember { mutableStateOf(card?.color ?: "#FFFFFF") }
 
     val isValid by remember { derivedStateOf { storeName.isNotEmpty() && cardNumber.isNotEmpty() } }
     val hasChanges by remember {
         derivedStateOf {
             storeName != (card?.storeName ?: "") || cardNumber != (card?.cardNumber
-                ?: "") || color != (card?.color ?: "#FFFFFF")
+                ?: "") || color != (card?.color
+                ?: "#FFFFFF") || barcodeFormat != (card?.barcodeFormat ?: BarcodeType.QR_CODE)
         }
     }
 
@@ -105,7 +115,7 @@ fun AddEditCardScreen(
                                 id = Uuid.random().toString(),
                                 storeName = storeName,
                                 cardNumber = cardNumber,
-                                barcodeFormat = 0,
+                                barcodeFormat = barcodeFormat,
                                 color = color,
                             )
                         )
@@ -162,6 +172,43 @@ fun AddEditCardScreen(
                     keyboardType = KeyboardType.Number, imeAction = ImeAction.Done
                 )
             )
+
+            ExposedDropdownMenuBox(
+                expanded = barcodeFormatExpanded,
+                onExpandedChange = { barcodeFormatExpanded = !barcodeFormatExpanded }
+            ) {
+                OutlinedTextField(
+                    readOnly = true,
+                    value = barcodeFormat.name,
+                    onValueChange = { },
+                    label = { Text("Select barcode format") },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(
+                            expanded = barcodeFormatExpanded
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor()
+                        .clickable { barcodeFormatExpanded = !barcodeFormatExpanded }
+                )
+                ExposedDropdownMenu(
+                    expanded = barcodeFormatExpanded,
+                    onDismissRequest = { barcodeFormatExpanded = false }
+                ) {
+                    BarcodeType.entries.forEach { format ->
+                        DropdownMenuItem(
+                            onClick = {
+                                barcodeFormat = format
+                                barcodeFormatExpanded = false
+                            },
+                            text = {
+                                Text(text = format.name)
+                            }
+                        )
+                    }
+                }
+            }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
