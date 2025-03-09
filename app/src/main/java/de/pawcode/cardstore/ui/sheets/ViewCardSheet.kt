@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,7 +30,7 @@ fun ViewCardSheet(card: CardEntity) {
     Column(
         modifier = Modifier
             .padding(horizontal = 32.dp)
-            .clip(RoundedCornerShape(16.dp))
+            .clip(MaterialTheme.shapes.large)
             .fillMaxWidth()
             .background(color)
             .padding(16.dp),
@@ -52,7 +51,7 @@ fun ViewCardSheet(card: CardEntity) {
             modifier = Modifier
                 .fillMaxWidth(0.7f)
                 .aspectRatio(1f)
-                .clip(RoundedCornerShape(8.dp))
+                .clip(MaterialTheme.shapes.medium)
                 .background(Color.White)
                 .padding(12.dp)
         ) {
