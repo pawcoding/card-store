@@ -27,32 +27,42 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.pawcode.cardstore.data.database.CardEntity
+import de.pawcode.cardstore.data.enums.SortAttribute
+import de.pawcode.cardstore.data.managers.PreferencesManager
 import de.pawcode.cardstore.navigation.Screen
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.CardsListComponent
 import de.pawcode.cardstore.ui.sheets.ViewCardSheet
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
+import kotlinx.coroutines.launch
 
-
-enum class SortOption {
-    ALPHABETICALLY, RECENTLY_USED, MOST_USED
-}
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardListScreen(navController: NavController, viewModel: CardViewModel = viewModel()) {
+    val context = LocalContext.current
+    val preferencesManager = remember { PreferencesManager(context) }
+    val scope = rememberCoroutineScope()
+
     val cards by viewModel.allCards.collectAsState(initial = emptyList())
 
     var sortMenuExpanded by remember { mutableStateOf(false) }
-    var sortBy by remember { mutableStateOf(SortOption.ALPHABETICALLY) }
+    var sortBy by remember { mutableStateOf(SortAttribute.ALPHABETICALLY) }
+    val storedSortOrder by preferencesManager.sortAttribute.collectAsState(initial = SortAttribute.ALPHABETICALLY)
+
+    LaunchedEffect(storedSortOrder) {
+        sortBy = storedSortOrder
+    }
 
     var showCardSheet by remember { mutableStateOf<CardEntity?>(null) }
     val sheetState = rememberModalBottomSheetState()
@@ -60,13 +70,21 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     val listState = rememberLazyGridState()
     val sortedCards by rememberUpdatedState(
         when (sortBy) {
-            SortOption.ALPHABETICALLY -> cards.sortedBy { it.storeName }
-            SortOption.RECENTLY_USED -> cards.sortedByDescending { it.lastUsed }
-            SortOption.MOST_USED -> cards.sortedByDescending { it.useCount }
+            SortAttribute.ALPHABETICALLY -> cards.sortedBy { it.storeName }
+            SortAttribute.RECENTLY_USED -> cards.sortedByDescending { it.lastUsed }
+            SortAttribute.MOST_USED -> cards.sortedByDescending { it.useCount }
         })
 
     LaunchedEffect(sortBy) {
         listState.scrollToItem(0)
+    }
+
+    fun updateSortAttribute(sortAttribute: SortAttribute) {
+        scope.launch {
+            preferencesManager.saveSortAttribute(sortAttribute)
+        }
+        sortBy = sortAttribute
+        sortMenuExpanded = false
     }
 
     Scaffold(topBar = {
@@ -83,29 +101,20 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                         expanded = sortMenuExpanded,
                         onDismissRequest = { sortMenuExpanded = false }) {
                         DropdownMenuItem(text = { Text("Alphabetically") }, trailingIcon = {
-                            if (sortBy == SortOption.ALPHABETICALLY) {
+                            if (sortBy == SortAttribute.ALPHABETICALLY) {
                                 Icon(Icons.Filled.Check, contentDescription = null)
                             }
-                        }, onClick = {
-                            sortBy = SortOption.ALPHABETICALLY
-                            sortMenuExpanded = false
-                        })
+                        }, onClick = { updateSortAttribute(SortAttribute.ALPHABETICALLY) })
                         DropdownMenuItem(text = { Text("Recently used") }, trailingIcon = {
-                            if (sortBy == SortOption.RECENTLY_USED) {
+                            if (sortBy == SortAttribute.RECENTLY_USED) {
                                 Icon(Icons.Filled.Check, contentDescription = null)
                             }
-                        }, onClick = {
-                            sortBy = SortOption.RECENTLY_USED
-                            sortMenuExpanded = false
-                        })
+                        }, onClick = { updateSortAttribute(SortAttribute.RECENTLY_USED) })
                         DropdownMenuItem(text = { Text("Most used") }, trailingIcon = {
-                            if (sortBy == SortOption.MOST_USED) {
+                            if (sortBy == SortAttribute.MOST_USED) {
                                 Icon(Icons.Filled.Check, contentDescription = null)
                             }
-                        }, onClick = {
-                            sortBy = SortOption.MOST_USED
-                            sortMenuExpanded = false
-                        })
+                        }, onClick = { updateSortAttribute(SortAttribute.MOST_USED) })
                     }
                 }
             })
