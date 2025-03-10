@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.simonsickle.compose.barcodes.BarcodeType
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * Entity representing a card.
@@ -47,13 +49,13 @@ data class CardEntity(
      * Last used date of the card.
      */
     @ColumnInfo(name = "last_used")
-    var lastUsed: Long? = null,
+    val lastUsed: Long? = null,
 
     /**
      * Number of times the card was used.
      */
     @ColumnInfo(name = "use_count")
-    var useCount: Int = 0
+    val useCount: Int = 0
 )
 
 /**
@@ -69,3 +71,14 @@ val EXAMPLE_CARD: CardEntity = CardEntity(
     lastUsed = null,
     useCount = 0
 )
+
+@OptIn(ExperimentalUuidApi::class)
+fun emptyCard(): CardEntity {
+    return CardEntity(
+        id = Uuid.random().toString(),
+        storeName = "",
+        cardNumber = "",
+        barcodeFormat = BarcodeType.QR_CODE,
+        color = "#FFFFFF"
+    )
+}

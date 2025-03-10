@@ -22,10 +22,12 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun addUsage(card: CardEntity) = viewModelScope.launch {
-        card.useCount++
-        card.lastUsed = System.currentTimeMillis()
+        val updatedCard = card.copy(
+            useCount = card.useCount + 1,
+            lastUsed = System.currentTimeMillis()
+        )
 
-        updateCard(card)
+        updateCard(updatedCard)
     }
 
     fun deleteCard(card: CardEntity) = viewModelScope.launch {

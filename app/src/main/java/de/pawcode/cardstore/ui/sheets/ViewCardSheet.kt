@@ -22,11 +22,12 @@ import com.simonsickle.compose.barcodes.Barcode
 import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.data.database.CardEntity
 import de.pawcode.cardstore.data.database.EXAMPLE_CARD
+import de.pawcode.cardstore.ui.utils.isLightColor
 
 @Composable
 fun ViewCardSheet(card: CardEntity) {
     val color = Color(card.color.toColorInt())
-    val isLightColor = (0.299 * color.red + 0.587 * color.green + 0.114 * color.blue) > 0.5
+    val isLightColor = isLightColor(color)
 
     Column(
         modifier = Modifier

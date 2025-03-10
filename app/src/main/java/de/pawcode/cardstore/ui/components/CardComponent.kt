@@ -21,9 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import de.pawcode.cardstore.data.database.CardEntity
 import de.pawcode.cardstore.data.database.EXAMPLE_CARD
+import de.pawcode.cardstore.ui.utils.isLightColor
 
 @Composable
 fun CardComponent(card: CardEntity, onClick: () -> Unit, onLongPress: () -> Unit) {
+    val color = Color(card.color.toColorInt())
+    val isLightColor = isLightColor(color)
+
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -35,7 +39,7 @@ fun CardComponent(card: CardEntity, onClick: () -> Unit, onLongPress: () -> Unit
             defaultElevation = 8.dp
         ),
         colors = CardDefaults.cardColors(
-            containerColor = Color(card.color.toColorInt())
+            containerColor = color
         ),
     ) {
         Column(
@@ -46,7 +50,8 @@ fun CardComponent(card: CardEntity, onClick: () -> Unit, onLongPress: () -> Unit
                 .fillMaxSize()
         ) {
             Text(
-                text = card.storeName, style = MaterialTheme.typography.bodyLarge
+                text = card.storeName, style = MaterialTheme.typography.headlineMedium,
+                color = if (isLightColor) Color.Black else Color.White
             )
         }
     }
@@ -57,99 +62,3 @@ fun CardComponent(card: CardEntity, onClick: () -> Unit, onLongPress: () -> Unit
 fun PreviewCardComponent() {
     CardComponent(card = EXAMPLE_CARD, onClick = {}, onLongPress = {})
 }
-
-/*
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CardComponent(card: Card, onEditCard: () -> Unit, onDeleteCard: () -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
-
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = false
-    )
-    var isQrFullscreen by rememberSaveable { mutableStateOf(false) }
-
-    ElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1.586f) // Aspect ratio of a credit card (85.60mm x 53.98mm)
-            .padding(8.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp,
-        ),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(android.graphics.Color.parseColor(card.color))
-        ),
-        onClick = {
-            isQrFullscreen = true
-        }
-    ) {
-        Box(
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.End)
-        ) {
-            IconButton(onClick = { expanded = !expanded }) {
-                Icon(Icons.Default.MoreVert, contentDescription = "Options")
-            }
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text("Edit card") },
-                    leadingIcon = { Icon(Icons.Outlined.Edit, contentDescription = null) },
-                    onClick = {
-                        expanded = false
-                        onEditCard()
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Delete card") },
-                    leadingIcon = { Icon(Icons.Outlined.Delete, contentDescription = null) },
-                    onClick = {
-                        expanded = false
-                        onDeleteCard()
-                    }
-                )
-            }
-        }
-
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxSize()
-        ) {
-            Text(text = card.store, style = MaterialTheme.typography.bodyLarge)
-        }
-    }
-
-    if (isQrFullscreen) {
-        ModalBottomSheet(
-            sheetState = sheetState,
-            onDismissRequest = {
-                isQrFullscreen = false
-            },
-            modifier = Modifier.safeDrawingPadding(),
-            containerColor = Color(
-                android.graphics.Color.parseColor(
-                    card.color
-                )
-            )
-        ) {
-            CardModal(card)
-        }
-    }
-}
-
-@Preview
-@Composable
-fun PreviewCardComponent() {
-    CardComponent(
-        card = EXAMPLE_CARD,
-        onEditCard = {},
-        onDeleteCard = {}
-    )
-}*/
