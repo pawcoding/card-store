@@ -11,6 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,6 +43,8 @@ import de.pawcode.cardstore.data.managers.PreferencesManager
 import de.pawcode.cardstore.navigation.Screen
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.CardsListComponent
+import de.pawcode.cardstore.ui.sheets.Option
+import de.pawcode.cardstore.ui.sheets.OptionSheet
 import de.pawcode.cardstore.ui.sheets.ViewCardSheet
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 import kotlinx.coroutines.launch
@@ -65,15 +69,18 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     }
 
     var showCardSheet by remember { mutableStateOf<CardEntity?>(null) }
-    val sheetState = rememberModalBottomSheetState()
+    val cardSheetState = rememberModalBottomSheetState()
+
+    var showCardOptionSheet by remember { mutableStateOf<CardEntity?>(null) }
+    val cardOptionSheetState = rememberModalBottomSheetState()
 
     val listState = rememberLazyGridState()
     val sortedCards by rememberUpdatedState(
         when (sortBy) {
-            SortAttribute.ALPHABETICALLY -> cards.sortedBy { it.storeName }
-            SortAttribute.RECENTLY_USED -> cards.sortedByDescending { it.lastUsed }
-            SortAttribute.MOST_USED -> cards.sortedByDescending { it.useCount }
-        })
+        SortAttribute.ALPHABETICALLY -> cards.sortedBy { it.storeName }
+        SortAttribute.RECENTLY_USED -> cards.sortedByDescending { it.lastUsed }
+        SortAttribute.MOST_USED -> cards.sortedByDescending { it.useCount }
+    })
 
     LaunchedEffect(sortBy) {
         listState.scrollToItem(0)
@@ -121,8 +128,8 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     }, floatingActionButton = {
         ExtendedFloatingActionButton(
             onClick = {
-                navController.navigate(Screen.AddEditCard.route)
-            },
+            navController.navigate(Screen.AddEditCard.route)
+        },
             text = { Text("Add new card") },
             icon = { Icon(Icons.Filled.Add, contentDescription = "Add new card") })
     }) { innerPadding ->
@@ -141,9 +148,30 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                     modifier = Modifier
                         .fillMaxHeight()
                         .safeDrawingPadding(),
-                    sheetState = sheetState,
+                    sheetState = cardSheetState,
                     onDismissRequest = { showCardSheet = null }) {
                     ViewCardSheet(showCardSheet!!)
+                }
+            }
+
+            showCardOptionSheet?.let {
+                ModalBottomSheet(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .safeDrawingPadding(),
+                    sheetState = cardOptionSheetState,
+                    onDismissRequest = { showCardOptionSheet = null }) {
+                    OptionSheet(
+                        listOf(
+                            Option(
+                                label = "Edit card", icon = Icons.Filled.Edit, onClick = {
+                                    navController.navigate(Screen.AddEditCard.route + "?cardId=${showCardOptionSheet!!.id}")
+                                }), Option(
+                                label = "Delete card",
+                                icon = Icons.Filled.DeleteForever,
+                                onClick = {})
+                        )
+                    )
                 }
             }
         }
