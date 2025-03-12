@@ -1,6 +1,10 @@
 package de.pawcode.cardstore.navigation
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -34,6 +38,10 @@ fun Navigation() {
         NavHost(
             navController = navController,
             startDestination = Screen.CardList.route,
+            enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
         ) {
             composable(Screen.CardList.route) {
                 CardListScreen(navController = navController)
