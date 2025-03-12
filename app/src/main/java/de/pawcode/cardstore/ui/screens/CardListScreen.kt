@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.twotone.DeleteForever
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,6 +44,7 @@ import de.pawcode.cardstore.data.managers.PreferencesManager
 import de.pawcode.cardstore.navigation.Screen
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.CardsListComponent
+import de.pawcode.cardstore.ui.dialogs.ConfirmDialog
 import de.pawcode.cardstore.ui.sheets.Option
 import de.pawcode.cardstore.ui.sheets.OptionSheet
 import de.pawcode.cardstore.ui.sheets.ViewCardSheet
@@ -74,13 +76,15 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     var showCardOptionSheet by remember { mutableStateOf<CardEntity?>(null) }
     val cardOptionSheetState = rememberModalBottomSheetState()
 
+    var openDeleteDialog by remember { mutableStateOf<CardEntity?>(null) }
+
     val listState = rememberLazyGridState()
     val sortedCards by rememberUpdatedState(
         when (sortBy) {
-        SortAttribute.ALPHABETICALLY -> cards.sortedBy { it.storeName }
-        SortAttribute.RECENTLY_USED -> cards.sortedByDescending { it.lastUsed }
-        SortAttribute.MOST_USED -> cards.sortedByDescending { it.useCount }
-    })
+            SortAttribute.ALPHABETICALLY -> cards.sortedBy { it.storeName }
+            SortAttribute.RECENTLY_USED -> cards.sortedByDescending { it.lastUsed }
+            SortAttribute.MOST_USED -> cards.sortedByDescending { it.useCount }
+        })
 
     LaunchedEffect(sortBy) {
         listState.scrollToItem(0)
@@ -101,47 +105,64 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                     modifier = Modifier.padding(16.dp)
                 ) {
                     IconButton(
-                        onClick = { sortMenuExpanded = !sortMenuExpanded }) {
+                        onClick = { sortMenuExpanded = !sortMenuExpanded }
+                    ) {
                         Icon(Icons.AutoMirrored.Filled.Sort, contentDescription = "Sort cards")
                     }
                     DropdownMenu(
                         expanded = sortMenuExpanded,
-                        onDismissRequest = { sortMenuExpanded = false }) {
-                        DropdownMenuItem(text = { Text("Alphabetically") }, trailingIcon = {
-                            if (sortBy == SortAttribute.ALPHABETICALLY) {
-                                Icon(Icons.Filled.Check, contentDescription = null)
-                            }
-                        }, onClick = { updateSortAttribute(SortAttribute.ALPHABETICALLY) })
-                        DropdownMenuItem(text = { Text("Recently used") }, trailingIcon = {
-                            if (sortBy == SortAttribute.RECENTLY_USED) {
-                                Icon(Icons.Filled.Check, contentDescription = null)
-                            }
-                        }, onClick = { updateSortAttribute(SortAttribute.RECENTLY_USED) })
-                        DropdownMenuItem(text = { Text("Most used") }, trailingIcon = {
-                            if (sortBy == SortAttribute.MOST_USED) {
-                                Icon(Icons.Filled.Check, contentDescription = null)
-                            }
-                        }, onClick = { updateSortAttribute(SortAttribute.MOST_USED) })
+                        onDismissRequest = { sortMenuExpanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Alphabetically") },
+                            trailingIcon = {
+                                if (sortBy == SortAttribute.ALPHABETICALLY) {
+                                    Icon(Icons.Filled.Check, contentDescription = null)
+                                }
+                            },
+                            onClick = { updateSortAttribute(SortAttribute.ALPHABETICALLY) }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Recently used") },
+                            trailingIcon = {
+                                if (sortBy == SortAttribute.RECENTLY_USED) {
+                                    Icon(Icons.Filled.Check, contentDescription = null)
+                                }
+                            },
+                            onClick = { updateSortAttribute(SortAttribute.RECENTLY_USED) }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Most used") },
+                            trailingIcon = {
+                                if (sortBy == SortAttribute.MOST_USED) {
+                                    Icon(Icons.Filled.Check, contentDescription = null)
+                                }
+                            },
+                            onClick = { updateSortAttribute(SortAttribute.MOST_USED) }
+                        )
                     }
                 }
             })
     }, floatingActionButton = {
         ExtendedFloatingActionButton(
             onClick = {
-            navController.navigate(Screen.AddEditCard.route)
-        },
+                navController.navigate(Screen.AddEditCard.route)
+            },
             text = { Text("Add new card") },
             icon = { Icon(Icons.Filled.Add, contentDescription = "Add new card") })
     }) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
-            CardsListComponent(cards = sortedCards, listState = listState, onCardClicked = { card ->
-                viewModel.addUsage(card)
-                showCardSheet = card
-            }, onCardLongPressed = {
-                navController.navigate(Screen.AddEditCard.route + "?cardId=${it.id}")
-            })
+            CardsListComponent(
+                cards = sortedCards,
+                listState = listState,
+                onCardClicked = { card ->
+                    viewModel.addUsage(card)
+                    showCardSheet = card
+                },
+                onCardLongPressed = { showCardOptionSheet = it }
+            )
 
             showCardSheet?.let {
                 ModalBottomSheet(
@@ -157,22 +178,45 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
             showCardOptionSheet?.let {
                 ModalBottomSheet(
                     modifier = Modifier
-                        .fillMaxHeight()
                         .safeDrawingPadding(),
                     sheetState = cardOptionSheetState,
                     onDismissRequest = { showCardOptionSheet = null }) {
                     OptionSheet(
                         listOf(
                             Option(
-                                label = "Edit card", icon = Icons.Filled.Edit, onClick = {
+                                label = "Edit card",
+                                icon = Icons.Filled.Edit,
+                                onClick = {
                                     navController.navigate(Screen.AddEditCard.route + "?cardId=${showCardOptionSheet!!.id}")
-                                }), Option(
+                                    showCardOptionSheet = null
+                                }
+                            ),
+                            Option(
                                 label = "Delete card",
                                 icon = Icons.Filled.DeleteForever,
-                                onClick = {})
+                                onClick = {
+                                    openDeleteDialog = showCardOptionSheet!!
+                                    showCardOptionSheet = null
+                                }
+                            )
                         )
                     )
                 }
+            }
+
+            openDeleteDialog?.let {
+                ConfirmDialog(
+                    onDismissRequest = { openDeleteDialog = null },
+                    onConfirmation = {
+                        scope.launch {
+                            viewModel.deleteCard(openDeleteDialog!!)
+                            openDeleteDialog = null
+                        }
+                    },
+                    dialogTitle = "Delete card",
+                    dialogText = "Are you sure you want to delete the card? It cannot be restored.",
+                    Icons.TwoTone.DeleteForever
+                )
             }
         }
     }

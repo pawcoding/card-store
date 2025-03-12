@@ -10,10 +10,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,12 +34,15 @@ fun OptionSheet(
             .padding(16.dp),
     ) {
         options.forEach {
-            Row(modifier = Modifier
-                .clickable { it.onClick() }
-                .padding(8.dp)
-                .fillMaxWidth(),
+            Row(
+                modifier = Modifier
+                    .clickable { it.onClick() }
+                    .clip(MaterialTheme.shapes.medium)
+                    .padding(16.dp)
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
                 Icon(it.icon, contentDescription = null)
 
                 Text(it.label)
@@ -54,8 +59,11 @@ fun PreviewOptionSheet() {
     OptionSheet(
         listOf(
             Option(
-                label = "Edit card", icon = Icons.Filled.Edit, onClick = {}), Option(
-                label = "Delete card", icon = Icons.Filled.DeleteForever, onClick = {})
+                label = "Edit card", icon = Icons.Filled.Edit, onClick = {}
+            ),
+            Option(
+                label = "Delete card", icon = Icons.Filled.DeleteForever, onClick = {}
+            )
         )
     )
 }
