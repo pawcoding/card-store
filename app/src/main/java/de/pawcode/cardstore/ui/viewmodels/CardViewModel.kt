@@ -5,13 +5,21 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import de.pawcode.cardstore.data.database.CardEntity
 import de.pawcode.cardstore.data.repository.CardRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 class CardViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = CardRepository(application)
     val allCards = repository.allCards
 
-    fun getCardById(id: String) = repository.getCardById(id)
+    fun getCardById(id: String?): Flow<CardEntity?> = flow {
+        if (id == null) {
+            emit(null)
+        } else {
+            repository.getCardById(id).collect { emit(it) }
+        }
+    }
 
     fun insertCard(card: CardEntity) = viewModelScope.launch {
         repository.insertCard(card)

@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -42,10 +43,13 @@ fun AddEditCardScreen(
 ) {
     val scope = rememberCoroutineScope()
 
-    var initialCard =
-        cardId?.let { viewModel.getCardById(it) }?.collectAsState(initial = emptyCard())?.value
+    val initialCard by viewModel.getCardById(cardId).collectAsState(initial = emptyCard())
 
     var card by remember { mutableStateOf(initialCard ?: emptyCard()) }
+
+    LaunchedEffect(initialCard) {
+        card = initialCard ?: emptyCard()
+    }
 
     val isValid by remember { derivedStateOf { card.storeName.isNotEmpty() && card.cardNumber.isNotEmpty() } }
     val hasChanges by remember {
@@ -56,12 +60,14 @@ fun AddEditCardScreen(
 
     Scaffold(topBar = {
         AppBar(
-            title = if (cardId != null) "Edit card" else "Add card", navigationIcon = {
+            title = if (cardId != null) "Edit card" else "Add card",
+            navigationIcon = {
                 IconButton(
                     onClick = { navController.popBackStack() }) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                 }
-            })
+            }
+        )
     }, floatingActionButton = {
         AnimatedVisibility(
             visible = hasChanges,
@@ -78,10 +84,9 @@ fun AddEditCardScreen(
                         viewModel.updateCard(card)
                     } else {
                         viewModel.insertCard(card)
+                        navController.popBackStack()
+                        navController.navigate(Screen.AddEditCard.route + "?cardId=${card.id}")
                     }
-                    initialCard = card
-
-                    navController.navigate(Screen.AddEditCard.route + "?cardId=${card.id}")
 
                     SnackbarService.showSnackbar(
                         message = "Card ${if (cardId != null) "updated" else "saved"}",
@@ -107,9 +112,9 @@ fun AddEditCardScreen(
             modifier = Modifier.padding(innerPadding)
         ) {
             EditCardForm(
-                initialCard = card, onCardUpdate = {
-                    card = it
-                })
+                initialCard = card,
+                onCardUpdate = { card = it }
+            )
         }
     }
 }

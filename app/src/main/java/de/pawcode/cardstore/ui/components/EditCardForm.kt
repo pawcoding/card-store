@@ -45,7 +45,8 @@ import de.pawcode.cardstore.ui.utils.isLightColor
 
 @Composable
 fun EditCardForm(
-    initialCard: CardEntity? = null, onCardUpdate: (CardEntity) -> Unit
+    initialCard: CardEntity? = null,
+    onCardUpdate: (CardEntity) -> Unit
 ) {
     var showColorPicker by remember { mutableStateOf(false) }
 
@@ -54,6 +55,10 @@ fun EditCardForm(
         derivedStateOf {
             isLightColor(Color(card.color.toColorInt()))
         }
+    }
+
+    LaunchedEffect(initialCard) {
+        card = initialCard?.copy() ?: emptyCard()
     }
 
     LaunchedEffect(card) {
@@ -87,7 +92,8 @@ fun EditCardForm(
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number, imeAction = ImeAction.Done
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
             )
         )
 
@@ -104,16 +110,22 @@ fun EditCardForm(
 
             var expanded by remember { mutableStateOf(false) }
             Box {
-                OutlinedButton(onClick = { expanded = true }) {
+                OutlinedButton(
+                    onClick = { expanded = true }
+                ) {
                     Text(card.barcodeFormat.name)
                 }
                 DropdownMenu(
-                    expanded = expanded, onDismissRequest = { expanded = false }) {
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }) {
                     BarcodeType.entries.forEach { type ->
-                        DropdownMenuItem(onClick = {
-                            card = card.copy(barcodeFormat = type)
-                            expanded = false
-                        }, text = { Text(type.name) })
+                        DropdownMenuItem(
+                            onClick = {
+                                card = card.copy(barcodeFormat = type)
+                                expanded = false
+                            },
+                            text = { Text(type.name) }
+                        )
                     }
                 }
             }
@@ -137,7 +149,8 @@ fun EditCardForm(
                         MaterialTheme.shapes.medium
                     )
                     .background(Color(card.color.toColorInt()))
-                    .clickable { showColorPicker = true }, contentAlignment = Alignment.Center
+                    .clickable { showColorPicker = true },
+                contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Filled.Colorize,
@@ -150,12 +163,14 @@ fun EditCardForm(
 
     if (showColorPicker) {
         ColorPickerDialog(
-            color = Color(card.color.toColorInt()), onDismiss = { color ->
+            color = Color(card.color.toColorInt()),
+            onDismiss = { color ->
                 if (color != null) {
                     card = card.copy(color = String.format("#%06X", 0xFFFFFF and color.toArgb()))
                 }
                 showColorPicker = false
-            })
+            }
+        )
     }
 }
 
