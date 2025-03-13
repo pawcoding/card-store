@@ -11,23 +11,28 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.toColorInt
 import com.simonsickle.compose.barcodes.Barcode
-import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.data.database.CardEntity
 import de.pawcode.cardstore.data.database.EXAMPLE_CARD
+import de.pawcode.cardstore.ui.utils.calculateBarcodeAspectRatio
 import de.pawcode.cardstore.ui.utils.isLightColor
 
 @Composable
 fun ViewCardSheet(card: CardEntity) {
-    val color = Color(card.color)
-    val isLightColor = isLightColor(color)
+    val aspectRatio by remember { mutableFloatStateOf(calculateBarcodeAspectRatio(card.barcodeFormat)) }
+    val color by remember { mutableStateOf(Color(card.color)) }
+    val isLightColor by remember { derivedStateOf { isLightColor(color) } }
 
     Column(
         modifier = Modifier
@@ -53,7 +58,7 @@ fun ViewCardSheet(card: CardEntity) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
-                    .aspectRatio(calculateBarcodeAspectRatio(card.barcodeFormat))
+                    .aspectRatio(aspectRatio)
                     .clip(MaterialTheme.shapes.medium)
                     .background(Color.White)
                     .padding(12.dp)
@@ -72,24 +77,6 @@ fun ViewCardSheet(card: CardEntity) {
         Text(
             text = card.cardNumber, color = if (isLightColor) Color.Black else Color.White
         )
-    }
-}
-
-fun calculateBarcodeAspectRatio(barcodeType: BarcodeType): Float {
-    return when (barcodeType) {
-        BarcodeType.EAN_8 -> 3.0f / 2.0f
-        BarcodeType.UPC_E -> 3.0f / 2.0f
-        BarcodeType.EAN_13 -> 4.0f / 3.0f
-        BarcodeType.UPC_A -> 4.0f / 3.0f
-        BarcodeType.QR_CODE -> 1.0f
-        BarcodeType.CODE_39 -> 3.0f / 1.0f
-        BarcodeType.CODE_93 -> 3.0f / 1.0f
-        BarcodeType.CODE_128 -> 3.0f / 1.0f
-        BarcodeType.ITF -> 3.0f / 1.0f
-        BarcodeType.PDF_417 -> 4.0f / 1.0f
-        BarcodeType.CODABAR -> 3.0f / 1.0f
-        BarcodeType.DATA_MATRIX -> 1.0f
-        BarcodeType.AZTEC -> 1.0f
     }
 }
 
