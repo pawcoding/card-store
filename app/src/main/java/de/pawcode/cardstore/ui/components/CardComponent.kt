@@ -25,7 +25,7 @@ import de.pawcode.cardstore.ui.utils.isLightColor
 
 @Composable
 fun CardComponent(card: CardEntity, onClick: () -> Unit, onLongPress: () -> Unit) {
-    val color = Color(card.color.toColorInt())
+    val color = Color(card.color)
     val isLightColor = isLightColor(color)
 
     ElevatedCard(

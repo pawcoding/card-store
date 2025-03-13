@@ -51,11 +51,8 @@ fun EditCardForm(
     var showColorPicker by remember { mutableStateOf(false) }
 
     var card by remember { mutableStateOf(initialCard?.copy() ?: emptyCard()) }
-    val isLightColor by remember {
-        derivedStateOf {
-            isLightColor(Color(card.color.toColorInt()))
-        }
-    }
+    val color by remember { derivedStateOf { Color(card.color) } }
+    val isLightColor by remember { derivedStateOf { isLightColor(color) } }
 
     LaunchedEffect(initialCard) {
         card = initialCard?.copy() ?: emptyCard()
@@ -148,7 +145,7 @@ fun EditCardForm(
                     .clip(
                         MaterialTheme.shapes.medium
                     )
-                    .background(Color(card.color.toColorInt()))
+                    .background(color)
                     .clickable { showColorPicker = true },
                 contentAlignment = Alignment.Center
             ) {
@@ -163,10 +160,10 @@ fun EditCardForm(
 
     if (showColorPicker) {
         ColorPickerDialog(
-            color = Color(card.color.toColorInt()),
-            onDismiss = { color ->
-                if (color != null) {
-                    card = card.copy(color = String.format("#%06X", 0xFFFFFF and color.toArgb()))
+            color = color,
+            onDismiss = { newColor ->
+                if (newColor != null) {
+                    card = card.copy(color = newColor.toArgb())
                 }
                 showColorPicker = false
             }

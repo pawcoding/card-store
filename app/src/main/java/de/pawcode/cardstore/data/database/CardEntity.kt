@@ -1,5 +1,8 @@
 package de.pawcode.cardstore.data.database
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.core.graphics.toColorInt
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -36,9 +39,9 @@ data class CardEntity(
     val barcodeFormat: BarcodeType,
 
     /**
-     * Color of the card (hex code).
+     * Color of the card (ARGB int).
      */
-    val color: String,
+    val color: Int,
 
     /**
      * Logo of the store.
@@ -66,7 +69,7 @@ val EXAMPLE_CARD: CardEntity = CardEntity(
     storeName = "pawcode Development",
     cardNumber = "1234567890",
     barcodeFormat = BarcodeType.QR_CODE,
-    color = "#4472c4",
+    color = "#4472c4".toColorInt(),
     logo = null,
     lastUsed = null,
     useCount = 0
@@ -79,6 +82,6 @@ fun emptyCard(): CardEntity {
         storeName = "",
         cardNumber = "",
         barcodeFormat = BarcodeType.QR_CODE,
-        color = "#FFFFFF"
+        color = Color.White.toArgb()
     )
 }

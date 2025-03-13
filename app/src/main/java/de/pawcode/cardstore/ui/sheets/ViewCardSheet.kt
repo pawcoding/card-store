@@ -26,7 +26,7 @@ import de.pawcode.cardstore.ui.utils.isLightColor
 
 @Composable
 fun ViewCardSheet(card: CardEntity) {
-    val color = Color(card.color.toColorInt())
+    val color = Color(card.color)
     val isLightColor = isLightColor(color)
 
     Column(
