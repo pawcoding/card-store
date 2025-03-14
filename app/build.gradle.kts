@@ -56,6 +56,8 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.composed.barcodes)
+    implementation(libs.play.services.code.scanner)
+    implementation(libs.barcode.scanning)
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

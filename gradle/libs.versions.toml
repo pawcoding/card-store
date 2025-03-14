@@ -17,6 +17,8 @@ navigationCompose = "2.8.8"
 materialIconsExtended = "1.7.8"
 datastorePreferences = "1.1.3"
 composedBarcodes = "1.3.0"
+playServicesCodeScanner = "16.1.0"
+barcodeScanning = "17.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version = "1.15.0" }
@@ -42,6 +44,8 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
 composed-barcodes = { group = "com.simonsickle", name = "composed-barcodes", version.ref = "composedBarcodes" }
+play-services-code-scanner = { group = "com.google.android.gms", name = "play-services-code-scanner", version.ref = "playServicesCodeScanner" }
+barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning", version.ref = "barcodeScanning" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Colorize
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -41,6 +42,7 @@ import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.database.entities.emptyCard
 import de.pawcode.cardstore.ui.dialogs.ColorPickerDialog
 import de.pawcode.cardstore.ui.utils.isLightColor
+import de.pawcode.cardstore.ui.utils.mapBarcodeFormat
 
 @Composable
 fun EditCardForm(
@@ -48,6 +50,7 @@ fun EditCardForm(
     onCardUpdate: (CardEntity) -> Unit
 ) {
     var showColorPicker by remember { mutableStateOf(false) }
+    var showBarcodeScanner by remember { mutableStateOf(false) }
 
     var card by remember { mutableStateOf(initialCard?.copy() ?: emptyCard()) }
     val color by remember { derivedStateOf { Color(card.color) } }
@@ -80,6 +83,15 @@ fun EditCardForm(
                 imeAction = ImeAction.Next
             )
         )
+
+        HorizontalDivider()
+
+        OutlinedButton(
+            onClick = { showBarcodeScanner = true },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Scan barcode")
+        }
 
         OutlinedTextField(
             value = card.cardNumber,
@@ -127,6 +139,8 @@ fun EditCardForm(
             }
         }
 
+        HorizontalDivider()
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -166,6 +180,20 @@ fun EditCardForm(
                 }
                 showColorPicker = false
             }
+        )
+    }
+
+    if (showBarcodeScanner) {
+        BarcodeScanner(
+            onBarcodeDetected = { barcode ->
+                card = card.copy(
+                    cardNumber = barcode.rawValue ?: "",
+                    barcodeFormat = mapBarcodeFormat(barcode.format)
+                )
+
+                showBarcodeScanner = false
+            },
+            onCancel = { showBarcodeScanner = false }
         )
     }
 }

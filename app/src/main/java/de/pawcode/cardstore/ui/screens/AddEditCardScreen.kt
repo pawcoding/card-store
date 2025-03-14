@@ -30,7 +30,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.pawcode.cardstore.data.database.entities.emptyCard
 import de.pawcode.cardstore.data.services.SnackbarService
-import de.pawcode.cardstore.navigation.Screen
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.EditCardForm
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
@@ -84,9 +83,9 @@ fun AddEditCardScreen(
                         viewModel.updateCard(card)
                     } else {
                         viewModel.insertCard(card)
-                        navController.popBackStack()
-                        navController.navigate(Screen.AddEditCard.route + "?cardId=${card.id}")
                     }
+
+                    navController.popBackStack()
 
                     SnackbarService.showSnackbar(
                         message = "Card ${if (cardId != null) "updated" else "saved"}",
