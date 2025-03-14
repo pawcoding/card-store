@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -50,63 +51,75 @@ fun AddEditCardScreen(
         card = initialCard ?: emptyCard()
     }
 
-    val isValid by remember { derivedStateOf { card.storeName.isNotEmpty() && card.cardNumber.isNotEmpty() } }
+    val isValid by remember {
+        derivedStateOf {
+            if (card.storeName.isEmpty() || card.cardNumber.isEmpty()) {
+                false
+            }
+
+            card.barcodeFormat.isValueValid(card.cardNumber)
+        }
+    }
     val hasChanges by remember {
         derivedStateOf {
             card.storeName != (initialCard?.storeName) || card.cardNumber != (initialCard?.cardNumber) || card.color != (initialCard?.color) || card.barcodeFormat != (initialCard?.barcodeFormat)
         }
     }
 
-    Scaffold(topBar = {
-        AppBar(
-            title = if (cardId != null) "Edit card" else "Add card",
-            navigationIcon = {
-                IconButton(
-                    onClick = { navController.popBackStack() }) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+    Scaffold(
+        modifier = Modifier.imePadding(),
+        topBar = {
+            AppBar(
+                title = if (cardId != null) "Edit card" else "Add card",
+                navigationIcon = {
+                    IconButton(
+                        onClick = { navController.popBackStack() }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
                 }
-            }
-        )
-    }, floatingActionButton = {
-        AnimatedVisibility(
-            visible = hasChanges,
-            enter = slideInVertically(initialOffsetY = { it }),
-            exit = slideOutVertically(targetOffsetY = { it })
-        ) {
-            ExtendedFloatingActionButton(
-                onClick = {
-                    if (!isValid) {
-                        return@ExtendedFloatingActionButton
-                    }
-
-                    if (cardId != null) {
-                        viewModel.updateCard(card)
-                    } else {
-                        viewModel.insertCard(card)
-                    }
-
-                    navController.popBackStack()
-
-                    SnackbarService.showSnackbar(
-                        message = "Card ${if (cardId != null) "updated" else "saved"}",
-                        scope = scope
-                    )
-                },
-                text = {
-                    if (cardId != null) {
-                        Text("Update")
-                    } else {
-                        Text("Save")
-                    }
-                },
-                icon = { Icon(Icons.Filled.Save, contentDescription = "Save card") },
-                containerColor = if (isValid) MaterialTheme.colorScheme.primary else Color.Gray,
-                contentColor = if (isValid) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(
-                    alpha = 0.38f
-                )
             )
+        },
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = hasChanges,
+                enter = slideInVertically(initialOffsetY = { it }),
+                exit = slideOutVertically(targetOffsetY = { it })
+            ) {
+                ExtendedFloatingActionButton(
+                    onClick = {
+                        if (!isValid) {
+                            return@ExtendedFloatingActionButton
+                        }
+
+                        if (cardId != null) {
+                            viewModel.updateCard(card)
+                        } else {
+                            viewModel.insertCard(card)
+                        }
+
+                        navController.popBackStack()
+
+                        SnackbarService.showSnackbar(
+                            message = "Card ${if (cardId != null) "updated" else "saved"}",
+                            scope = scope
+                        )
+                    },
+                    text = {
+                        if (cardId != null) {
+                            Text("Update")
+                        } else {
+                            Text("Save")
+                        }
+                    },
+                    icon = { Icon(Icons.Filled.Save, contentDescription = "Save card") },
+                    containerColor = if (isValid) MaterialTheme.colorScheme.primary else Color.Gray,
+                    contentColor = if (isValid) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(
+                        alpha = 0.38f
+                    )
+                )
+            }
         }
-    }) { innerPadding ->
+    ) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {

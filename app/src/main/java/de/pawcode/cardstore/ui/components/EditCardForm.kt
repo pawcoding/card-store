@@ -110,11 +110,22 @@ fun EditCardForm(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = "Barcode Type:",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Text(
+                    text = "Barcode Type:",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                if (card.cardNumber != "" && !card.barcodeFormat.isValueValid(card.cardNumber)) {
+                    Text(
+                        text = "Invalid barcode format",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
 
             var expanded by remember { mutableStateOf(false) }
             Box {
