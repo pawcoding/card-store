@@ -63,12 +63,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     val cards by viewModel.allCards.collectAsState(initial = emptyList())
 
     var sortMenuExpanded by remember { mutableStateOf(false) }
-    var sortBy by remember { mutableStateOf(SortAttribute.ALPHABETICALLY) }
-    val storedSortOrder by preferencesManager.sortAttribute.collectAsState(initial = SortAttribute.ALPHABETICALLY)
-
-    LaunchedEffect(storedSortOrder) {
-        sortBy = storedSortOrder
-    }
+    val sortBy by preferencesManager.sortAttribute.collectAsState(initial = null)
 
     var showCardSheet by remember { mutableStateOf<CardEntity?>(null) }
     val cardSheetState = rememberModalBottomSheetState()
@@ -84,7 +79,9 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
             SortAttribute.ALPHABETICALLY -> cards.sortedBy { it.storeName }
             SortAttribute.RECENTLY_USED -> cards.sortedByDescending { it.lastUsed }
             SortAttribute.MOST_USED -> cards.sortedByDescending { it.useCount }
-        })
+            else -> null
+        }
+    )
 
     LaunchedEffect(sortBy) {
         listState.scrollToItem(0)
@@ -94,7 +91,6 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
         scope.launch {
             preferencesManager.saveSortAttribute(sortAttribute)
         }
-        sortBy = sortAttribute
         sortMenuExpanded = false
     }
 
@@ -154,15 +150,17 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
-            CardsListComponent(
-                cards = sortedCards,
-                listState = listState,
-                onCardClicked = { card ->
-                    viewModel.addUsage(card)
-                    showCardSheet = card
-                },
-                onCardLongPressed = { showCardOptionSheet = it }
-            )
+            sortedCards?.let {
+                CardsListComponent(
+                    cards = it,
+                    listState = listState,
+                    onCardClicked = { card ->
+                        viewModel.addUsage(card)
+                        showCardSheet = card
+                    },
+                    onCardLongPressed = { showCardOptionSheet = it }
+                )
+            }
 
             showCardSheet?.let {
                 ModalBottomSheet(
