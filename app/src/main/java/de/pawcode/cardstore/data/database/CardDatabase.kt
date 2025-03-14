@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import de.pawcode.cardstore.data.database.daos.CardDao
+import de.pawcode.cardstore.data.database.entities.CardEntity
 
 @Database(entities = [CardEntity::class], version = 1, exportSchema = false)
 abstract class CardDatabase : RoomDatabase() {

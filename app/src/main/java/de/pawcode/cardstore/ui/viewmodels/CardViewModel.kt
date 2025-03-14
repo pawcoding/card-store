@@ -3,8 +3,8 @@ package de.pawcode.cardstore.ui.viewmodels
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import de.pawcode.cardstore.data.database.CardEntity
-import de.pawcode.cardstore.data.repository.CardRepository
+import de.pawcode.cardstore.data.database.entities.CardEntity
+import de.pawcode.cardstore.data.database.repositories.CardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch

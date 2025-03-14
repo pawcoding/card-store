@@ -28,7 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import de.pawcode.cardstore.data.database.emptyCard
+import de.pawcode.cardstore.data.database.entities.emptyCard
 import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.navigation.Screen
 import de.pawcode.cardstore.ui.components.AppBar

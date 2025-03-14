@@ -10,8 +10,8 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import de.pawcode.cardstore.data.database.CardEntity
-import de.pawcode.cardstore.data.database.EXAMPLE_CARD
+import de.pawcode.cardstore.data.database.entities.CardEntity
+import de.pawcode.cardstore.data.database.entities.EXAMPLE_CARD
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

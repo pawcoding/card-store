@@ -1,4 +1,4 @@
-package de.pawcode.cardstore.data.database
+package de.pawcode.cardstore.data.database.entities
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb

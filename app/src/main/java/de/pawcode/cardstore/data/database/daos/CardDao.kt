@@ -1,4 +1,4 @@
-package de.pawcode.cardstore.data.database
+package de.pawcode.cardstore.data.database.daos
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import de.pawcode.cardstore.data.database.entities.CardEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
