@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_CARD
-import de.pawcode.cardstore.ui.utils.isLightColor
+import de.pawcode.cardstore.utils.isLightColor
 
 @Composable
 fun CardComponent(card: CardEntity, onClick: () -> Unit, onLongPress: () -> Unit) {

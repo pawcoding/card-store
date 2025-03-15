@@ -1,4 +1,4 @@
-package de.pawcode.cardstore.ui.components
+package de.pawcode.cardstore.ui.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext

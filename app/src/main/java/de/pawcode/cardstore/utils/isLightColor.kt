@@ -1,4 +1,4 @@
-package de.pawcode.cardstore.ui.utils
+package de.pawcode.cardstore.utils
 
 import androidx.compose.ui.graphics.Color
 

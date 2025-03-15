@@ -41,8 +41,9 @@ import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.database.entities.emptyCard
 import de.pawcode.cardstore.ui.dialogs.ColorPickerDialog
-import de.pawcode.cardstore.ui.utils.isLightColor
-import de.pawcode.cardstore.ui.utils.mapBarcodeFormat
+import de.pawcode.cardstore.ui.utils.BarcodeScanner
+import de.pawcode.cardstore.utils.isLightColor
+import de.pawcode.cardstore.utils.mapBarcodeFormat
 
 @Composable
 fun EditCardForm(

@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import com.simonsickle.compose.barcodes.Barcode
 import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_CARD
-import de.pawcode.cardstore.ui.utils.calculateBarcodeAspectRatio
-import de.pawcode.cardstore.ui.utils.isLightColor
+import de.pawcode.cardstore.utils.calculateBarcodeAspectRatio
+import de.pawcode.cardstore.utils.isLightColor
 
 @Composable
 fun ViewCardSheet(card: CardEntity) {

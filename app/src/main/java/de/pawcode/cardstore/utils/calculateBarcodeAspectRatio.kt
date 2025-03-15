@@ -1,4 +1,4 @@
-package de.pawcode.cardstore.ui.utils
+package de.pawcode.cardstore.utils
 
 import com.simonsickle.compose.barcodes.BarcodeType
 
