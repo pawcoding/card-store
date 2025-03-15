@@ -10,23 +10,23 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 class CardViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = CardRepository(application)
-    val allCards = repository.allCards
+    private val cardRepository = CardRepository(application)
+    val allCards = cardRepository.allCards
 
     fun getCardById(id: String?): Flow<CardEntity?> = flow {
         if (id == null) {
             emit(null)
         } else {
-            repository.getCardById(id).collect { emit(it) }
+            cardRepository.getCardById(id).collect { emit(it) }
         }
     }
 
     fun insertCard(card: CardEntity) = viewModelScope.launch {
-        repository.insertCard(card)
+        cardRepository.insertCard(card)
     }
 
     fun updateCard(card: CardEntity) = viewModelScope.launch {
-        repository.updateCard(card)
+        cardRepository.updateCard(card)
     }
 
     fun addUsage(card: CardEntity) = viewModelScope.launch {
@@ -39,6 +39,6 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun deleteCard(card: CardEntity) = viewModelScope.launch {
-        repository.deleteCard(card)
+        cardRepository.deleteCard(card)
     }
 }

@@ -185,7 +185,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                                 label = "Edit card",
                                 icon = Icons.Filled.Edit,
                                 onClick = {
-                                    navController.navigate(Screen.AddEditCard.route + "?cardId=${showCardOptionSheet!!.id}")
+                                    navController.navigate(Screen.AddEditCard.route + "?cardId=${showCardOptionSheet!!.cardId}")
                                     showCardOptionSheet = null
                                 }
                             ),

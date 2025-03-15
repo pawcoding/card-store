@@ -7,7 +7,7 @@ import de.pawcode.cardstore.data.database.entities.CardEntity
 import kotlinx.coroutines.flow.Flow
 
 class CardRepository(context: Context) {
-    private val cardDao: CardDao = CardDatabase.Companion.getDatabase(context).cardDao()
+    private val cardDao: CardDao = CardDatabase.getDatabase(context).cardDao()
 
     val allCards: Flow<List<CardEntity>> = cardDao.getAll()
 

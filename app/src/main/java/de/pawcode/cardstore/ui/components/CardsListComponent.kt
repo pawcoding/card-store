@@ -50,12 +50,18 @@ fun CardsListComponent(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(
-                items = cards, key = { card -> card.id }) { card ->
-                CardComponent(card = card, onClick = {
-                    onCardClicked(card)
-                }, onLongPress = {
-                    onCardLongPressed(card)
-                })
+                items = cards,
+                key = { card -> card.cardId }
+            ) { card ->
+                CardComponent(
+                    card = card,
+                    onClick = {
+                        onCardClicked(card)
+                    },
+                    onLongPress = {
+                        onCardLongPressed(card)
+                    }
+                )
             }
         }
     }
@@ -68,8 +74,8 @@ fun PreviewCardsListComponent() {
     CardsListComponent(
         cards = listOf(
             EXAMPLE_CARD,
-            EXAMPLE_CARD.copy(id = Uuid.random().toString()),
-            EXAMPLE_CARD.copy(id = Uuid.random().toString())
+            EXAMPLE_CARD.copy(cardId = Uuid.random().toString()),
+            EXAMPLE_CARD.copy(cardId = Uuid.random().toString())
         ),
         listState = rememberLazyGridState(),
         onCardClicked = {},
