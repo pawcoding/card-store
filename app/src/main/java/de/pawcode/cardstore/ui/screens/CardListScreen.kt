@@ -39,11 +39,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.pawcode.cardstore.data.database.entities.CardEntity
+import de.pawcode.cardstore.data.database.entities.emptyLabel
 import de.pawcode.cardstore.data.enums.SortAttribute
 import de.pawcode.cardstore.data.managers.PreferencesManager
 import de.pawcode.cardstore.navigation.Screen
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.CardsListComponent
+import de.pawcode.cardstore.ui.components.LabelsListComponent
 import de.pawcode.cardstore.ui.dialogs.ConfirmDialog
 import de.pawcode.cardstore.ui.sheets.Option
 import de.pawcode.cardstore.ui.sheets.OptionSheet
@@ -61,6 +63,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     val scope = rememberCoroutineScope()
 
     val cards by viewModel.allCards.collectAsState(initial = emptyList())
+    val labels by viewModel.allLabels.collectAsState(initial = emptyList())
 
     var sortMenuExpanded by remember { mutableStateOf(false) }
     val sortBy by preferencesManager.sortAttribute.collectAsState(initial = null)
@@ -83,7 +86,9 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
         }
     )
 
-    LaunchedEffect(sortBy) {
+    var selectedLabel by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(sortBy, selectedLabel) {
         listState.scrollToItem(0)
     }
 
@@ -148,8 +153,31 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
             icon = { Icon(Icons.Filled.Add, contentDescription = "Add new card") })
     }) { innerPadding ->
         Column(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(horizontal = 8.dp)
         ) {
+            Box(
+                modifier = Modifier.padding(vertical = 8.dp)
+            ) {
+                LabelsListComponent(
+                    labels = labels,
+                    selected = selectedLabel,
+                    onLabelClick = { label ->
+                        if (selectedLabel == label.labelId) {
+                            selectedLabel = null
+                        } else {
+                            selectedLabel = label.labelId
+                        }
+                    },
+                    onEdit = {
+                        viewModel.insertLabel(
+                            emptyLabel().copy(name = "Test label")
+                        )
+                    }
+                )
+            }
+
             sortedCards?.let {
                 CardsListComponent(
                     cards = it,

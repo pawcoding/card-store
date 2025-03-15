@@ -4,14 +4,19 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import de.pawcode.cardstore.data.database.entities.CardEntity
+import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.database.repositories.CardRepository
+import de.pawcode.cardstore.data.database.repositories.LabelRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 class CardViewModel(application: Application) : AndroidViewModel(application) {
     private val cardRepository = CardRepository(application)
+    private val labelRepository = LabelRepository(application)
+
     val allCards = cardRepository.allCards
+    val allLabels = labelRepository.allLabels
 
     fun getCardById(id: String?): Flow<CardEntity?> = flow {
         if (id == null) {
@@ -23,6 +28,10 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
 
     fun insertCard(card: CardEntity) = viewModelScope.launch {
         cardRepository.insertCard(card)
+    }
+
+    fun insertLabel(label: LabelEntity) = viewModelScope.launch {
+        labelRepository.insertLabel(label)
     }
 
     fun updateCard(card: CardEntity) = viewModelScope.launch {
