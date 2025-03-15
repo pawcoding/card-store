@@ -35,6 +35,10 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
         labelRepository.insertLabel(label)
     }
 
+    fun addLabelsToCard(cardId: String, labelIds: List<String>) = viewModelScope.launch {
+        cardRepository.addLabelsToCard(cardId, labelIds)
+    }
+
     fun updateCard(card: CardEntity) = viewModelScope.launch {
         cardRepository.updateCard(card)
     }
@@ -54,5 +58,9 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
 
     fun deleteLabel(label: LabelEntity) = viewModelScope.launch {
         labelRepository.deleteLabel(label)
+    }
+
+    fun removeLabelsFromCard(cardId: String, labelIds: List<String>) = viewModelScope.launch {
+        cardRepository.removeLabelsFromCard(cardId, labelIds)
     }
 }

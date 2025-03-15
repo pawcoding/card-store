@@ -34,6 +34,9 @@ import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.EditCardForm
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
+import de.pawcode.cardstore.utils.classifyLabelsForUpdate
+import de.pawcode.cardstore.utils.hasCardChanged
+import de.pawcode.cardstore.utils.isCardValid
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalMaterial3Api::class)
@@ -44,29 +47,16 @@ fun AddEditCardScreen(
     val scope = rememberCoroutineScope()
 
     val labels by viewModel.allLabels.collectAsState(initial = emptyList())
-    val initialCard by viewModel.getCardById(cardId).collectAsState(initial = emptyCardWithLabels())
+    val initialCard by viewModel.getCardById(cardId).collectAsState(initial = null)
     var card by remember { mutableStateOf(initialCard ?: emptyCardWithLabels()) }
 
     LaunchedEffect(initialCard) {
         card = initialCard ?: emptyCardWithLabels()
     }
 
-    val isValid by remember {
-        derivedStateOf {
-            if (card.card.storeName.isEmpty() || card.card.cardNumber.isEmpty()) {
-                false
-            }
-
-            card.card.barcodeFormat.isValueValid(card.card.cardNumber)
-        }
-    }
+    val isValid by remember { derivedStateOf { isCardValid(card.card) } }
     val hasChanges by remember {
-        derivedStateOf {
-            card.card.storeName != (initialCard?.card?.storeName)
-                    || card.card.cardNumber != (initialCard?.card?.cardNumber)
-                    || card.card.color != (initialCard?.card?.color)
-                    || card.card.barcodeFormat != (initialCard?.card?.barcodeFormat)
-        }
+        derivedStateOf { initialCard == null || hasCardChanged(initialCard!!, card) }
     }
 
     Scaffold(
@@ -94,10 +84,23 @@ fun AddEditCardScreen(
                             return@ExtendedFloatingActionButton
                         }
 
-                        if (cardId != null) {
+                        if (initialCard != null) {
                             viewModel.updateCard(card.card)
+
+                            val (labelsToAdd, labelsToRemove) = classifyLabelsForUpdate(
+                                initialCard!!.labels,
+                                card.labels
+                            )
+                            viewModel.removeLabelsFromCard(
+                                initialCard!!.card.cardId,
+                                labelsToRemove
+                            )
+                            viewModel.addLabelsToCard(initialCard!!.card.cardId, labelsToAdd)
                         } else {
                             viewModel.insertCard(card.card)
+                            viewModel.addLabelsToCard(
+                                card.card.cardId,
+                                card.labels.map { it.labelId })
                         }
 
                         navController.popBackStack()
