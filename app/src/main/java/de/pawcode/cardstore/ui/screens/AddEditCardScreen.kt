@@ -29,7 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import de.pawcode.cardstore.data.database.entities.emptyCard
+import de.pawcode.cardstore.data.database.classes.emptyCardWithLabels
 import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.EditCardForm
@@ -43,26 +43,29 @@ fun AddEditCardScreen(
 ) {
     val scope = rememberCoroutineScope()
 
-    val initialCard by viewModel.getCardById(cardId).collectAsState(initial = emptyCard())
+    val initialCard by viewModel.getCardById(cardId).collectAsState(initial = emptyCardWithLabels())
 
-    var card by remember { mutableStateOf(initialCard ?: emptyCard()) }
+    var card by remember { mutableStateOf(initialCard ?: emptyCardWithLabels()) }
 
     LaunchedEffect(initialCard) {
-        card = initialCard ?: emptyCard()
+        card = initialCard ?: emptyCardWithLabels()
     }
 
     val isValid by remember {
         derivedStateOf {
-            if (card.storeName.isEmpty() || card.cardNumber.isEmpty()) {
+            if (card.card.storeName.isEmpty() || card.card.cardNumber.isEmpty()) {
                 false
             }
 
-            card.barcodeFormat.isValueValid(card.cardNumber)
+            card.card.barcodeFormat.isValueValid(card.card.cardNumber)
         }
     }
     val hasChanges by remember {
         derivedStateOf {
-            card.storeName != (initialCard?.storeName) || card.cardNumber != (initialCard?.cardNumber) || card.color != (initialCard?.color) || card.barcodeFormat != (initialCard?.barcodeFormat)
+            card.card.storeName != (initialCard?.card?.storeName)
+                    || card.card.cardNumber != (initialCard?.card?.cardNumber)
+                    || card.card.color != (initialCard?.card?.color)
+                    || card.card.barcodeFormat != (initialCard?.card?.barcodeFormat)
         }
     }
 
@@ -92,9 +95,9 @@ fun AddEditCardScreen(
                         }
 
                         if (cardId != null) {
-                            viewModel.updateCard(card)
+                            viewModel.updateCard(card.card)
                         } else {
-                            viewModel.insertCard(card)
+                            viewModel.insertCard(card.card)
                         }
 
                         navController.popBackStack()

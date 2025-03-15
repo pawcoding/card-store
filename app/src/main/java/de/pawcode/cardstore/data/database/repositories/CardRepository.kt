@@ -12,7 +12,7 @@ class CardRepository(context: Context) {
 
     val allCards: Flow<List<CardWithLabels>> = cardDao.getAll()
 
-    fun getCardById(id: String): Flow<CardEntity?> {
+    fun getCardById(id: String): Flow<CardWithLabels?> {
         return cardDao.getById(id)
     }
 

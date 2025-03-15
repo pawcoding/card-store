@@ -26,6 +26,7 @@ interface CardDao {
     @Query("SELECT * FROM cards")
     fun getAll(): Flow<List<CardWithLabels>>
 
+    @Transaction
     @Query("SELECT * FROM cards WHERE card_id = :id")
-    fun getById(id: String): Flow<CardEntity?>
+    fun getById(id: String): Flow<CardWithLabels?>
 }

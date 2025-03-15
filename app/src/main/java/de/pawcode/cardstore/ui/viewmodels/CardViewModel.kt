@@ -19,7 +19,7 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
     val allCards: Flow<List<CardWithLabels>> = cardRepository.allCards
     val allLabels = labelRepository.allLabels
 
-    fun getCardById(id: String?): Flow<CardEntity?> = flow {
+    fun getCardById(id: String?): Flow<CardWithLabels?> = flow {
         if (id == null) {
             emit(null)
         } else {

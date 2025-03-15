@@ -38,8 +38,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.simonsickle.compose.barcodes.BarcodeType
-import de.pawcode.cardstore.data.database.entities.CardEntity
-import de.pawcode.cardstore.data.database.entities.emptyCard
+import de.pawcode.cardstore.data.database.classes.CardWithLabels
+import de.pawcode.cardstore.data.database.classes.emptyCardWithLabels
 import de.pawcode.cardstore.ui.dialogs.ColorPickerDialog
 import de.pawcode.cardstore.ui.utils.BarcodeScanner
 import de.pawcode.cardstore.utils.isLightColor
@@ -47,18 +47,18 @@ import de.pawcode.cardstore.utils.mapBarcodeFormat
 
 @Composable
 fun EditCardForm(
-    initialCard: CardEntity? = null,
-    onCardUpdate: (CardEntity) -> Unit
+    initialCard: CardWithLabels? = null,
+    onCardUpdate: (CardWithLabels) -> Unit
 ) {
     var showColorPicker by remember { mutableStateOf(false) }
     var showBarcodeScanner by remember { mutableStateOf(false) }
 
-    var card by remember { mutableStateOf(initialCard?.copy() ?: emptyCard()) }
-    val color by remember { derivedStateOf { Color(card.color) } }
+    var card by remember { mutableStateOf(initialCard?.copy() ?: emptyCardWithLabels()) }
+    val color by remember { derivedStateOf { Color(card.card.color) } }
     val isLightColor by remember { derivedStateOf { isLightColor(color) } }
 
     LaunchedEffect(initialCard) {
-        card = initialCard?.copy() ?: emptyCard()
+        card = initialCard?.copy() ?: emptyCardWithLabels()
     }
 
     LaunchedEffect(card) {
@@ -72,8 +72,8 @@ fun EditCardForm(
             .padding(16.dp)
     ) {
         OutlinedTextField(
-            value = card.storeName,
-            onValueChange = { card = card.copy(storeName = it) },
+            value = card.card.storeName,
+            onValueChange = { card = card.copy(card = card.card.copy(storeName = it)) },
             label = { Text("Store name") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
@@ -95,8 +95,8 @@ fun EditCardForm(
         }
 
         OutlinedTextField(
-            value = card.cardNumber,
-            onValueChange = { card = card.copy(cardNumber = it) },
+            value = card.card.cardNumber,
+            onValueChange = { card = card.copy(card = card.card.copy(cardNumber = it)) },
             label = { Text("Card number") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
@@ -120,7 +120,7 @@ fun EditCardForm(
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
-                if (card.cardNumber != "" && !card.barcodeFormat.isValueValid(card.cardNumber)) {
+                if (card.card.cardNumber != "" && !card.card.barcodeFormat.isValueValid(card.card.cardNumber)) {
                     Text(
                         text = "Invalid barcode format",
                         color = MaterialTheme.colorScheme.error
@@ -133,7 +133,7 @@ fun EditCardForm(
                 OutlinedButton(
                     onClick = { expanded = true }
                 ) {
-                    Text(card.barcodeFormat.name)
+                    Text(card.card.barcodeFormat.name)
                 }
                 DropdownMenu(
                     expanded = expanded,
@@ -141,7 +141,7 @@ fun EditCardForm(
                     BarcodeType.entries.forEach { type ->
                         DropdownMenuItem(
                             onClick = {
-                                card = card.copy(barcodeFormat = type)
+                                card = card.copy(card = card.card.copy(barcodeFormat = type))
                                 expanded = false
                             },
                             text = { Text(type.name) }
@@ -188,7 +188,7 @@ fun EditCardForm(
             color = color,
             onDismiss = { newColor ->
                 if (newColor != null) {
-                    card = card.copy(color = newColor.toArgb())
+                    card = card.copy(card = card.card.copy(color = newColor.toArgb()))
                 }
                 showColorPicker = false
             }
@@ -199,8 +199,10 @@ fun EditCardForm(
         BarcodeScanner(
             onBarcodeDetected = { barcode ->
                 card = card.copy(
-                    cardNumber = barcode.rawValue ?: "",
-                    barcodeFormat = mapBarcodeFormat(barcode.format)
+                    card = card.card.copy(
+                        cardNumber = barcode.rawValue ?: "",
+                        barcodeFormat = mapBarcodeFormat(barcode.format)
+                    )
                 )
 
                 showBarcodeScanner = false

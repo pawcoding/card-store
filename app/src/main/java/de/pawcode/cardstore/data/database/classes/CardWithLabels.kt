@@ -6,6 +6,7 @@ import androidx.room.Relation
 import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.database.entities.CardLabelCrossRef
 import de.pawcode.cardstore.data.database.entities.LabelEntity
+import de.pawcode.cardstore.data.database.entities.emptyCard
 
 data class CardWithLabels(
     @Embedded
@@ -18,3 +19,10 @@ data class CardWithLabels(
     )
     val labels: List<LabelEntity>
 )
+
+fun emptyCardWithLabels(): CardWithLabels {
+    return CardWithLabels(
+        emptyCard(),
+        listOf()
+    )
+}
