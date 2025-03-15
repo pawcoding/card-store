@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">CardStore</string>
+    <string name="card_add">Add card</string>
+    <string name="card_added">Card added</string>
+    <string name="card_barcode_type">Barcode Type:</string>
+    <string name="card_color">Color</string>
+    <string name="card_delete_description">Are you sure you want to delete the card? It cannot be restored.</string>
+    <string name="card_delete_title">Delete card</string>
+    <string name="card_edit">Edit card</string>
+    <string name="card_invalid_barcode_format">Invalid barcode format</string>
+    <string name="card_labels">Labels</string>
+    <string name="card_number">Card number</string>
+    <string name="card_pick_color">Pick a color</string>
+    <string name="card_save">Save card</string>
+    <string name="card_store_name">Store name</string>
+    <string name="card_updated">Card updated</string>
+    <string name="cards_list_empty">Create your first card</string>
+    <string name="cards_list_empty_filtered">No cards with this label</string>
+    <string name="cards_new">Add new card</string>
+    <string name="cards_sort">Sort cards</string>
+    <string name="common_back">Back</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_delete">Delete</string>
+    <string name="common_save">Save</string>
+    <string name="common_update">Update</string>
+    <string name="label_delete_description">Are you sure you want to delete the label? It cannot be restored.</string>
+    <string name="label_delete_title">Delete label</string>
+    <string name="label_edit">Edit label</string>
+    <string name="labels_edit">Edit labels</string>
+    <string name="labels_list_empty">Create your first label to categorize your cards</string>
+    <string name="labels_new">Add new label</string>
+    <string name="labels_none">No labels</string>
+    <string name="scan_barcode">Scan barcode</string>
+    <string name="sort_alphabetically">Alphabetically</string>
+    <string name="sort_most_used">Most used</string>
+    <string name="sort_recently_used">Recently used</string>
 </resources>

@@ -14,9 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_CARD
 import kotlin.uuid.ExperimentalUuidApi
@@ -38,7 +40,9 @@ fun CardsListComponent(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = if (isFiltered) "No cards with this label" else "Create your first card",
+                text = stringResource(
+                    if (isFiltered) R.string.cards_list_empty_filtered else R.string.cards_list_empty
+                ),
                 style = MaterialTheme.typography.headlineMedium,
                 textAlign = TextAlign.Center
             )

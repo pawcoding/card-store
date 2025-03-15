@@ -33,10 +33,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.database.entities.emptyLabel
 import de.pawcode.cardstore.ui.components.AppBar
@@ -64,12 +66,15 @@ fun FilterListScreen(
     Scaffold(
         topBar = {
             AppBar(
-                title = "Labels",
+                title = stringResource(R.string.card_labels),
                 navigationIcon = {
                     IconButton(
                         onClick = { navController.popBackStack() }
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.common_back)
+                        )
                     }
                 }
             )
@@ -81,8 +86,13 @@ fun FilterListScreen(
                         emptyLabel().copy(name = "Test label")
                     )
                 },
-                text = { Text("Add new label") },
-                icon = { Icon(Icons.Filled.Add, contentDescription = "Add new label") }
+                text = { Text(stringResource(R.string.labels_new)) },
+                icon = {
+                    Icon(
+                        Icons.Filled.Add,
+                        contentDescription = stringResource(R.string.labels_new)
+                    )
+                }
             )
         }
     ) { innerPadding ->
@@ -98,7 +108,7 @@ fun FilterListScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Create your first label to categorize your cards",
+                        text = stringResource(R.string.labels_list_empty),
                         style = MaterialTheme.typography.headlineMedium,
                         textAlign = TextAlign.Center
                     )
@@ -131,14 +141,14 @@ fun FilterListScreen(
                 OptionSheet(
                     listOf(
                         Option(
-                            label = "Edit label",
+                            label = stringResource(R.string.label_edit),
                             icon = Icons.Filled.Edit,
                             onClick = {
                                 showLabelOptionSheet = null
                             }
                         ),
                         Option(
-                            label = "Delete label",
+                            label = stringResource(R.string.label_delete_title),
                             icon = Icons.Filled.DeleteForever,
                             onClick = {
                                 openDeleteDialog = showLabelOptionSheet!!
@@ -159,8 +169,9 @@ fun FilterListScreen(
                         openDeleteDialog = null
                     }
                 },
-                dialogTitle = "Delete label",
-                dialogText = "Are you sure you want to delete the label? It cannot be restored.",
+                dialogTitle = stringResource(R.string.label_delete_title),
+                dialogText = stringResource(R.string.label_delete_description),
+                confirmText = stringResource(R.string.common_delete),
                 Icons.TwoTone.DeleteForever
             )
         }

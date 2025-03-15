@@ -8,7 +8,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import de.pawcode.cardstore.R
 
 @Composable
 fun ConfirmDialog(
@@ -16,6 +18,7 @@ fun ConfirmDialog(
     onConfirmation: () -> Unit,
     dialogTitle: String,
     dialogText: String,
+    confirmText: String,
     icon: ImageVector,
 ) {
     AlertDialog(
@@ -37,7 +40,7 @@ fun ConfirmDialog(
                     onConfirmation()
                 }
             ) {
-                Text("Confirm")
+                Text(confirmText)
             }
         },
         dismissButton = {
@@ -46,7 +49,7 @@ fun ConfirmDialog(
                     onDismissRequest()
                 }
             ) {
-                Text("Dismiss")
+                Text(stringResource(R.string.common_cancel))
             }
         }
     )
@@ -62,6 +65,7 @@ fun PreviewConfirmDialog() {
         onConfirmation = {},
         dialogTitle = "Example",
         dialogText = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam",
+        confirmText = "Confirm",
         Icons.TwoTone.AccountCircle
     )
 }

@@ -36,9 +36,11 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.enums.SortAttribute
 import de.pawcode.cardstore.data.managers.PreferencesManager
@@ -108,21 +110,25 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
 
     Scaffold(topBar = {
         AppBar(
-            title = "Card Store", actions = {
+            title = stringResource(R.string.app_name),
+            actions = {
                 Box(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     IconButton(
                         onClick = { sortMenuExpanded = !sortMenuExpanded }
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.Sort, contentDescription = "Sort cards")
+                        Icon(
+                            Icons.AutoMirrored.Filled.Sort,
+                            contentDescription = stringResource(R.string.cards_sort)
+                        )
                     }
                     DropdownMenu(
                         expanded = sortMenuExpanded,
                         onDismissRequest = { sortMenuExpanded = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Alphabetically") },
+                            text = { Text(stringResource(R.string.sort_alphabetically)) },
                             trailingIcon = {
                                 if (sortBy == SortAttribute.ALPHABETICALLY) {
                                     Icon(Icons.Filled.Check, contentDescription = null)
@@ -131,7 +137,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                             onClick = { updateSortAttribute(SortAttribute.ALPHABETICALLY) }
                         )
                         DropdownMenuItem(
-                            text = { Text("Recently used") },
+                            text = { Text(stringResource(R.string.sort_recently_used)) },
                             trailingIcon = {
                                 if (sortBy == SortAttribute.RECENTLY_USED) {
                                     Icon(Icons.Filled.Check, contentDescription = null)
@@ -140,7 +146,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                             onClick = { updateSortAttribute(SortAttribute.RECENTLY_USED) }
                         )
                         DropdownMenuItem(
-                            text = { Text("Most used") },
+                            text = { Text(stringResource(R.string.sort_most_used)) },
                             trailingIcon = {
                                 if (sortBy == SortAttribute.MOST_USED) {
                                     Icon(Icons.Filled.Check, contentDescription = null)
@@ -156,8 +162,13 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
             onClick = {
                 navController.navigate(Screen.AddEditCard.route)
             },
-            text = { Text("Add new card") },
-            icon = { Icon(Icons.Filled.Add, contentDescription = "Add new card") })
+            text = { Text(stringResource(R.string.cards_new)) },
+            icon = {
+                Icon(
+                    Icons.Filled.Add,
+                    contentDescription = stringResource(R.string.cards_new)
+                )
+            })
     }) { innerPadding ->
         Column(
             modifier = Modifier
@@ -216,7 +227,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                     OptionSheet(
                         listOf(
                             Option(
-                                label = "Edit card",
+                                label = stringResource(R.string.card_edit),
                                 icon = Icons.Filled.Edit,
                                 onClick = {
                                     navController.navigate(Screen.AddEditCard.route + "?cardId=${showCardOptionSheet!!.cardId}")
@@ -224,7 +235,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                                 }
                             ),
                             Option(
-                                label = "Delete card",
+                                label = stringResource(R.string.card_delete_title),
                                 icon = Icons.Filled.DeleteForever,
                                 onClick = {
                                     openDeleteDialog = showCardOptionSheet!!
@@ -245,8 +256,9 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                             openDeleteDialog = null
                         }
                     },
-                    dialogTitle = "Delete card",
-                    dialogText = "Are you sure you want to delete the card? It cannot be restored.",
+                    dialogTitle = stringResource(R.string.card_delete_title),
+                    dialogText = stringResource(R.string.card_delete_description),
+                    confirmText = stringResource(R.string.common_delete),
                     Icons.TwoTone.DeleteForever
                 )
             }

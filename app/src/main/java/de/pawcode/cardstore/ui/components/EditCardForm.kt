@@ -36,12 +36,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.simonsickle.compose.barcodes.BarcodeType
+import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.classes.CardWithLabels
 import de.pawcode.cardstore.data.database.classes.emptyCardWithLabels
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
@@ -82,7 +84,7 @@ fun EditCardForm(
         OutlinedTextField(
             value = card.card.storeName,
             onValueChange = { card = card.copy(card = card.card.copy(storeName = it)) },
-            label = { Text("Store name") },
+            label = { Text(stringResource(R.string.card_store_name)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -99,13 +101,13 @@ fun EditCardForm(
             onClick = { showBarcodeScanner = true },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Scan barcode")
+            Text(stringResource(R.string.scan_barcode))
         }
 
         OutlinedTextField(
             value = card.card.cardNumber,
             onValueChange = { card = card.copy(card = card.card.copy(cardNumber = it)) },
-            label = { Text("Card number") },
+            label = { Text(stringResource(R.string.card_number)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -123,14 +125,14 @@ fun EditCardForm(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Text(
-                    text = "Barcode Type:",
+                    text = stringResource(R.string.card_barcode_type),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
                 if (card.card.cardNumber != "" && !card.card.barcodeFormat.isValueValid(card.card.cardNumber)) {
                     Text(
-                        text = "Invalid barcode format",
+                        text = stringResource(R.string.card_invalid_barcode_format),
                         color = MaterialTheme.colorScheme.error
                     )
                 }
@@ -167,7 +169,7 @@ fun EditCardForm(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "Color:",
+                text = stringResource(R.string.card_color) + ":",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -184,7 +186,7 @@ fun EditCardForm(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Colorize,
-                    contentDescription = "Pick a color",
+                    contentDescription = stringResource(R.string.card_pick_color),
                     tint = if (isLightColor) Color.Black else Color.White
                 )
             }
@@ -199,7 +201,7 @@ fun EditCardForm(
             Icon(Icons.AutoMirrored.Filled.Label, contentDescription = null)
 
             Text(
-                text = "Labels",
+                text = stringResource(R.string.card_labels),
                 style = MaterialTheme.typography.bodyLarge,
             )
         }

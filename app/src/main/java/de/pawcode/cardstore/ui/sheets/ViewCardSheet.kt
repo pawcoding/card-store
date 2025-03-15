@@ -20,9 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.simonsickle.compose.barcodes.Barcode
+import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_CARD
 import de.pawcode.cardstore.utils.calculateBarcodeAspectRatio
@@ -71,7 +73,7 @@ fun ViewCardSheet(card: CardEntity) {
                 )
             }
         } else {
-            Text("Cannot display barcode")
+            Text(stringResource(R.string.card_invalid_barcode_format))
         }
 
         Text(

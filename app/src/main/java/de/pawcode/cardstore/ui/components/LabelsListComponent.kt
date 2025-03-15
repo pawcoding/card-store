@@ -17,8 +17,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
 import de.pawcode.cardstore.data.database.entities.LabelEntity
@@ -46,7 +48,7 @@ fun LabelsListComponent(
         ) {
             if (labels.isEmpty()) {
                 Text(
-                    text = "No labels",
+                    text = stringResource(R.string.labels_none),
                     style = MaterialTheme.typography.bodyLarge
                 )
             } else {
@@ -72,7 +74,7 @@ fun LabelsListComponent(
         ) {
             Icon(
                 imageVector = Icons.Filled.EditNote,
-                contentDescription = "Edit labels",
+                contentDescription = stringResource(R.string.labels_edit),
                 modifier = Modifier.size(32.dp)
             )
         }

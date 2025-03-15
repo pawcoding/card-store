@@ -27,8 +27,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.classes.emptyCardWithLabels
 import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.ui.components.AppBar
@@ -63,11 +65,14 @@ fun AddEditCardScreen(
         modifier = Modifier.imePadding(),
         topBar = {
             AppBar(
-                title = if (cardId != null) "Edit card" else "Add card",
+                title = stringResource(if (cardId != null) R.string.card_edit else R.string.card_add),
                 navigationIcon = {
                     IconButton(
                         onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.common_back)
+                        )
                     }
                 }
             )
@@ -78,6 +83,9 @@ fun AddEditCardScreen(
                 enter = slideInVertically(initialOffsetY = { it }),
                 exit = slideOutVertically(targetOffsetY = { it })
             ) {
+                val snackbarMessage =
+                    stringResource(if (cardId != null) R.string.card_updated else R.string.card_added)
+
                 ExtendedFloatingActionButton(
                     onClick = {
                         if (!isValid) {
@@ -106,18 +114,23 @@ fun AddEditCardScreen(
                         navController.popBackStack()
 
                         SnackbarService.showSnackbar(
-                            message = "Card ${if (cardId != null) "updated" else "saved"}",
+                            message = snackbarMessage,
                             scope = scope
                         )
                     },
                     text = {
                         if (cardId != null) {
-                            Text("Update")
+                            Text(stringResource(R.string.common_update))
                         } else {
-                            Text("Save")
+                            Text(stringResource(R.string.common_save))
                         }
                     },
-                    icon = { Icon(Icons.Filled.Save, contentDescription = "Save card") },
+                    icon = {
+                        Icon(
+                            Icons.Filled.Save,
+                            contentDescription = stringResource(R.string.card_save)
+                        )
+                    },
                     containerColor = if (isValid) MaterialTheme.colorScheme.primary else Color.Gray,
                     contentColor = if (isValid) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(
                         alpha = 0.38f
