@@ -18,6 +18,7 @@ import androidx.navigation.navArgument
 import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.ui.screens.AddEditCardScreen
 import de.pawcode.cardstore.ui.screens.CardListScreen
+import de.pawcode.cardstore.ui.screens.FilterListScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -56,6 +57,9 @@ fun Navigation() {
                 val cardId = entry.arguments?.getString("cardId")
                 AddEditCardScreen(navController = navController, cardId = cardId)
             }
+            composable(Screen.FilterList.route) {
+                FilterListScreen(navController = navController)
+            }
         }
     }
 }
@@ -63,5 +67,6 @@ fun Navigation() {
 sealed class Screen(val route: String) {
     object CardList : Screen("card_list")
     object AddEditCard : Screen("add_edit_card")
+    object FilterList : Screen("filter_list")
 }
 

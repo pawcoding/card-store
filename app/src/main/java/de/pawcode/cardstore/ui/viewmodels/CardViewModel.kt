@@ -50,4 +50,8 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
     fun deleteCard(card: CardEntity) = viewModelScope.launch {
         cardRepository.deleteCard(card)
     }
+
+    fun deleteLabel(label: LabelEntity) = viewModelScope.launch {
+        labelRepository.deleteLabel(label)
+    }
 }
