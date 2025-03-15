@@ -23,9 +23,14 @@
     <string name="common_delete">Delete</string>
     <string name="common_save">Save</string>
     <string name="common_update">Update</string>
+    <string name="label_add">Add label</string>
+    <string name="label_added">Label added</string>
     <string name="label_delete_description">Are you sure you want to delete the label? It cannot be restored.</string>
     <string name="label_delete_title">Delete label</string>
     <string name="label_edit">Edit label</string>
+    <string name="label_name">Label name</string>
+    <string name="label_save">Save label</string>
+    <string name="label_updated">Label updated</string>
     <string name="labels_edit">Edit labels</string>
     <string name="labels_list_empty">Create your first label to categorize your cards</string>
     <string name="labels_new">Add new label</string>

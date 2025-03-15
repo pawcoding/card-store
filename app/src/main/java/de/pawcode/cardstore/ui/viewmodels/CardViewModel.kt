@@ -27,6 +27,14 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun getLabelById(id: String?): Flow<LabelEntity?> = flow {
+        if (id == null) {
+            emit(null)
+        } else {
+            labelRepository.getLabelById(id).collect { emit(it) }
+        }
+    }
+
     fun insertCard(card: CardEntity) = viewModelScope.launch {
         cardRepository.insertCard(card)
     }
@@ -41,6 +49,10 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
 
     fun updateCard(card: CardEntity) = viewModelScope.launch {
         cardRepository.updateCard(card)
+    }
+
+    fun updateLabel(label: LabelEntity) = viewModelScope.launch {
+        labelRepository.updateLabel(label)
     }
 
     fun addUsage(card: CardEntity) = viewModelScope.launch {

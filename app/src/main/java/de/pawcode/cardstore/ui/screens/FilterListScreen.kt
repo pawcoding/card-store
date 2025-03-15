@@ -40,7 +40,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.entities.LabelEntity
-import de.pawcode.cardstore.data.database.entities.emptyLabel
+import de.pawcode.cardstore.navigation.Screen
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.dialogs.ConfirmDialog
 import de.pawcode.cardstore.ui.sheets.Option
@@ -82,9 +82,7 @@ fun FilterListScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = {
-                    viewModel.insertLabel(
-                        emptyLabel().copy(name = "Test label")
-                    )
+                    navController.navigate(Screen.EditLabel.route)
                 },
                 text = { Text(stringResource(R.string.labels_new)) },
                 icon = {
@@ -144,6 +142,7 @@ fun FilterListScreen(
                             label = stringResource(R.string.label_edit),
                             icon = Icons.Filled.Edit,
                             onClick = {
+                                navController.navigate(Screen.EditLabel.route + "?labelId=${it.labelId}")
                                 showLabelOptionSheet = null
                             }
                         ),

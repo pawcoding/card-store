@@ -24,9 +24,14 @@
     <string name="common_delete">Löschen</string>
     <string name="common_save">Speichern</string>
     <string name="common_update">Aktualisieren</string>
+    <string name="label_add">Label hinzufügen</string>
+    <string name="label_added">Label hinzugefügt</string>
     <string name="label_delete_description">Möchtest Du das Label wirklich löschen? Es kann nicht wiederhergestellt werden.</string>
     <string name="label_delete_title">Label löschen</string>
     <string name="label_edit">Label bearbeiten</string>
+    <string name="label_name">Name</string>
+    <string name="label_save">Label speichern</string>
+    <string name="label_updated">Label aktualisiert</string>
     <string name="labels_edit">Labels bearbeiten</string>
     <string name="labels_list_empty">Erstelle dein erstes Label, um deine Karten zu kategorisieren</string>
     <string name="labels_new">Neues Label hinzufügen</string>

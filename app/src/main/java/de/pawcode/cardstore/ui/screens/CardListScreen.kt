@@ -230,7 +230,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                                 label = stringResource(R.string.card_edit),
                                 icon = Icons.Filled.Edit,
                                 onClick = {
-                                    navController.navigate(Screen.AddEditCard.route + "?cardId=${showCardOptionSheet!!.cardId}")
+                                    navController.navigate(Screen.AddEditCard.route + "?cardId=${it.cardId}")
                                     showCardOptionSheet = null
                                 }
                             ),
