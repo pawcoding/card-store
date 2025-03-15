@@ -150,7 +150,7 @@ fun FilterListScreen(
                             label = stringResource(R.string.label_delete_title),
                             icon = Icons.Filled.DeleteForever,
                             onClick = {
-                                openDeleteDialog = showLabelOptionSheet!!
+                                openDeleteDialog = it
                                 showLabelOptionSheet = null
                             }
                         )

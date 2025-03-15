@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.EditNote
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -64,16 +66,24 @@ fun LabelsListComponent(
                                 style = MaterialTheme.typography.bodyLarge
                             )
                         },
+                        leadingIcon = {
+                            if (chipSelected) {
+                                Icon(
+                                    Icons.Filled.Check,
+                                    contentDescription = null
+                                )
+                            }
+                        }
                     )
                 }
             }
         }
 
-        IconButton(
+        FilledTonalIconButton(
             onClick = { onEdit() }
         ) {
             Icon(
-                imageVector = Icons.Filled.EditNote,
+                imageVector = if (labels.isNotEmpty()) Icons.Filled.EditNote else Icons.Filled.Add,
                 contentDescription = stringResource(R.string.labels_edit),
                 modifier = Modifier.size(32.dp)
             )

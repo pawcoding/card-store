@@ -4,11 +4,12 @@
     <string name="card_add">Karte hinzufügen</string>
     <string name="card_added">Karte hinzugefügt</string>
     <string name="card_barcode_type">Barcode Typ:</string>
+    <string name="card_code">Code</string>
     <string name="card_color">Farbe</string>
     <string name="card_delete_description">Möchtest du die Karte wirklich löschen? Sie kann nicht wiederhergestellt werden.</string>
     <string name="card_delete_title">Karte löschen</string>
     <string name="card_edit">Karte bearbeiten</string>
-    <string name="card_invalid_barcode_format">Ungültiges Barcode-Format</string>
+    <string name="card_invalid_barcode_format">Ungültiges Format</string>
     <string name="card_labels">Labels</string>
     <string name="card_number">Kartennummer</string>
     <string name="card_pick_color">Wähle eine Farbe</string>
@@ -22,6 +23,7 @@
     <string name="common_back">Zurück</string>
     <string name="common_cancel">Abbrechen</string>
     <string name="common_delete">Löschen</string>
+    <string name="common_required">erforderlich</string>
     <string name="common_save">Speichern</string>
     <string name="common_update">Aktualisieren</string>
     <string name="label_add">Label hinzufügen</string>

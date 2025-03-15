@@ -14,13 +14,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Label
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Colorize
-import androidx.compose.material3.DropdownMenu
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.QrCode2
+import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -53,7 +61,7 @@ import de.pawcode.cardstore.ui.utils.BarcodeScanner
 import de.pawcode.cardstore.utils.isLightColor
 import de.pawcode.cardstore.utils.mapBarcodeFormat
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun EditCardForm(
     initialCard: CardWithLabels? = null,
@@ -66,6 +74,10 @@ fun EditCardForm(
     var card by remember { mutableStateOf(initialCard?.copy() ?: emptyCardWithLabels()) }
     val color by remember { derivedStateOf { Color(card.card.color) } }
     val isLightColor by remember { derivedStateOf { isLightColor(color) } }
+
+    val formatValid by remember {
+        derivedStateOf { card.card.cardNumber == "" || card.card.barcodeFormat.isValueValid(card.card.cardNumber) }
+    }
 
     LaunchedEffect(initialCard) {
         card = initialCard?.copy() ?: emptyCardWithLabels()
@@ -81,10 +93,28 @@ fun EditCardForm(
             .fillMaxWidth()
             .padding(16.dp)
     ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(
+                Icons.Filled.Storefront,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(32.dp)
+            )
+
+            Text(
+                text = stringResource(R.string.card_store_name),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
+
         OutlinedTextField(
             value = card.card.storeName,
             onValueChange = { card = card.copy(card = card.card.copy(storeName = it)) },
-            label = { Text(stringResource(R.string.card_store_name)) },
+            label = { Text(stringResource(R.string.card_store_name) + "*") },
+            supportingText = { Text("*" + stringResource(R.string.common_required)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -95,60 +125,94 @@ fun EditCardForm(
             )
         )
 
-        HorizontalDivider()
-
-        OutlinedButton(
-            onClick = { showBarcodeScanner = true },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(stringResource(R.string.scan_barcode))
-        }
-
-        OutlinedTextField(
-            value = card.card.cardNumber,
-            onValueChange = { card = card.copy(card = card.card.copy(cardNumber = it)) },
-            label = { Text(stringResource(R.string.card_number)) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
-            )
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp),
         )
 
         Row(
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp),
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text(
-                    text = stringResource(R.string.card_barcode_type),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface
+                Icon(
+                    Icons.Filled.QrCode2,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(32.dp)
                 )
 
-                if (card.card.cardNumber != "" && !card.card.barcodeFormat.isValueValid(card.card.cardNumber)) {
-                    Text(
-                        text = stringResource(R.string.card_invalid_barcode_format),
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
+                Text(
+                    text = stringResource(R.string.card_code),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
             }
 
+            OutlinedButton(
+                onClick = { showBarcodeScanner = true },
+            ) {
+                Icon(
+                    Icons.Filled.QrCodeScanner,
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+
+                Text(stringResource(R.string.scan_barcode))
+            }
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            OutlinedTextField(
+                value = card.card.cardNumber,
+                onValueChange = { card = card.copy(card = card.card.copy(cardNumber = it)) },
+                label = { Text(stringResource(R.string.card_number) + "*") },
+                supportingText = { Text("*" + stringResource(R.string.common_required)) },
+                modifier = Modifier.weight(3f),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                )
+            )
+
             var expanded by remember { mutableStateOf(false) }
-            Box {
-                OutlinedButton(
-                    onClick = { expanded = true }
-                ) {
-                    Text(card.card.barcodeFormat.name)
-                }
-                DropdownMenu(
+            ExposedDropdownMenuBox(
+                modifier = Modifier.weight(2f),
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded }
+            ) {
+                OutlinedTextField(
+                    value = card.card.barcodeFormat.name,
+                    onValueChange = { },
+                    label = { Text(stringResource(R.string.card_barcode_type)) },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(
+                            expanded = expanded
+                        )
+                    },
+                    modifier = Modifier.menuAnchor(MenuAnchorType.SecondaryEditable, true),
+                    readOnly = true,
+                    singleLine = true,
+                    isError = !formatValid,
+                    supportingText = {
+                        if (!formatValid) {
+                            Text(
+                                text = stringResource(R.string.card_invalid_barcode_format),
+                            )
+                        }
+                    }
+                )
+                ExposedDropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false }) {
-                    BarcodeType.entries.forEach { type ->
+                    onDismissRequest = { expanded = false }
+                ) {
+                    BarcodeType.entries.sortedBy { it.name }.forEach { type ->
                         DropdownMenuItem(
                             onClick = {
                                 card = card.copy(card = card.card.copy(barcodeFormat = type))
@@ -161,24 +225,37 @@ fun EditCardForm(
             }
         }
 
-        HorizontalDivider()
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp),
+        )
 
         Row(
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = stringResource(R.string.card_color) + ":",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Icon(
+                    Icons.Filled.Palette,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(32.dp)
+                )
+
+                Text(
+                    text = stringResource(R.string.card_color),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
 
             Box(
                 modifier = Modifier
                     .size(44.dp)
                     .clip(
-                        MaterialTheme.shapes.medium
+                        MaterialTheme.shapes.small
                     )
                     .background(color)
                     .clickable { showColorPicker = true },
@@ -192,13 +269,20 @@ fun EditCardForm(
             }
         }
 
-        HorizontalDivider()
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp),
+        )
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Icon(Icons.AutoMirrored.Filled.Label, contentDescription = null)
+            Icon(
+                Icons.AutoMirrored.Filled.Label,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(32.dp)
+            )
 
             Text(
                 text = stringResource(R.string.card_labels),
@@ -230,6 +314,14 @@ fun EditCardForm(
                             style = MaterialTheme.typography.bodyLarge
                         )
                     },
+                    leadingIcon = {
+                        if (chipSelected) {
+                            Icon(
+                                Icons.Filled.Check,
+                                contentDescription = null
+                            )
+                        }
+                    }
                 )
             }
         }
