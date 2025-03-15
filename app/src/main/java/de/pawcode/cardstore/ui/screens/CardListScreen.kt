@@ -27,6 +27,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,8 +62,10 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     val preferencesManager = remember { PreferencesManager(context) }
     val scope = rememberCoroutineScope()
 
-    val cards by viewModel.allCards.collectAsState(initial = emptyList())
+    val cardsWithLabels by viewModel.allCards.collectAsState(initial = emptyList())
     val labels by viewModel.allLabels.collectAsState(initial = emptyList())
+
+    var selectedLabel by remember { mutableStateOf<String?>(null) }
 
     var sortMenuExpanded by remember { mutableStateOf(false) }
     val sortBy by preferencesManager.sortAttribute.collectAsState(initial = null)
@@ -76,6 +79,13 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     var openDeleteDialog by remember { mutableStateOf<CardEntity?>(null) }
 
     val listState = rememberLazyGridState()
+    val cards by remember {
+        derivedStateOf {
+            cardsWithLabels
+                .filter { selectedLabel == null || it.labels.any { it.labelId == selectedLabel } }
+                .map { it.card }
+        }
+    }
     val sortedCards by rememberUpdatedState(
         when (sortBy) {
             SortAttribute.ALPHABETICALLY -> cards.sortedBy { it.storeName }
@@ -84,8 +94,6 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
             else -> null
         }
     )
-
-    var selectedLabel by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(sortBy, selectedLabel) {
         listState.scrollToItem(0)

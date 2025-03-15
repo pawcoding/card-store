@@ -3,6 +3,7 @@ package de.pawcode.cardstore.ui.viewmodels
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import de.pawcode.cardstore.data.database.classes.CardWithLabels
 import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.database.repositories.CardRepository
@@ -15,7 +16,7 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
     private val cardRepository = CardRepository(application)
     private val labelRepository = LabelRepository(application)
 
-    val allCards = cardRepository.allCards
+    val allCards: Flow<List<CardWithLabels>> = cardRepository.allCards
     val allLabels = labelRepository.allLabels
 
     fun getCardById(id: String?): Flow<CardEntity?> = flow {
