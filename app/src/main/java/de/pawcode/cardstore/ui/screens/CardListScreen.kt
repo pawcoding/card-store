@@ -186,6 +186,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
             sortedCards?.let {
                 CardsListComponent(
                     cards = it,
+                    isFiltered = selectedLabel != null,
                     listState = listState,
                     onCardClicked = { card ->
                         viewModel.addUsage(card)

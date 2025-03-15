@@ -44,19 +44,26 @@ fun LabelsListComponent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            labels.forEach { label ->
-                val chipSelected = label.labelId == selected
-                FilterChip(
-                    selected = chipSelected,
-                    onClick = { onLabelClick(label) },
-                    label = {
-                        Text(
-                            modifier = Modifier.padding(vertical = 8.dp),
-                            text = label.name,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    },
+            if (labels.isEmpty()) {
+                Text(
+                    text = "No labels",
+                    style = MaterialTheme.typography.bodyLarge
                 )
+            } else {
+                labels.forEach { label ->
+                    val chipSelected = label.labelId == selected
+                    FilterChip(
+                        selected = chipSelected,
+                        onClick = { onLabelClick(label) },
+                        label = {
+                            Text(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                text = label.name,
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        },
+                    )
+                }
             }
         }
 
@@ -78,6 +85,17 @@ fun PreviewLabelsListComponent() {
     LabelsListComponent(
         labels = EXAMPLE_LABEL_LIST,
         selected = EXAMPLE_LABEL.labelId,
+        onLabelClick = {},
+        onEdit = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewLabelsListComponentEmpty() {
+    LabelsListComponent(
+        labels = listOf(),
+        selected = null,
         onLabelClick = {},
         onEdit = {}
     )

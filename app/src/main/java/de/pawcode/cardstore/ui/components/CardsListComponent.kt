@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.pawcode.cardstore.data.database.entities.CardEntity
@@ -24,6 +25,7 @@ import kotlin.uuid.Uuid
 @Composable
 fun CardsListComponent(
     cards: List<CardEntity>,
+    isFiltered: Boolean,
     listState: LazyGridState,
     onCardClicked: (CardEntity) -> Unit,
     onCardLongPressed: (CardEntity) -> Unit,
@@ -36,8 +38,9 @@ fun CardsListComponent(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Create your first card",
-                style = MaterialTheme.typography.headlineMedium
+                text = if (isFiltered) "No cards with this label" else "Create your first card",
+                style = MaterialTheme.typography.headlineMedium,
+                textAlign = TextAlign.Center
             )
         }
     } else {
@@ -66,7 +69,7 @@ fun CardsListComponent(
 }
 
 @OptIn(ExperimentalUuidApi::class)
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewCardsListComponent() {
     CardsListComponent(
@@ -75,17 +78,31 @@ fun PreviewCardsListComponent() {
             EXAMPLE_CARD.copy(cardId = Uuid.random().toString()),
             EXAMPLE_CARD.copy(cardId = Uuid.random().toString())
         ),
+        isFiltered = false,
         listState = rememberLazyGridState(),
         onCardClicked = {},
         onCardLongPressed = {}
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewCardsListComponentEmpty() {
     CardsListComponent(
         cards = listOf(),
+        isFiltered = false,
+        listState = rememberLazyGridState(),
+        onCardClicked = {},
+        onCardLongPressed = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewCardsListComponentEmptyFiltered() {
+    CardsListComponent(
+        cards = listOf(),
+        isFiltered = true,
         listState = rememberLazyGridState(),
         onCardClicked = {},
         onCardLongPressed = {}
