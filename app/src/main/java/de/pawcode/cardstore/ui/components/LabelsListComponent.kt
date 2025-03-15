@@ -4,6 +4,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
@@ -19,9 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL
+import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
 import de.pawcode.cardstore.data.database.entities.LabelEntity
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @Composable
 fun LabelsListComponent(
@@ -51,6 +51,7 @@ fun LabelsListComponent(
                     onClick = { onLabelClick(label) },
                     label = {
                         Text(
+                            modifier = Modifier.padding(vertical = 8.dp),
                             text = label.name,
                             style = MaterialTheme.typography.bodyLarge
                         )
@@ -71,17 +72,11 @@ fun LabelsListComponent(
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
 @Preview(showBackground = true)
 @Composable
 fun PreviewLabelsListComponent() {
     LabelsListComponent(
-        labels = listOf(
-            EXAMPLE_LABEL,
-            EXAMPLE_LABEL.copy(labelId = Uuid.random().toString()),
-            EXAMPLE_LABEL.copy(labelId = Uuid.random().toString()),
-            EXAMPLE_LABEL.copy(labelId = Uuid.random().toString())
-        ),
+        labels = EXAMPLE_LABEL_LIST,
         selected = EXAMPLE_LABEL.labelId,
         onLabelClick = {},
         onEdit = {}

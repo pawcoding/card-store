@@ -43,8 +43,8 @@ fun AddEditCardScreen(
 ) {
     val scope = rememberCoroutineScope()
 
+    val labels by viewModel.allLabels.collectAsState(initial = emptyList())
     val initialCard by viewModel.getCardById(cardId).collectAsState(initial = emptyCardWithLabels())
-
     var card by remember { mutableStateOf(initialCard ?: emptyCardWithLabels()) }
 
     LaunchedEffect(initialCard) {
@@ -128,6 +128,7 @@ fun AddEditCardScreen(
         ) {
             EditCardForm(
                 initialCard = card,
+                labels = labels,
                 onCardUpdate = { card = it }
             )
         }

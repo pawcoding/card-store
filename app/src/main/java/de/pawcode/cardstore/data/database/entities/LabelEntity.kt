@@ -32,6 +32,25 @@ val EXAMPLE_LABEL: LabelEntity = LabelEntity(
     name = "Groceries"
 )
 
+/**
+ * List of example labels used to preview components.
+ */
+val EXAMPLE_LABEL_LIST: List<LabelEntity> = listOf(
+    LabelEntity(
+        labelId = "f3b3b3b3-3b3b-4b3b-b3b3-3b3b3b3b3b3b",
+        name = "Work"
+    ),
+    LabelEntity(
+        labelId = "f3b3b3b3-3b3b-4b3b-b3b3-3b3b3b3b3b3b",
+        name = "Personal"
+    ),
+    EXAMPLE_LABEL,
+    LabelEntity(
+        labelId = "f3b3b3b3-3b3b-4b3b-b3b3-3b3b3b3b3b3b",
+        name = "Shopping"
+    ),
+)
+
 @OptIn(ExperimentalUuidApi::class)
 fun emptyLabel(): LabelEntity {
     return LabelEntity(

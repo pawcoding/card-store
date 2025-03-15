@@ -5,15 +5,19 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.filled.Colorize
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -40,14 +44,18 @@ import androidx.compose.ui.unit.dp
 import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.data.database.classes.CardWithLabels
 import de.pawcode.cardstore.data.database.classes.emptyCardWithLabels
+import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
+import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.ui.dialogs.ColorPickerDialog
 import de.pawcode.cardstore.ui.utils.BarcodeScanner
 import de.pawcode.cardstore.utils.isLightColor
 import de.pawcode.cardstore.utils.mapBarcodeFormat
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun EditCardForm(
     initialCard: CardWithLabels? = null,
+    labels: List<LabelEntity>,
     onCardUpdate: (CardWithLabels) -> Unit
 ) {
     var showColorPicker by remember { mutableStateOf(false) }
@@ -181,6 +189,48 @@ fun EditCardForm(
                 )
             }
         }
+
+        HorizontalDivider()
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(Icons.AutoMirrored.Filled.Label, contentDescription = null)
+
+            Text(
+                text = "Labels",
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
+
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            labels.forEach { label ->
+                val chipSelected =
+                    label.labelId == card.labels.find { it.labelId == label.labelId }?.labelId
+                FilterChip(
+                    selected = chipSelected,
+                    onClick = {
+                        if (chipSelected) {
+                            card =
+                                card.copy(labels = card.labels.filter { it.labelId != label.labelId })
+                        } else {
+                            card = card.copy(labels = card.labels + label)
+                        }
+                    },
+                    label = {
+                        Text(
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            text = label.name,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
+                )
+            }
+        }
     }
 
     if (showColorPicker) {
@@ -217,5 +267,8 @@ fun EditCardForm(
 )
 @Composable
 fun PreviewEditCardForm() {
-    EditCardForm(onCardUpdate = {})
+    EditCardForm(
+        labels = EXAMPLE_LABEL_LIST,
+        onCardUpdate = {}
+    )
 }
