@@ -120,7 +120,7 @@ fun FilterListScreen(
                             .padding(24.dp)
                             .pointerInput(Unit) {
                                 detectTapGestures(
-                                    onLongPress = { showLabelOptionSheet = label }
+                                    onTap = { showLabelOptionSheet = label }
                                 )
                             }
                     )
