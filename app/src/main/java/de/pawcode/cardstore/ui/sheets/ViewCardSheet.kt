@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.simonsickle.compose.barcodes.Barcode
+import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_CARD
@@ -59,17 +60,19 @@ fun ViewCardSheet(card: CardEntity) {
         if (card.barcodeFormat.isValueValid(card.cardNumber)) {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth(0.7f)
+                    .fillMaxWidth(0.7f * aspectRatio)
                     .aspectRatio(aspectRatio)
                     .clip(MaterialTheme.shapes.medium)
                     .background(Color.White)
-                    .padding(12.dp)
+                    .padding(8.dp)
             ) {
                 Barcode(
                     modifier = Modifier.fillMaxWidth(),
-                    resolutionFactor = 10,
+                    resolutionFactor = 5,
                     value = card.cardNumber,
                     type = card.barcodeFormat,
+                    width = (128 * aspectRatio).dp,
+                    height = 128.dp
                 )
             }
         } else {
@@ -86,4 +89,26 @@ fun ViewCardSheet(card: CardEntity) {
 @Composable
 fun PreviewViewCardSheet() {
     ViewCardSheet(EXAMPLE_CARD)
+}
+
+@Preview
+@Composable
+fun PreviewViewCardSheetBarcode() {
+    ViewCardSheet(
+        EXAMPLE_CARD.copy(
+            cardNumber = "123456789012",
+            barcodeFormat = BarcodeType.EAN_13
+        )
+    )
+}
+
+@Preview
+@Composable
+fun PreviewViewCardSheetBarcode2() {
+    ViewCardSheet(
+        EXAMPLE_CARD.copy(
+            cardNumber = "123456789012",
+            barcodeFormat = BarcodeType.CODE_128
+        )
+    )
 }
