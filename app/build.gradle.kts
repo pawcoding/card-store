@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -13,8 +15,15 @@ android {
         applicationId = "de.pawcode.cardstore"
         minSdk = 33
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+
+        val properties = Properties()
+        val propertiesFile = rootProject.file("version.properties")
+        if (propertiesFile.exists()) {
+            properties.load(propertiesFile.inputStream())
+        }
+
+        this.versionCode = properties.getProperty("VERSION_CODE")?.toInt() ?: 1
+        this.versionName = properties.getProperty("VERSION_NAME") ?: "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
