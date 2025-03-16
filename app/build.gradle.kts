@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.composed.barcodes)
     implementation(libs.play.services.code.scanner)
     implementation(libs.barcode.scanning)
+    implementation(libs.androidx.core.splashscreen)
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
