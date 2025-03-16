@@ -13,12 +13,14 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import de.pawcode.cardstore.R
 
 @Composable
 fun ColorPickerDialog(color: Color, onDismiss: (Color?) -> Unit) {
@@ -36,7 +38,7 @@ fun ColorPickerDialog(color: Color, onDismiss: (Color?) -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(16.dp)
             ) {
                 Text(
-                    text = "Pick a color",
+                    text = stringResource(R.string.card_pick_color),
                     style = MaterialTheme.typography.headlineSmall,
                 )
 
@@ -67,7 +69,7 @@ fun ColorPickerDialog(color: Color, onDismiss: (Color?) -> Unit) {
                             onDismiss(null)
                         },
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.common_cancel))
                     }
 
                     TextButton(
@@ -75,7 +77,7 @@ fun ColorPickerDialog(color: Color, onDismiss: (Color?) -> Unit) {
                             onDismiss(controller.selectedColor.value)
                         },
                     ) {
-                        Text("Save")
+                        Text(stringResource(R.string.common_save))
                     }
                 }
             }

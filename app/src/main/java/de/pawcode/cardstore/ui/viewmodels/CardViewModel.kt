@@ -3,30 +3,56 @@ package de.pawcode.cardstore.ui.viewmodels
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import de.pawcode.cardstore.data.database.classes.CardWithLabels
 import de.pawcode.cardstore.data.database.entities.CardEntity
+import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.database.repositories.CardRepository
+import de.pawcode.cardstore.data.database.repositories.LabelRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 class CardViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = CardRepository(application)
-    val allCards = repository.allCards
+    private val cardRepository = CardRepository(application)
+    private val labelRepository = LabelRepository(application)
 
-    fun getCardById(id: String?): Flow<CardEntity?> = flow {
+    val allCards: Flow<List<CardWithLabels>> = cardRepository.allCards
+    val allLabels = labelRepository.allLabels
+
+    fun getCardById(id: String?): Flow<CardWithLabels?> = flow {
         if (id == null) {
             emit(null)
         } else {
-            repository.getCardById(id).collect { emit(it) }
+            cardRepository.getCardById(id).collect { emit(it) }
+        }
+    }
+
+    fun getLabelById(id: String?): Flow<LabelEntity?> = flow {
+        if (id == null) {
+            emit(null)
+        } else {
+            labelRepository.getLabelById(id).collect { emit(it) }
         }
     }
 
     fun insertCard(card: CardEntity) = viewModelScope.launch {
-        repository.insertCard(card)
+        cardRepository.insertCard(card)
+    }
+
+    fun insertLabel(label: LabelEntity) = viewModelScope.launch {
+        labelRepository.insertLabel(label)
+    }
+
+    fun addLabelsToCard(cardId: String, labelIds: List<String>) = viewModelScope.launch {
+        cardRepository.addLabelsToCard(cardId, labelIds)
     }
 
     fun updateCard(card: CardEntity) = viewModelScope.launch {
-        repository.updateCard(card)
+        cardRepository.updateCard(card)
+    }
+
+    fun updateLabel(label: LabelEntity) = viewModelScope.launch {
+        labelRepository.updateLabel(label)
     }
 
     fun addUsage(card: CardEntity) = viewModelScope.launch {
@@ -39,6 +65,14 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun deleteCard(card: CardEntity) = viewModelScope.launch {
-        repository.deleteCard(card)
+        cardRepository.deleteCard(card)
+    }
+
+    fun deleteLabel(label: LabelEntity) = viewModelScope.launch {
+        labelRepository.deleteLabel(label)
+    }
+
+    fun removeLabelsFromCard(cardId: String, labelIds: List<String>) = viewModelScope.launch {
+        cardRepository.removeLabelsFromCard(cardId, labelIds)
     }
 }

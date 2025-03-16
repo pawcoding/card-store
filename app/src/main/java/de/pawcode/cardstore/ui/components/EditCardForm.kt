@@ -5,18 +5,30 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Label
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Colorize
-import androidx.compose.material3.DropdownMenu
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.QrCode2
+import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -32,33 +44,43 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.simonsickle.compose.barcodes.BarcodeType
-import de.pawcode.cardstore.data.database.entities.CardEntity
-import de.pawcode.cardstore.data.database.entities.emptyCard
+import de.pawcode.cardstore.R
+import de.pawcode.cardstore.data.database.classes.CardWithLabels
+import de.pawcode.cardstore.data.database.classes.emptyCardWithLabels
+import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
+import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.ui.dialogs.ColorPickerDialog
 import de.pawcode.cardstore.ui.utils.BarcodeScanner
 import de.pawcode.cardstore.utils.isLightColor
 import de.pawcode.cardstore.utils.mapBarcodeFormat
 
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun EditCardForm(
-    initialCard: CardEntity? = null,
-    onCardUpdate: (CardEntity) -> Unit
+    initialCard: CardWithLabels? = null,
+    labels: List<LabelEntity>,
+    onCardUpdate: (CardWithLabels) -> Unit
 ) {
     var showColorPicker by remember { mutableStateOf(false) }
     var showBarcodeScanner by remember { mutableStateOf(false) }
 
-    var card by remember { mutableStateOf(initialCard?.copy() ?: emptyCard()) }
-    val color by remember { derivedStateOf { Color(card.color) } }
+    var card by remember { mutableStateOf(initialCard?.copy() ?: emptyCardWithLabels()) }
+    val color by remember { derivedStateOf { Color(card.card.color) } }
     val isLightColor by remember { derivedStateOf { isLightColor(color) } }
 
+    val formatValid by remember {
+        derivedStateOf { card.card.cardNumber == "" || card.card.barcodeFormat.isValueValid(card.card.cardNumber) }
+    }
+
     LaunchedEffect(initialCard) {
-        card = initialCard?.copy() ?: emptyCard()
+        card = initialCard?.copy() ?: emptyCardWithLabels()
     }
 
     LaunchedEffect(card) {
@@ -71,10 +93,28 @@ fun EditCardForm(
             .fillMaxWidth()
             .padding(16.dp)
     ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(
+                Icons.Filled.Storefront,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(32.dp)
+            )
+
+            Text(
+                text = stringResource(R.string.card_store_name),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
+
         OutlinedTextField(
-            value = card.storeName,
-            onValueChange = { card = card.copy(storeName = it) },
-            label = { Text("Store name") },
+            value = card.card.storeName,
+            onValueChange = { card = card.copy(card = card.card.copy(storeName = it)) },
+            label = { Text(stringResource(R.string.card_store_name) + "*") },
+            supportingText = { Text("*" + stringResource(R.string.common_required)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -85,63 +125,97 @@ fun EditCardForm(
             )
         )
 
-        HorizontalDivider()
-
-        OutlinedButton(
-            onClick = { showBarcodeScanner = true },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Scan barcode")
-        }
-
-        OutlinedTextField(
-            value = card.cardNumber,
-            onValueChange = { card = card.copy(cardNumber = it) },
-            label = { Text("Card number") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
-            )
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp),
         )
 
         Row(
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp),
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text(
-                    text = "Barcode Type:",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface
+                Icon(
+                    Icons.Filled.QrCode2,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(32.dp)
                 )
 
-                if (card.cardNumber != "" && !card.barcodeFormat.isValueValid(card.cardNumber)) {
-                    Text(
-                        text = "Invalid barcode format",
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
+                Text(
+                    text = stringResource(R.string.card_code),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
             }
 
+            OutlinedButton(
+                onClick = { showBarcodeScanner = true },
+            ) {
+                Icon(
+                    Icons.Filled.QrCodeScanner,
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+
+                Text(stringResource(R.string.scan_barcode))
+            }
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            OutlinedTextField(
+                value = card.card.cardNumber,
+                onValueChange = { card = card.copy(card = card.card.copy(cardNumber = it)) },
+                label = { Text(stringResource(R.string.card_number) + "*") },
+                supportingText = { Text("*" + stringResource(R.string.common_required)) },
+                modifier = Modifier.weight(3f),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                )
+            )
+
             var expanded by remember { mutableStateOf(false) }
-            Box {
-                OutlinedButton(
-                    onClick = { expanded = true }
-                ) {
-                    Text(card.barcodeFormat.name)
-                }
-                DropdownMenu(
+            ExposedDropdownMenuBox(
+                modifier = Modifier.weight(2f),
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded }
+            ) {
+                OutlinedTextField(
+                    value = card.card.barcodeFormat.name,
+                    onValueChange = { },
+                    label = { Text(stringResource(R.string.card_barcode_type)) },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(
+                            expanded = expanded
+                        )
+                    },
+                    modifier = Modifier.menuAnchor(MenuAnchorType.SecondaryEditable, true),
+                    readOnly = true,
+                    singleLine = true,
+                    isError = !formatValid,
+                    supportingText = {
+                        if (!formatValid) {
+                            Text(
+                                text = stringResource(R.string.card_invalid_barcode_format),
+                            )
+                        }
+                    }
+                )
+                ExposedDropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false }) {
-                    BarcodeType.entries.forEach { type ->
+                    onDismissRequest = { expanded = false }
+                ) {
+                    BarcodeType.entries.sortedBy { it.name }.forEach { type ->
                         DropdownMenuItem(
                             onClick = {
-                                card = card.copy(barcodeFormat = type)
+                                card = card.copy(card = card.card.copy(barcodeFormat = type))
                                 expanded = false
                             },
                             text = { Text(type.name) }
@@ -151,24 +225,37 @@ fun EditCardForm(
             }
         }
 
-        HorizontalDivider()
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp),
+        )
 
         Row(
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = "Color:",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Icon(
+                    Icons.Filled.Palette,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(32.dp)
+                )
+
+                Text(
+                    text = stringResource(R.string.card_color),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
 
             Box(
                 modifier = Modifier
                     .size(44.dp)
                     .clip(
-                        MaterialTheme.shapes.medium
+                        MaterialTheme.shapes.small
                     )
                     .background(color)
                     .clickable { showColorPicker = true },
@@ -176,8 +263,65 @@ fun EditCardForm(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Colorize,
-                    contentDescription = "Pick a color",
+                    contentDescription = stringResource(R.string.card_pick_color),
                     tint = if (isLightColor) Color.Black else Color.White
+                )
+            }
+        }
+
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp),
+        )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(
+                Icons.AutoMirrored.Filled.Label,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(32.dp)
+            )
+
+            Text(
+                text = stringResource(R.string.card_labels),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
+
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            labels.forEach { label ->
+                val chipSelected =
+                    label.labelId == card.labels.find { it.labelId == label.labelId }?.labelId
+                FilterChip(
+                    selected = chipSelected,
+                    onClick = {
+                        if (chipSelected) {
+                            card =
+                                card.copy(labels = card.labels.filter { it.labelId != label.labelId })
+                        } else {
+                            card = card.copy(labels = card.labels + label)
+                        }
+                    },
+                    label = {
+                        Text(
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            text = label.name,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
+                    leadingIcon = {
+                        if (chipSelected) {
+                            Icon(
+                                Icons.Filled.Check,
+                                contentDescription = null
+                            )
+                        }
+                    }
                 )
             }
         }
@@ -188,7 +332,7 @@ fun EditCardForm(
             color = color,
             onDismiss = { newColor ->
                 if (newColor != null) {
-                    card = card.copy(color = newColor.toArgb())
+                    card = card.copy(card = card.card.copy(color = newColor.toArgb()))
                 }
                 showColorPicker = false
             }
@@ -199,8 +343,10 @@ fun EditCardForm(
         BarcodeScanner(
             onBarcodeDetected = { barcode ->
                 card = card.copy(
-                    cardNumber = barcode.rawValue ?: "",
-                    barcodeFormat = mapBarcodeFormat(barcode.format)
+                    card = card.card.copy(
+                        cardNumber = barcode.rawValue ?: "",
+                        barcodeFormat = mapBarcodeFormat(barcode.format)
+                    )
                 )
 
                 showBarcodeScanner = false
@@ -215,5 +361,8 @@ fun EditCardForm(
 )
 @Composable
 fun PreviewEditCardForm() {
-    EditCardForm(onCardUpdate = {})
+    EditCardForm(
+        labels = EXAMPLE_LABEL_LIST,
+        onCardUpdate = {}
+    )
 }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CardStore</string>
+    <string name="card_add">Karte hinzufügen</string>
+    <string name="card_added">Karte hinzugefügt</string>
+    <string name="card_barcode_type">Barcode Typ:</string>
+    <string name="card_code">Code</string>
+    <string name="card_color">Farbe</string>
+    <string name="card_delete_description">Möchtest du die Karte wirklich löschen? Sie kann nicht wiederhergestellt werden.</string>
+    <string name="card_delete_title">Karte löschen</string>
+    <string name="card_edit">Karte bearbeiten</string>
+    <string name="card_invalid_barcode_format">Ungültiges Format</string>
+    <string name="card_labels">Labels</string>
+    <string name="card_number">Kartennummer</string>
+    <string name="card_pick_color">Wähle eine Farbe</string>
+    <string name="card_save">Karte speichern</string>
+    <string name="card_store_name">Name des Geschäfts</string>
+    <string name="card_updated">Karte aktualisiert</string>
+    <string name="cards_list_empty">Erstelle deine erste Karte</string>
+    <string name="cards_list_empty_filtered">Keine Karten mit diesem Label</string>
+    <string name="cards_new">Neue Karte hinzufügen</string>
+    <string name="cards_sort">Karten sortieren</string>
+    <string name="common_back">Zurück</string>
+    <string name="common_cancel">Abbrechen</string>
+    <string name="common_delete">Löschen</string>
+    <string name="common_required">erforderlich</string>
+    <string name="common_save">Speichern</string>
+    <string name="common_update">Aktualisieren</string>
+    <string name="label_add">Label hinzufügen</string>
+    <string name="label_added">Label hinzugefügt</string>
+    <string name="label_delete_description">Möchtest Du das Label wirklich löschen? Es kann nicht wiederhergestellt werden.</string>
+    <string name="label_delete_title">Label löschen</string>
+    <string name="label_edit">Label bearbeiten</string>
+    <string name="label_name">Name</string>
+    <string name="label_save">Label speichern</string>
+    <string name="label_updated">Label aktualisiert</string>
+    <string name="labels_edit">Labels bearbeiten</string>
+    <string name="labels_list_empty">Erstelle dein erstes Label, um deine Karten zu kategorisieren</string>
+    <string name="labels_new">Neues Label hinzufügen</string>
+    <string name="labels_none">Keine Labels</string>
+    <string name="scan_barcode">Barcode scannen</string>
+    <string name="sort_alphabetically">Alphabetisch</string>
+    <string name="sort_most_used">Am häufigsten verwendet</string>
+    <string name="sort_recently_used">Kürzlich verwendet</string>
+</resources>
