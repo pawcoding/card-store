@@ -1,8 +1,5 @@
 package de.pawcode.cardstore.ui.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,8 +13,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.NewLabel
-import androidx.compose.material.icons.filled.Save
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +30,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -50,6 +44,7 @@ import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.database.entities.emptyLabel
 import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.ui.components.AppBar
+import de.pawcode.cardstore.ui.components.SaveFabComponent
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 
 @Composable
@@ -121,38 +116,12 @@ fun EditLabelScreenComponent(
             )
         },
         floatingActionButton = {
-            AnimatedVisibility(
-                visible = hasChanges,
-                enter = slideInVertically(initialOffsetY = { it }),
-                exit = slideOutVertically(targetOffsetY = { it })
-            ) {
-                ExtendedFloatingActionButton(
-                    onClick = {
-                        if (!isValid) {
-                            return@ExtendedFloatingActionButton
-                        }
-
-                        onSave(label)
-                    },
-                    text = {
-                        if (initialLabel != null) {
-                            Text(stringResource(R.string.common_update))
-                        } else {
-                            Text(stringResource(R.string.common_save))
-                        }
-                    },
-                    icon = {
-                        Icon(
-                            Icons.Filled.Save,
-                            contentDescription = stringResource(R.string.label_save)
-                        )
-                    },
-                    containerColor = if (isValid) MaterialTheme.colorScheme.primary else Color.Gray,
-                    contentColor = if (isValid) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface.copy(
-                        alpha = 0.38f
-                    )
-                )
-            }
+            SaveFabComponent(
+                hadInitialValue = initialLabel != null,
+                hasChanges = hasChanges,
+                isValid = isValid,
+                onSave = { onSave(label) }
+            )
         }
     ) { innerPadding ->
         Column(
