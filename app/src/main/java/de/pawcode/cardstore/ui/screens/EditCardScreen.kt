@@ -5,10 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -113,15 +109,7 @@ fun EditCardScreenComponent(
         topBar = {
             AppBar(
                 title = stringResource(if (initialCard != null) R.string.card_edit else R.string.card_add),
-                navigationIcon = {
-                    IconButton(
-                        onClick = { onBack() }) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.common_back)
-                        )
-                    }
-                }
+                onBack = { onBack() }
             )
         },
         floatingActionButton = {

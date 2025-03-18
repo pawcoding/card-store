@@ -11,10 +11,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.NewLabel
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -103,16 +101,7 @@ fun EditLabelScreenComponent(
         topBar = {
             AppBar(
                 title = stringResource(if (initialLabel != null) R.string.label_edit else R.string.label_add),
-                navigationIcon = {
-                    IconButton(
-                        onClick = { onBack() }
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.common_back)
-                        )
-                    }
-                }
+                onBack = { onBack() }
             )
         },
         floatingActionButton = {
