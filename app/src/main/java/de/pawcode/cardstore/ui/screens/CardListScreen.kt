@@ -189,7 +189,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                         }
                     },
                     onEdit = {
-                        navController.navigate(Screen.FilterList.route)
+                        navController.navigate(Screen.LabelList.route)
                     }
                 )
             }

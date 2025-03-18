@@ -19,7 +19,7 @@ import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.ui.screens.AddEditCardScreen
 import de.pawcode.cardstore.ui.screens.CardListScreen
 import de.pawcode.cardstore.ui.screens.EditLabelScreen
-import de.pawcode.cardstore.ui.screens.FilterListScreen
+import de.pawcode.cardstore.ui.screens.LabelListScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -58,8 +58,8 @@ fun Navigation() {
                 val cardId = entry.arguments?.getString("cardId")
                 AddEditCardScreen(navController = navController, cardId = cardId)
             }
-            composable(Screen.FilterList.route) {
-                FilterListScreen(navController = navController)
+            composable(Screen.LabelList.route) {
+                LabelListScreen(navController = navController)
             }
             composable(
                 route = Screen.EditLabel.route + "?labelId={labelId}",
@@ -78,7 +78,7 @@ fun Navigation() {
 sealed class Screen(val route: String) {
     object CardList : Screen("card_list")
     object AddEditCard : Screen("add_edit_card")
-    object FilterList : Screen("filter_list")
+    object LabelList : Screen("label_list")
     object EditLabel : Screen("edit_label")
 }
 

@@ -35,10 +35,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.pawcode.cardstore.R
+import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
 import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.navigation.Screen
 import de.pawcode.cardstore.ui.components.AppBar
@@ -48,9 +50,8 @@ import de.pawcode.cardstore.ui.sheets.OptionSheet
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterListScreen(
+fun LabelListScreen(
     navController: NavController,
     viewModel: CardViewModel = viewModel()
 ) {
@@ -58,6 +59,32 @@ fun FilterListScreen(
 
     val labels by viewModel.allLabels.collectAsState(initial = emptyList())
 
+    LabelListScreenComponent(
+        labels = labels,
+        onBack = { navController.popBackStack() },
+        onEdit = { label ->
+            if (label != null) {
+                navController.navigate(Screen.EditLabel.route + "?labelId=${label.labelId}")
+            } else {
+                navController.navigate(Screen.EditLabel.route)
+            }
+        },
+        onDelete = {
+            scope.launch {
+                viewModel.deleteLabel(it)
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LabelListScreenComponent(
+    labels: List<LabelEntity>,
+    onBack: () -> Unit,
+    onEdit: (LabelEntity?) -> Unit,
+    onDelete: (LabelEntity) -> Unit
+) {
     var showLabelOptionSheet by remember { mutableStateOf<LabelEntity?>(null) }
     val cardOptionSheetState = rememberModalBottomSheetState()
 
@@ -69,7 +96,7 @@ fun FilterListScreen(
                 title = stringResource(R.string.card_labels),
                 navigationIcon = {
                     IconButton(
-                        onClick = { navController.popBackStack() }
+                        onClick = { onBack }
                     ) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
@@ -82,7 +109,7 @@ fun FilterListScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = {
-                    navController.navigate(Screen.EditLabel.route)
+                    onEdit(null)
                 },
                 text = { Text(stringResource(R.string.labels_new)) },
                 icon = {
@@ -141,7 +168,7 @@ fun FilterListScreen(
                         label = stringResource(R.string.label_edit),
                         icon = Icons.Filled.Edit,
                         onClick = {
-                            navController.navigate(Screen.EditLabel.route + "?labelId=${it.labelId}")
+                            onEdit(it)
                             showLabelOptionSheet = null
                         }
                     ),
@@ -161,10 +188,8 @@ fun FilterListScreen(
             ConfirmDialog(
                 onDismissRequest = { openDeleteDialog = null },
                 onConfirmation = {
-                    scope.launch {
-                        viewModel.deleteLabel(openDeleteDialog!!)
-                        openDeleteDialog = null
-                    }
+                    onDelete(it)
+                    openDeleteDialog = null
                 },
                 dialogTitle = stringResource(R.string.label_delete_title),
                 dialogText = stringResource(R.string.label_delete_description),
@@ -173,4 +198,28 @@ fun FilterListScreen(
             )
         }
     }
+}
+
+@Preview
+@Preview(device = "id:pixel_tablet")
+@Composable
+fun PreviewLabelListScreenComponent() {
+    LabelListScreenComponent(
+        labels = EXAMPLE_LABEL_LIST,
+        onBack = {},
+        onEdit = {},
+        onDelete = {}
+    )
+}
+
+@Preview
+@Preview(device = "id:pixel_tablet")
+@Composable
+fun PreviewLabelListScreenComponentEmpty() {
+    LabelListScreenComponent(
+        labels = listOf(),
+        onBack = {},
+        onEdit = {},
+        onDelete = {}
+    )
 }
