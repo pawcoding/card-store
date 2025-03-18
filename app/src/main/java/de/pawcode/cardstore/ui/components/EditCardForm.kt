@@ -64,6 +64,7 @@ import de.pawcode.cardstore.utils.mapBarcodeFormat
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun EditCardForm(
+    modifier: Modifier = Modifier,
     initialCard: CardWithLabels? = null,
     labels: List<LabelEntity>,
     onCardUpdate: (CardWithLabels) -> Unit
@@ -89,7 +90,7 @@ fun EditCardForm(
 
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {

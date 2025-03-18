@@ -160,7 +160,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     }, floatingActionButton = {
         ExtendedFloatingActionButton(
             onClick = {
-                navController.navigate(Screen.AddEditCard.route)
+                navController.navigate(Screen.EditCard.route)
             },
             text = { Text(stringResource(R.string.cards_new)) },
             icon = {
@@ -229,7 +229,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                             label = stringResource(R.string.card_edit),
                             icon = Icons.Filled.Edit,
                             onClick = {
-                                navController.navigate(Screen.AddEditCard.route + "?cardId=${it.cardId}")
+                                navController.navigate(Screen.EditCard.route + "?cardId=${it.cardId}")
                                 showCardOptionSheet = null
                             }
                         ),

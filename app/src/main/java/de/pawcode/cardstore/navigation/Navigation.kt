@@ -16,8 +16,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import de.pawcode.cardstore.data.services.SnackbarService
-import de.pawcode.cardstore.ui.screens.AddEditCardScreen
 import de.pawcode.cardstore.ui.screens.CardListScreen
+import de.pawcode.cardstore.ui.screens.EditCardScreen
 import de.pawcode.cardstore.ui.screens.EditLabelScreen
 import de.pawcode.cardstore.ui.screens.LabelListScreen
 
@@ -49,14 +49,14 @@ fun Navigation() {
                 CardListScreen(navController = navController)
             }
             composable(
-                route = Screen.AddEditCard.route + "?cardId={cardId}",
+                route = Screen.EditCard.route + "?cardId={cardId}",
                 arguments = listOf(navArgument("cardId") {
                     type = NavType.StringType
                     nullable = true
                 })
             ) { entry ->
                 val cardId = entry.arguments?.getString("cardId")
-                AddEditCardScreen(navController = navController, cardId = cardId)
+                EditCardScreen(navController = navController, cardId = cardId)
             }
             composable(Screen.LabelList.route) {
                 LabelListScreen(navController = navController)
@@ -77,7 +77,7 @@ fun Navigation() {
 
 sealed class Screen(val route: String) {
     object CardList : Screen("card_list")
-    object AddEditCard : Screen("add_edit_card")
+    object EditCard : Screen("edit_card")
     object LabelList : Screen("label_list")
     object EditLabel : Screen("edit_label")
 }
