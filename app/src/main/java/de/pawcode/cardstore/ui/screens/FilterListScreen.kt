@@ -137,23 +137,21 @@ fun FilterListScreen(
                 onDismissRequest = { showLabelOptionSheet = null }
             ) {
                 OptionSheet(
-                    listOf(
-                        Option(
-                            label = stringResource(R.string.label_edit),
-                            icon = Icons.Filled.Edit,
-                            onClick = {
-                                navController.navigate(Screen.EditLabel.route + "?labelId=${it.labelId}")
-                                showLabelOptionSheet = null
-                            }
-                        ),
-                        Option(
-                            label = stringResource(R.string.label_delete_title),
-                            icon = Icons.Filled.DeleteForever,
-                            onClick = {
-                                openDeleteDialog = it
-                                showLabelOptionSheet = null
-                            }
-                        )
+                    Option(
+                        label = stringResource(R.string.label_edit),
+                        icon = Icons.Filled.Edit,
+                        onClick = {
+                            navController.navigate(Screen.EditLabel.route + "?labelId=${it.labelId}")
+                            showLabelOptionSheet = null
+                        }
+                    ),
+                    Option(
+                        label = stringResource(R.string.label_delete_title),
+                        icon = Icons.Filled.DeleteForever,
+                        onClick = {
+                            openDeleteDialog = it
+                            showLabelOptionSheet = null
+                        }
                     )
                 )
             }

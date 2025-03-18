@@ -20,13 +20,27 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+/**
+ * Option to be displayed in the [OptionSheet].
+ */
 data class Option(
-    val label: String, val icon: ImageVector, val onClick: () -> Unit
+    /**
+     * Label that is shown to the user.
+     */
+    val label: String,
+    /**
+     * Icons that is shown in front of the label.
+     */
+    val icon: ImageVector,
+    /**
+     * Action that is executed when the option is clicked.
+     */
+    val onClick: () -> Unit
 )
 
 @Composable
 fun OptionSheet(
-    options: List<Option>
+    vararg options: Option
 ) {
     Column(
         modifier = Modifier
@@ -57,13 +71,11 @@ fun OptionSheet(
 @Composable
 fun PreviewOptionSheet() {
     OptionSheet(
-        listOf(
-            Option(
-                label = "Edit card", icon = Icons.Filled.Edit, onClick = {}
-            ),
-            Option(
-                label = "Delete card", icon = Icons.Filled.DeleteForever, onClick = {}
-            )
+        Option(
+            label = "Edit card", icon = Icons.Filled.Edit, onClick = {}
+        ),
+        Option(
+            label = "Delete card", icon = Icons.Filled.DeleteForever, onClick = {}
         )
     )
 }

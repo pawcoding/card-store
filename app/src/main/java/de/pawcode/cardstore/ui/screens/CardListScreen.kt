@@ -225,23 +225,21 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                     sheetState = cardOptionSheetState,
                     onDismissRequest = { showCardOptionSheet = null }) {
                     OptionSheet(
-                        listOf(
-                            Option(
-                                label = stringResource(R.string.card_edit),
-                                icon = Icons.Filled.Edit,
-                                onClick = {
-                                    navController.navigate(Screen.AddEditCard.route + "?cardId=${it.cardId}")
-                                    showCardOptionSheet = null
-                                }
-                            ),
-                            Option(
-                                label = stringResource(R.string.card_delete_title),
-                                icon = Icons.Filled.DeleteForever,
-                                onClick = {
-                                    openDeleteDialog = showCardOptionSheet!!
-                                    showCardOptionSheet = null
-                                }
-                            )
+                        Option(
+                            label = stringResource(R.string.card_edit),
+                            icon = Icons.Filled.Edit,
+                            onClick = {
+                                navController.navigate(Screen.AddEditCard.route + "?cardId=${it.cardId}")
+                                showCardOptionSheet = null
+                            }
+                        ),
+                        Option(
+                            label = stringResource(R.string.card_delete_title),
+                            icon = Icons.Filled.DeleteForever,
+                            onClick = {
+                                openDeleteDialog = showCardOptionSheet!!
+                                showCardOptionSheet = null
+                            }
                         )
                     )
                 }
