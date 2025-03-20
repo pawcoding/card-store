@@ -16,6 +16,7 @@ const config = {
           { type: 'docs', scope: 'README', release: 'patch' },
           { type: 'build', scope: 'deps', release: 'patch' },
           { type: 'refactor', release: 'patch' },
+          { type: 'ci', release: 'patch' },
           { type: 'style', release: 'patch' }
         ],
         parserOpts: {

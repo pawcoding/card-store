@@ -14,3 +14,5 @@
 .cxx
 local.properties
 /app/release/
+keystore.jks
+/scripts/build-apk-local.sh
