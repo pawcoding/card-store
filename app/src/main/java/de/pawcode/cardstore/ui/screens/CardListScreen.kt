@@ -1,6 +1,5 @@
 package de.pawcode.cardstore.ui.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -10,16 +9,12 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.twotone.DeleteForever
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,17 +32,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.pawcode.cardstore.R
+import de.pawcode.cardstore.data.database.classes.CardWithLabels
+import de.pawcode.cardstore.data.database.classes.EXAMPLE_CARD_WITH_LABELS
 import de.pawcode.cardstore.data.database.entities.CardEntity
+import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
+import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.enums.SortAttribute
 import de.pawcode.cardstore.data.managers.PreferencesManager
 import de.pawcode.cardstore.navigation.Screen
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.CardsListComponent
+import de.pawcode.cardstore.ui.components.DropdownOption
 import de.pawcode.cardstore.ui.components.LabelsListComponent
+import de.pawcode.cardstore.ui.components.SelectDropdownMenu
 import de.pawcode.cardstore.ui.dialogs.ConfirmDialog
 import de.pawcode.cardstore.ui.sheets.Option
 import de.pawcode.cardstore.ui.sheets.OptionSheet
@@ -56,8 +58,6 @@ import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 import kotlinx.coroutines.launch
 
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardListScreen(navController: NavController, viewModel: CardViewModel = viewModel()) {
     val context = LocalContext.current
@@ -66,33 +66,72 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
 
     val cardsWithLabels by viewModel.allCards.collectAsState(initial = emptyList())
     val labels by viewModel.allLabels.collectAsState(initial = emptyList())
-
-    var selectedLabel by remember { mutableStateOf<String?>(null) }
-
-    var sortMenuExpanded by remember { mutableStateOf(false) }
     val sortBy by preferencesManager.sortAttribute.collectAsState(initial = null)
 
+    CardListScreenComponent(
+        cards = cardsWithLabels,
+        labels = labels,
+        sortBy = sortBy,
+        onEditCard = { card ->
+            if (card != null) {
+                navController.navigate(Screen.EditCard.route + "?cardId=${card.cardId}")
+            } else {
+                navController.navigate(Screen.EditCard.route)
+            }
+        },
+        onShowCard = {
+            viewModel.addUsage(it)
+        },
+        onDeleteCard = {
+            scope.launch {
+                viewModel.deleteCard(it)
+            }
+        },
+        onViewLabels = {
+            navController.navigate(Screen.LabelList.route)
+        },
+        onSortChange = {
+            scope.launch {
+                preferencesManager.saveSortAttribute(it)
+            }
+        },
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CardListScreenComponent(
+    cards: List<CardWithLabels>,
+    labels: List<LabelEntity>,
+    sortBy: SortAttribute?,
+    onEditCard: (CardEntity?) -> Unit,
+    onShowCard: (CardEntity) -> Unit,
+    onDeleteCard: (CardEntity) -> Unit,
+    onViewLabels: () -> Unit,
+    onSortChange: (SortAttribute) -> Unit,
+) {
     var showCardSheet by remember { mutableStateOf<CardEntity?>(null) }
-    val cardSheetState = rememberModalBottomSheetState()
-
     var showCardOptionSheet by remember { mutableStateOf<CardEntity?>(null) }
-    val cardOptionSheetState = rememberModalBottomSheetState()
-
     var openDeleteDialog by remember { mutableStateOf<CardEntity?>(null) }
 
     val listState = rememberLazyGridState()
-    val cards by remember {
+    val cardSheetState = rememberModalBottomSheetState()
+    val cardOptionSheetState = rememberModalBottomSheetState()
+
+    var selectedLabel by remember { mutableStateOf<String?>(null) }
+
+    val cardsFiltered by remember {
         derivedStateOf {
-            cardsWithLabels
+            cards
                 .filter { selectedLabel == null || it.labels.any { it.labelId == selectedLabel } }
                 .map { it.card }
         }
     }
-    val sortedCards by rememberUpdatedState(
+    val cardsSorted by rememberUpdatedState(
         when (sortBy) {
-            SortAttribute.ALPHABETICALLY -> cards.sortedBy { it.storeName }
-            SortAttribute.RECENTLY_USED -> cards.sortedByDescending { it.lastUsed }
-            SortAttribute.MOST_USED -> cards.sortedByDescending { it.useCount }
+            SortAttribute.ALPHABETICALLY -> cardsFiltered.sortedBy { it.storeName }
+            SortAttribute.RECENTLY_USED -> cardsFiltered.sortedByDescending { it.lastUsed }
+            SortAttribute.MOST_USED -> cardsFiltered.sortedByDescending { it.useCount }
             else -> null
         }
     )
@@ -101,75 +140,46 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
         listState.scrollToItem(0)
     }
 
-    fun updateSortAttribute(sortAttribute: SortAttribute) {
-        scope.launch {
-            preferencesManager.saveSortAttribute(sortAttribute)
-        }
-        sortMenuExpanded = false
-    }
-
-    Scaffold(topBar = {
-        AppBar(
-            title = stringResource(R.string.app_name),
-            actions = {
-                Box(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    IconButton(
-                        onClick = { sortMenuExpanded = !sortMenuExpanded }
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.Sort,
-                            contentDescription = stringResource(R.string.cards_sort)
-                        )
-                    }
-                    DropdownMenu(
-                        expanded = sortMenuExpanded,
-                        onDismissRequest = { sortMenuExpanded = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.sort_alphabetically)) },
-                            trailingIcon = {
-                                if (sortBy == SortAttribute.ALPHABETICALLY) {
-                                    Icon(Icons.Filled.Check, contentDescription = null)
-                                }
-                            },
-                            onClick = { updateSortAttribute(SortAttribute.ALPHABETICALLY) }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.sort_recently_used)) },
-                            trailingIcon = {
-                                if (sortBy == SortAttribute.RECENTLY_USED) {
-                                    Icon(Icons.Filled.Check, contentDescription = null)
-                                }
-                            },
-                            onClick = { updateSortAttribute(SortAttribute.RECENTLY_USED) }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.sort_most_used)) },
-                            trailingIcon = {
-                                if (sortBy == SortAttribute.MOST_USED) {
-                                    Icon(Icons.Filled.Check, contentDescription = null)
-                                }
-                            },
-                            onClick = { updateSortAttribute(SortAttribute.MOST_USED) }
-                        )
-                    }
+    Scaffold(
+        topBar = {
+            AppBar(
+                title = stringResource(R.string.app_name),
+                actions = {
+                    SelectDropdownMenu(
+                        icon = Icons.AutoMirrored.Filled.Sort,
+                        title = stringResource(R.string.cards_sort),
+                        value = SortAttribute.ALPHABETICALLY,
+                        values = listOf(
+                            DropdownOption(
+                                title = stringResource(R.string.sort_alphabetically),
+                                value = SortAttribute.ALPHABETICALLY
+                            ),
+                            DropdownOption(
+                                title = stringResource(R.string.sort_most_used),
+                                value = SortAttribute.MOST_USED
+                            ),
+                            DropdownOption(
+                                title = stringResource(R.string.sort_recently_used),
+                                value = SortAttribute.RECENTLY_USED
+                            )
+                        ),
+                        onValueChange = {
+                            onSortChange(it)
+                        },
+                    )
                 }
-            })
-    }, floatingActionButton = {
-        ExtendedFloatingActionButton(
-            onClick = {
-                navController.navigate(Screen.EditCard.route)
-            },
-            text = { Text(stringResource(R.string.cards_new)) },
-            icon = {
-                Icon(
-                    Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.cards_new)
-                )
-            })
-    }) { innerPadding ->
+            )
+        },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = { onEditCard(null) },
+                text = { Text(stringResource(R.string.cards_new)) },
+                icon = {
+                    Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.cards_new))
+                }
+            )
+        }
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -181,26 +191,20 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                 LabelsListComponent(
                     labels = labels,
                     selected = selectedLabel,
-                    onLabelClick = { label ->
-                        if (selectedLabel == label.labelId) {
-                            selectedLabel = null
-                        } else {
-                            selectedLabel = label.labelId
-                        }
+                    onLabelClick = {
+                        selectedLabel = if (selectedLabel == it.labelId) null else it.labelId
                     },
-                    onEdit = {
-                        navController.navigate(Screen.LabelList.route)
-                    }
+                    onEdit = { onViewLabels() },
                 )
             }
 
-            sortedCards?.let {
+            cardsSorted?.let {
                 CardsListComponent(
                     cards = it,
                     isFiltered = selectedLabel != null,
                     listState = listState,
                     onCardClicked = { card ->
-                        viewModel.addUsage(card)
+                        onShowCard(card)
                         showCardSheet = card
                     },
                     onCardLongPressed = { showCardOptionSheet = it }
@@ -213,8 +217,9 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                         .fillMaxHeight()
                         .safeDrawingPadding(),
                     sheetState = cardSheetState,
-                    onDismissRequest = { showCardSheet = null }) {
-                    ViewCardSheet(showCardSheet!!)
+                    onDismissRequest = { showCardSheet = null }
+                ) {
+                    ViewCardSheet(it)
                 }
             }
 
@@ -229,7 +234,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                             label = stringResource(R.string.card_edit),
                             icon = Icons.Filled.Edit,
                             onClick = {
-                                navController.navigate(Screen.EditCard.route + "?cardId=${it.cardId}")
+                                onEditCard(it)
                                 showCardOptionSheet = null
                             }
                         ),
@@ -237,7 +242,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                             label = stringResource(R.string.card_delete_title),
                             icon = Icons.Filled.DeleteForever,
                             onClick = {
-                                openDeleteDialog = showCardOptionSheet!!
+                                openDeleteDialog = it
                                 showCardOptionSheet = null
                             }
                         )
@@ -249,10 +254,8 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                 ConfirmDialog(
                     onDismissRequest = { openDeleteDialog = null },
                     onConfirmation = {
-                        scope.launch {
-                            viewModel.deleteCard(openDeleteDialog!!)
-                            openDeleteDialog = null
-                        }
+                        onDeleteCard(it)
+                        openDeleteDialog = null
                     },
                     dialogTitle = stringResource(R.string.card_delete_title),
                     dialogText = stringResource(R.string.card_delete_description),
@@ -262,4 +265,36 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
             }
         }
     }
+}
+
+@Preview
+@Preview(device = "id:pixel_tablet")
+@Composable
+fun PreviewCardListScreenComponent() {
+    CardListScreenComponent(
+        cards = listOf(EXAMPLE_CARD_WITH_LABELS),
+        labels = EXAMPLE_LABEL_LIST,
+        sortBy = SortAttribute.ALPHABETICALLY,
+        onEditCard = {},
+        onShowCard = {},
+        onDeleteCard = {},
+        onViewLabels = {},
+        onSortChange = {},
+    )
+}
+
+@Preview
+@Preview(device = "id:pixel_tablet")
+@Composable
+fun PreviewCardListScreenComponentEmpty() {
+    CardListScreenComponent(
+        cards = listOf(),
+        labels = listOf(),
+        sortBy = SortAttribute.ALPHABETICALLY,
+        onEditCard = {},
+        onShowCard = {},
+        onDeleteCard = {},
+        onViewLabels = {},
+        onSortChange = {},
+    )
 }
