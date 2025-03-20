@@ -37,6 +37,13 @@ const config = {
     ],
     '@semantic-release/changelog',
     [
+      '@semantic-release/exec',
+      {
+        prepareCmd: './scripts/update-version.sh ${nextRelease.version}',
+        publishCmd: './scripts/build-apk.sh'
+      }
+    ],
+    [
       '@semantic-release/git',
       {
         assets: assetsToUpdate
@@ -45,14 +52,8 @@ const config = {
     [
         '@semantic-release/github',
         {
-            assets: ['app/build/outputs/apk/release/app-release.apk']
+            assets: ['app/build/outputs/apk/release/*.apk']
         }
-    ],
-    [
-      '@semantic-release/exec',
-      {
-        prepareCmd: './scripts/build-apk.sh ${nextRelease.version}'
-      }
     ]
   ]
 };
