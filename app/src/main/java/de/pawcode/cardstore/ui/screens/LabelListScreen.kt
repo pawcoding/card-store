@@ -7,15 +7,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.twotone.DeleteForever
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -112,7 +117,9 @@ fun LabelListScreenComponent(
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(innerPadding)
+                .fillMaxSize()
+                .padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (labels.isEmpty()) {
                 Box(
@@ -128,20 +135,28 @@ fun LabelListScreenComponent(
                     )
                 }
             } else {
-                labels.forEachIndexed { index, label ->
-                    Text(
-                        text = label.name,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(24.dp)
-                            .pointerInput(Unit) {
-                                detectTapGestures(
-                                    onTap = { showLabelOptionSheet = label }
-                                )
-                            }
-                    )
+                Column(
+                    modifier = Modifier
+                        .widthIn(max = 500.dp)
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    labels.forEachIndexed { index, label ->
+                        ListItem(
+                            headlineContent = { Text(label.name) },
+                            trailingContent = {
+                                Icon(Icons.Filled.MoreHoriz, contentDescription = "Options")
+                            },
+                            modifier = Modifier
+                                .pointerInput(Unit) {
+                                    detectTapGestures(
+                                        onTap = { showLabelOptionSheet = label }
+                                    )
+                                }
+                        )
 
-                    HorizontalDivider()
+                        HorizontalDivider()
+                    }
                 }
             }
         }
