@@ -11,10 +11,12 @@ import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.twotone.DeleteForever
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -93,6 +95,9 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
                 preferencesManager.saveSortAttribute(it)
             }
         },
+        onShowAbout = {
+            navController.navigate(Screen.About.route)
+        }
     )
 }
 
@@ -107,6 +112,7 @@ fun CardListScreenComponent(
     onDeleteCard: (CardEntity) -> Unit,
     onViewLabels: () -> Unit,
     onSortChange: (SortAttribute) -> Unit,
+    onShowAbout: () -> Unit,
 ) {
     val cards by cardsFlow.collectAsState(initial = emptyList())
     val labels by labelsFlow.collectAsState(initial = emptyList())
@@ -147,6 +153,11 @@ fun CardListScreenComponent(
             AppBar(
                 title = stringResource(R.string.app_name),
                 actions = {
+                    IconButton(
+                        onClick = { onShowAbout() }
+                    ) {
+                        Icon(Icons.Outlined.Info, contentDescription = "About")
+                    }
                     SelectDropdownMenu(
                         icon = Icons.AutoMirrored.Filled.Sort,
                         title = stringResource(R.string.cards_sort),
@@ -282,6 +293,7 @@ fun PreviewCardListScreenComponent() {
         onDeleteCard = {},
         onViewLabels = {},
         onSortChange = {},
+        onShowAbout = {},
     )
 }
 
@@ -298,5 +310,6 @@ fun PreviewCardListScreenComponentEmpty() {
         onDeleteCard = {},
         onViewLabels = {},
         onSortChange = {},
+        onShowAbout = {},
     )
 }

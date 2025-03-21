@@ -21,4 +21,4 @@ fi
 
 # Write the updated version code and name to properties file
 sed -i "s/^VERSION_CODE=.*/VERSION_CODE=$VERSION_CODE/" "$PROPERTIES_FILE"
-sed -i "s/^VERSION_NAME=.*/VERSION_NAME=\"$VERSION_NAME\"/" "$PROPERTIES_FILE"
+sed -i "s/^VERSION_NAME=.*/VERSION_NAME=$VERSION_NAME/" "$PROPERTIES_FILE"
