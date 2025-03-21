@@ -33,7 +33,7 @@ data class DropdownOption<TValue : Enum<TValue>>(
 fun <TValue : Enum<TValue>> SelectDropdownMenu(
     icon: ImageVector,
     title: String,
-    value: TValue,
+    value: TValue?,
     values: List<DropdownOption<TValue>>,
     onValueChange: (TValue) -> Unit,
     initiallyExpanded: Boolean = false

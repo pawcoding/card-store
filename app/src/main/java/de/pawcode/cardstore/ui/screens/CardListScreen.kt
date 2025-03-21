@@ -55,6 +55,8 @@ import de.pawcode.cardstore.ui.sheets.Option
 import de.pawcode.cardstore.ui.sheets.OptionSheet
 import de.pawcode.cardstore.ui.sheets.ViewCardSheet
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 
@@ -64,14 +66,10 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     val preferencesManager = remember { PreferencesManager(context) }
     val scope = rememberCoroutineScope()
 
-    val cardsWithLabels by viewModel.allCards.collectAsState(initial = emptyList())
-    val labels by viewModel.allLabels.collectAsState(initial = emptyList())
-    val sortBy by preferencesManager.sortAttribute.collectAsState(initial = null)
-
     CardListScreenComponent(
-        cards = cardsWithLabels,
-        labels = labels,
-        sortBy = sortBy,
+        cardsFlow = viewModel.allCards,
+        labelsFlow = viewModel.allLabels,
+        sortByFlow = preferencesManager.sortAttribute,
         onEditCard = { card ->
             if (card != null) {
                 navController.navigate(Screen.EditCard.route + "?cardId=${card.cardId}")
@@ -101,15 +99,19 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardListScreenComponent(
-    cards: List<CardWithLabels>,
-    labels: List<LabelEntity>,
-    sortBy: SortAttribute?,
+    cardsFlow: Flow<List<CardWithLabels>>,
+    labelsFlow: Flow<List<LabelEntity>>,
+    sortByFlow: Flow<SortAttribute?>,
     onEditCard: (CardEntity?) -> Unit,
     onShowCard: (CardEntity) -> Unit,
     onDeleteCard: (CardEntity) -> Unit,
     onViewLabels: () -> Unit,
     onSortChange: (SortAttribute) -> Unit,
 ) {
+    val cards by cardsFlow.collectAsState(initial = emptyList())
+    val labels by labelsFlow.collectAsState(initial = emptyList())
+    val sortBy by sortByFlow.collectAsState(initial = null)
+
     var showCardSheet by remember { mutableStateOf<CardEntity?>(null) }
     var showCardOptionSheet by remember { mutableStateOf<CardEntity?>(null) }
     var openDeleteDialog by remember { mutableStateOf<CardEntity?>(null) }
@@ -148,7 +150,7 @@ fun CardListScreenComponent(
                     SelectDropdownMenu(
                         icon = Icons.AutoMirrored.Filled.Sort,
                         title = stringResource(R.string.cards_sort),
-                        value = SortAttribute.ALPHABETICALLY,
+                        value = sortBy,
                         values = listOf(
                             DropdownOption(
                                 title = stringResource(R.string.sort_alphabetically),
@@ -272,9 +274,9 @@ fun CardListScreenComponent(
 @Composable
 fun PreviewCardListScreenComponent() {
     CardListScreenComponent(
-        cards = listOf(EXAMPLE_CARD_WITH_LABELS),
-        labels = EXAMPLE_LABEL_LIST,
-        sortBy = SortAttribute.ALPHABETICALLY,
+        cardsFlow = flowOf(listOf(EXAMPLE_CARD_WITH_LABELS)),
+        labelsFlow = flowOf(EXAMPLE_LABEL_LIST),
+        sortByFlow = flowOf(SortAttribute.ALPHABETICALLY),
         onEditCard = {},
         onShowCard = {},
         onDeleteCard = {},
@@ -288,9 +290,9 @@ fun PreviewCardListScreenComponent() {
 @Composable
 fun PreviewCardListScreenComponentEmpty() {
     CardListScreenComponent(
-        cards = listOf(),
-        labels = listOf(),
-        sortBy = SortAttribute.ALPHABETICALLY,
+        cardsFlow = flowOf(emptyList()),
+        labelsFlow = flowOf(emptyList()),
+        sortByFlow = flowOf(SortAttribute.ALPHABETICALLY),
         onEditCard = {},
         onShowCard = {},
         onDeleteCard = {},
