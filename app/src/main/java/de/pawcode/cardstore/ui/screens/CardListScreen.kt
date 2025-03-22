@@ -156,7 +156,10 @@ fun CardListScreenComponent(
                     IconButton(
                         onClick = { onShowAbout() }
                     ) {
-                        Icon(Icons.Outlined.Info, contentDescription = "About")
+                        Icon(
+                            Icons.Outlined.Info,
+                            contentDescription = stringResource(R.string.about)
+                        )
                     }
                     SelectDropdownMenu(
                         icon = Icons.AutoMirrored.Filled.Sort,

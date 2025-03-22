@@ -1,4 +1,5 @@
 <resources>
+    <string name="about">About</string>
     <string name="app_name">CardStore</string>
     <string name="card_add">Add card</string>
     <string name="card_added">Card added</string>
@@ -19,12 +20,15 @@
     <string name="cards_list_empty_filtered">No cards with this label</string>
     <string name="cards_new">Add new card</string>
     <string name="cards_sort">Sort cards</string>
+    <string name="changelog_view">View changelog</string>
     <string name="common_back">Back</string>
     <string name="common_cancel">Cancel</string>
     <string name="common_delete">Delete</string>
     <string name="common_required">required</string>
     <string name="common_save">Save</string>
     <string name="common_update">Update</string>
+    <string name="github_issues">Open an issue on GitHub</string>
+    <string name="github_repository">Open project on GitHub</string>
     <string name="label_add">Add label</string>
     <string name="label_added">Label added</string>
     <string name="label_delete_description">Are you sure you want to delete the label? It cannot be restored.</string>
@@ -37,8 +41,14 @@
     <string name="labels_list_empty">Create your first label to categorize your cards</string>
     <string name="labels_new">Add new label</string>
     <string name="labels_none">No labels</string>
+    <string name="labels_options">Options</string>
+    <string name="report_issue">Report an issue</string>
     <string name="scan_barcode">Scan barcode</string>
     <string name="sort_alphabetically">Alphabetically</string>
     <string name="sort_most_used">Most used</string>
     <string name="sort_recently_used">Recently used</string>
+    <string name="source_code">View source code</string>
+    <string name="technologies">Technologies</string>
+    <string name="version">Version</string>
+    <string name="website">Visit website</string>
 </resources>

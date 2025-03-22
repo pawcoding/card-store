@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="about">Über</string>
     <string name="app_name">CardStore</string>
     <string name="card_add">Karte hinzufügen</string>
     <string name="card_added">Karte hinzugefügt</string>
@@ -20,12 +21,15 @@
     <string name="cards_list_empty_filtered">Keine Karten mit diesem Label</string>
     <string name="cards_new">Neue Karte hinzufügen</string>
     <string name="cards_sort">Karten sortieren</string>
+    <string name="changelog_view">Änderungsprotokoll anzeigen</string>
     <string name="common_back">Zurück</string>
     <string name="common_cancel">Abbrechen</string>
     <string name="common_delete">Löschen</string>
     <string name="common_required">erforderlich</string>
     <string name="common_save">Speichern</string>
     <string name="common_update">Aktualisieren</string>
+    <string name="github_issues">Ticket auf GitHub öffnen</string>
+    <string name="github_repository">Projekt auf GitHub öffnen</string>
     <string name="label_add">Label hinzufügen</string>
     <string name="label_added">Label hinzugefügt</string>
     <string name="label_delete_description">Möchtest Du das Label wirklich löschen? Es kann nicht wiederhergestellt werden.</string>
@@ -38,8 +42,14 @@
     <string name="labels_list_empty">Erstelle dein erstes Label, um deine Karten zu kategorisieren</string>
     <string name="labels_new">Neues Label hinzufügen</string>
     <string name="labels_none">Keine Labels</string>
+    <string name="labels_options">Optionen</string>
+    <string name="report_issue">Ein Problem entdeckt?</string>
     <string name="scan_barcode">Barcode scannen</string>
     <string name="sort_alphabetically">Alphabetisch</string>
     <string name="sort_most_used">Am häufigsten verwendet</string>
     <string name="sort_recently_used">Kürzlich verwendet</string>
+    <string name="source_code">Quellcode anzeigen</string>
+    <string name="technologies">Technologien</string>
+    <string name="version">Version</string>
+    <string name="website">Webseite besuchen</string>
 </resources>

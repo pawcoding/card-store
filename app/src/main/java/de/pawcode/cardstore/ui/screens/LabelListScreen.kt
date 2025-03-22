@@ -145,7 +145,10 @@ fun LabelListScreenComponent(
                         ListItem(
                             headlineContent = { Text(label.name) },
                             trailingContent = {
-                                Icon(Icons.Filled.MoreHoriz, contentDescription = "Options")
+                                Icon(
+                                    Icons.Filled.MoreHoriz,
+                                    contentDescription = stringResource(R.string.labels_options)
+                                )
                             },
                             modifier = Modifier
                                 .pointerInput(Unit) {

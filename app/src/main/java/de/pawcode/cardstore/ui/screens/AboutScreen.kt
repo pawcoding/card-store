@@ -96,7 +96,7 @@ fun AboutScreenComponent(
                     .fillMaxWidth(),
             ) {
                 Text(
-                    text = "About",
+                    text = stringResource(R.string.about),
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.padding(
                         top = 24.dp,
@@ -110,7 +110,7 @@ fun AboutScreenComponent(
 
                 ListItem(
                     headlineContent = {
-                        Text("Version")
+                        Text(stringResource(R.string.version))
                     },
                     supportingContent = {
                         Text(versionName + " (${packageInfo.longVersionCode})")
@@ -119,7 +119,7 @@ fun AboutScreenComponent(
                         if (hasVersionName) {
                             Icon(
                                 Icons.AutoMirrored.Filled.NavigateNext,
-                                contentDescription = "View changelog"
+                                contentDescription = stringResource(R.string.changelog_view)
                             )
                         } else {
                             null
@@ -145,14 +145,14 @@ fun AboutScreenComponent(
                         Text("pawcode Development")
                     },
                     supportingContent = {
-                        Text("Visit website")
+                        Text(stringResource(R.string.website))
                     },
                     trailingContent = {
                         Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = null)
                     },
                     modifier = Modifier.pointerInput(Unit) {
                         detectTapGestures(
-                            onTap = { onOpenWebsite("https://pawcode.de") }
+                            onTap = { onOpenWebsite("https://pawcode.de/?mtm_campaign=CardStore&mtm_kwd=About&mtm_source=App") }
                         )
                     }
                 )
@@ -161,10 +161,10 @@ fun AboutScreenComponent(
 
                 ListItem(
                     headlineContent = {
-                        Text("View source code")
+                        Text(stringResource(R.string.source_code))
                     },
                     supportingContent = {
-                        Text("Open project on GitHub")
+                        Text(stringResource(R.string.github_repository))
                     },
                     trailingContent = {
                         Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = null)
@@ -180,10 +180,10 @@ fun AboutScreenComponent(
 
                 ListItem(
                     headlineContent = {
-                        Text("Report an issue")
+                        Text(stringResource(R.string.report_issue))
                     },
                     supportingContent = {
-                        Text("Open an issue on GitHub")
+                        Text(stringResource(R.string.github_issues))
                     },
                     trailingContent = {
                         Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = null)
@@ -198,7 +198,7 @@ fun AboutScreenComponent(
                 HorizontalDivider()
 
                 Text(
-                    text = "Technologies",
+                    text = stringResource(R.string.technologies),
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.padding(
                         top = 24.dp,
