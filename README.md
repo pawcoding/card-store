@@ -13,7 +13,8 @@ wallets filled with cards!
 
 ## Installation
 
-1. Download the app from the [Google Play Store](Link to Play Store, once available).
+1. Download the app from
+   the [Google Play Store](https://play.google.com/store/apps/details?id=de.pawcode.cardstore).
 2. Open the app and start scanning your loyalty cards.
 
 ## Usage
