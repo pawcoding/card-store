@@ -17,6 +17,7 @@ const config = {
           { type: 'build', scope: 'deps', release: 'patch' },
           { type: 'refactor', release: 'patch' },
           { type: 'ci', release: 'patch' },
+          { type: 'i18n', release: 'patch' },
           { type: 'style', release: 'patch' }
         ],
         parserOpts: {
