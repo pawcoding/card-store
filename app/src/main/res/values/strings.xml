@@ -11,6 +11,7 @@
     <string name="card_edit">Edit card</string>
     <string name="card_invalid_barcode_format">Invalid format</string>
     <string name="card_labels">Labels</string>
+    <string name="card_no_labels">No labels created yet</string>
     <string name="card_number">Card number</string>
     <string name="card_pick_color">Pick a color</string>
     <string name="card_save">Save card</string>

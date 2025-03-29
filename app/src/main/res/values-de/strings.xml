@@ -12,6 +12,7 @@
     <string name="card_edit">Karte bearbeiten</string>
     <string name="card_invalid_barcode_format">Ungültiges Format</string>
     <string name="card_labels">Labels</string>
+    <string name="card_no_labels">Keine Labels verfügbar</string>
     <string name="card_number">Kartennummer</string>
     <string name="card_pick_color">Wähle eine Farbe</string>
     <string name="card_save">Karte speichern</string>

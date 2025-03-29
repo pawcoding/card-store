@@ -291,40 +291,48 @@ fun EditCardForm(
             )
         }
 
-        FlowRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            labels.forEach { label ->
-                val chipSelected =
-                    label.labelId == card.labels.find { it.labelId == label.labelId }?.labelId
-                FilterChip(
-                    selected = chipSelected,
-                    onClick = {
-                        if (chipSelected) {
-                            card =
-                                card.copy(labels = card.labels.filter { it.labelId != label.labelId })
-                        } else {
-                            card = card.copy(labels = card.labels + label)
-                        }
-                    },
-                    label = {
-                        Text(
-                            modifier = Modifier.padding(vertical = 8.dp),
-                            text = label.name,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    },
-                    leadingIcon = {
-                        if (chipSelected) {
-                            Icon(
-                                Icons.Filled.Check,
-                                contentDescription = null
+        if (labels.isNotEmpty()) {
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                labels.forEach { label ->
+                    val chipSelected =
+                        label.labelId == card.labels.find { it.labelId == label.labelId }?.labelId
+                    FilterChip(
+                        selected = chipSelected,
+                        onClick = {
+                            if (chipSelected) {
+                                card =
+                                    card.copy(labels = card.labels.filter { it.labelId != label.labelId })
+                            } else {
+                                card = card.copy(labels = card.labels + label)
+                            }
+                        },
+                        label = {
+                            Text(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                text = label.name,
+                                style = MaterialTheme.typography.bodyLarge
                             )
+                        },
+                        leadingIcon = {
+                            if (chipSelected) {
+                                Icon(
+                                    Icons.Filled.Check,
+                                    contentDescription = null
+                                )
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
+        } else {
+            Text(
+                text = stringResource(R.string.card_no_labels),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(8.dp)
+            )
         }
     }
 
