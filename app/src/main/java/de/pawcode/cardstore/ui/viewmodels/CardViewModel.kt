@@ -3,9 +3,11 @@ package de.pawcode.cardstore.ui.viewmodels
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.data.database.classes.CardWithLabels
 import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.database.entities.LabelEntity
+import de.pawcode.cardstore.data.database.entities.emptyCard
 import de.pawcode.cardstore.data.database.repositories.CardRepository
 import de.pawcode.cardstore.data.database.repositories.LabelRepository
 import kotlinx.coroutines.flow.Flow
@@ -19,9 +21,25 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
     val allCards: Flow<List<CardWithLabels>> = cardRepository.allCards
     val allLabels = labelRepository.allLabels
 
-    fun getCardById(id: String?): Flow<CardWithLabels?> = flow {
+    fun getCardById(
+        id: String?,
+        cardNumber: String? = null,
+        barcodeType: BarcodeType? = null
+    ): Flow<CardWithLabels?> = flow {
         if (id == null) {
-            emit(null)
+            if (cardNumber == null || barcodeType == null) {
+                emit(null)
+            } else {
+                emit(
+                    CardWithLabels(
+                        card = emptyCard().copy(
+                            cardNumber = cardNumber,
+                            barcodeFormat = barcodeType
+                        ),
+                        labels = emptyList()
+                    )
+                )
+            }
         } else {
             cardRepository.getCardById(id).collect { emit(it) }
         }

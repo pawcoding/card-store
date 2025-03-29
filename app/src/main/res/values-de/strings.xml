@@ -7,6 +7,7 @@
     <string name="card_barcode_type">Barcode Typ:</string>
     <string name="card_code">Code</string>
     <string name="card_color">Farbe</string>
+    <string name="card_create_manual">Karte manuell erstellen</string>
     <string name="card_delete_description">Möchtest du die Karte wirklich löschen? Sie kann nicht wiederhergestellt werden.</string>
     <string name="card_delete_title">Karte löschen</string>
     <string name="card_edit">Karte bearbeiten</string>

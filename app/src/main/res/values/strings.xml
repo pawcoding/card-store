@@ -6,6 +6,7 @@
     <string name="card_barcode_type">Barcode type:</string>
     <string name="card_code">Code</string>
     <string name="card_color">Color</string>
+    <string name="card_create_manual">Create manual</string>
     <string name="card_delete_description">Are you sure you want to delete the card? It cannot be restored.</string>
     <string name="card_delete_title">Delete card</string>
     <string name="card_edit">Edit card</string>

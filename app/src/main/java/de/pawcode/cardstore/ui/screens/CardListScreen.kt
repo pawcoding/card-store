@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.QrCodeScanner
 import androidx.compose.material.icons.twotone.DeleteForever
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -56,6 +57,7 @@ import de.pawcode.cardstore.ui.dialogs.ConfirmDialog
 import de.pawcode.cardstore.ui.sheets.Option
 import de.pawcode.cardstore.ui.sheets.OptionSheet
 import de.pawcode.cardstore.ui.sheets.ViewCardSheet
+import de.pawcode.cardstore.ui.utils.BarcodeScanner
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -72,12 +74,24 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
         cardsFlow = viewModel.allCards,
         labelsFlow = viewModel.allLabels,
         sortByFlow = preferencesManager.sortAttribute,
-        onEditCard = { card ->
-            if (card != null) {
-                navController.navigate(Screen.EditCard.route + "?cardId=${card.cardId}")
-            } else {
-                navController.navigate(Screen.EditCard.route)
+        onCreateCard = { cardNumber, barcodeFormat ->
+            val route = buildString {
+                append(Screen.EditCard.route)
+                if (cardNumber != null || barcodeFormat != null) {
+                    append("?")
+                    if (cardNumber != null) {
+                        append("cardNumber=$cardNumber")
+                    }
+                    if (barcodeFormat != null) {
+                        if (cardNumber != null) append("&")
+                        append("barcodeFormat=$barcodeFormat")
+                    }
+                }
             }
+            navController.navigate(route)
+        },
+        onEditCard = { card ->
+            navController.navigate(Screen.EditCard.route + "?cardId=${card.cardId}")
         },
         onShowCard = {
             viewModel.addUsage(it)
@@ -107,7 +121,8 @@ fun CardListScreenComponent(
     cardsFlow: Flow<List<CardWithLabels>>,
     labelsFlow: Flow<List<LabelEntity>>,
     sortByFlow: Flow<SortAttribute?>,
-    onEditCard: (CardEntity?) -> Unit,
+    onCreateCard: (cardNumber: String?, barcodeFormat: Int?) -> Unit,
+    onEditCard: (CardEntity) -> Unit,
     onShowCard: (CardEntity) -> Unit,
     onDeleteCard: (CardEntity) -> Unit,
     onViewLabels: () -> Unit,
@@ -120,11 +135,14 @@ fun CardListScreenComponent(
 
     var showCardSheet by remember { mutableStateOf<CardEntity?>(null) }
     var showCardOptionSheet by remember { mutableStateOf<CardEntity?>(null) }
+    var showCardCreateSheet by remember { mutableStateOf(false) }
     var openDeleteDialog by remember { mutableStateOf<CardEntity?>(null) }
+    var showBarcodeScanner by remember { mutableStateOf(false) }
 
     val listState = rememberLazyGridState()
     val cardSheetState = rememberModalBottomSheetState()
     val cardOptionSheetState = rememberModalBottomSheetState()
+    val cardCreateSheetState = rememberModalBottomSheetState()
 
     var selectedLabel by remember { mutableStateOf<String?>(null) }
 
@@ -188,7 +206,7 @@ fun CardListScreenComponent(
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { onEditCard(null) },
+                onClick = { showCardCreateSheet = true },
                 text = { Text(stringResource(R.string.cards_new)) },
                 icon = {
                     Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.cards_new))
@@ -266,6 +284,33 @@ fun CardListScreenComponent(
                 }
             }
 
+            if (showCardCreateSheet) {
+                ModalBottomSheet(
+                    modifier = Modifier
+                        .safeDrawingPadding(),
+                    sheetState = cardCreateSheetState,
+                    onDismissRequest = { showCardCreateSheet = false }) {
+                    OptionSheet(
+                        Option(
+                            label = stringResource(R.string.scan_barcode),
+                            icon = Icons.Outlined.QrCodeScanner,
+                            onClick = {
+                                showBarcodeScanner = true
+                                showCardCreateSheet = false
+                            }
+                        ),
+                        Option(
+                            label = stringResource(R.string.card_create_manual),
+                            icon = Icons.Filled.Edit,
+                            onClick = {
+                                onCreateCard(null, null)
+                                showCardCreateSheet = false
+                            }
+                        )
+                    )
+                }
+            }
+
             openDeleteDialog?.let {
                 ConfirmDialog(
                     onDismissRequest = { openDeleteDialog = null },
@@ -277,6 +322,16 @@ fun CardListScreenComponent(
                     dialogText = stringResource(R.string.card_delete_description),
                     confirmText = stringResource(R.string.common_delete),
                     Icons.TwoTone.DeleteForever
+                )
+            }
+
+            if (showBarcodeScanner) {
+                BarcodeScanner(
+                    onBarcodeDetected = { barcode ->
+                        onCreateCard(barcode.rawValue ?: "", barcode.format)
+                        showBarcodeScanner = false
+                    },
+                    onCancel = { showBarcodeScanner = false }
                 )
             }
         }
@@ -291,6 +346,7 @@ fun PreviewCardListScreenComponent() {
         cardsFlow = flowOf(listOf(EXAMPLE_CARD_WITH_LABELS)),
         labelsFlow = flowOf(EXAMPLE_LABEL_LIST),
         sortByFlow = flowOf(SortAttribute.ALPHABETICALLY),
+        onCreateCard = { _, _ -> },
         onEditCard = {},
         onShowCard = {},
         onDeleteCard = {},
@@ -308,6 +364,7 @@ fun PreviewCardListScreenComponentEmpty() {
         cardsFlow = flowOf(emptyList()),
         labelsFlow = flowOf(emptyList()),
         sortByFlow = flowOf(SortAttribute.ALPHABETICALLY),
+        onCreateCard = { _, _ -> },
         onEditCard = {},
         onShowCard = {},
         onDeleteCard = {},

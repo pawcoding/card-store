@@ -21,6 +21,7 @@ import de.pawcode.cardstore.ui.screens.CardListScreen
 import de.pawcode.cardstore.ui.screens.EditCardScreen
 import de.pawcode.cardstore.ui.screens.EditLabelScreen
 import de.pawcode.cardstore.ui.screens.LabelListScreen
+import de.pawcode.cardstore.utils.mapBarcodeFormat
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -50,14 +51,33 @@ fun Navigation() {
                 CardListScreen(navController = navController)
             }
             composable(
-                route = Screen.EditCard.route + "?cardId={cardId}",
-                arguments = listOf(navArgument("cardId") {
-                    type = NavType.StringType
-                    nullable = true
-                })
+                route = Screen.EditCard.route + "?cardId={cardId}&cardNumber={cardNumber}&barcodeFormat={barcodeFormat}",
+                arguments = listOf(
+                    navArgument("cardId") {
+                        type = NavType.StringType
+                        nullable = true
+                    },
+                    navArgument("cardNumber") {
+                        type = NavType.StringType
+                        nullable = true
+                    },
+                    navArgument("barcodeFormat") {
+                        type = NavType.StringType
+                        nullable = true
+                    }
+                )
             ) { entry ->
                 val cardId = entry.arguments?.getString("cardId")
-                EditCardScreen(navController = navController, cardId = cardId)
+                val cardNumber = entry.arguments?.getString("cardNumber")
+                val barcodeType = entry.arguments?.getString("barcodeFormat")
+                    ?.toIntOrNull()
+                    ?.let { mapBarcodeFormat(it) }
+                EditCardScreen(
+                    navController = navController,
+                    cardId = cardId,
+                    cardNumber = cardNumber,
+                    barcodeType = barcodeType
+                )
             }
             composable(Screen.LabelList.route) {
                 LabelListScreen(navController = navController)

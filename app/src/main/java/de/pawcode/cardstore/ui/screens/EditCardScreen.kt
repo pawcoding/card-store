@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.classes.CardWithLabels
 import de.pawcode.cardstore.data.database.classes.EXAMPLE_CARD_WITH_LABELS
@@ -43,23 +44,30 @@ import de.pawcode.cardstore.utils.isCardValid
 fun EditCardScreen(
     navController: NavController,
     cardId: String? = null,
+    cardNumber: String? = null,
+    barcodeType: BarcodeType? = null,
     viewModel: CardViewModel = viewModel()
 ) {
     val scope = rememberCoroutineScope()
 
     val labels by viewModel.allLabels.collectAsState(initial = emptyList())
-    val initialCard by viewModel.getCardById(cardId).collectAsState(initial = null)
+    val initialCard by viewModel.getCardById(
+        id = cardId,
+        cardNumber = cardNumber,
+        barcodeType = barcodeType
+    ).collectAsState(initial = null)
 
     val snackbarMessage = stringResource(
         if (initialCard != null) R.string.card_updated else R.string.card_added
     )
 
     EditCardScreenComponent(
+        isCreateCard = cardId == null,
         initialCard = initialCard,
         labels = labels,
         onBack = { navController.popBackStack() },
         onSave = { card ->
-            if (initialCard != null) {
+            if (cardId != null && initialCard != null) {
                 viewModel.updateCard(card.card)
 
                 val (labelsToAdd, labelsToRemove) = classifyLabelsForUpdate(
@@ -90,6 +98,7 @@ fun EditCardScreen(
 
 @Composable
 fun EditCardScreenComponent(
+    isCreateCard: Boolean,
     initialCard: CardWithLabels?,
     labels: List<LabelEntity>,
     onBack: () -> Unit,
@@ -103,20 +112,20 @@ fun EditCardScreenComponent(
 
     val isValid by remember { derivedStateOf { isCardValid(card.card) } }
     val hasChanges by remember {
-        derivedStateOf { initialCard == null || hasCardChanged(initialCard, card) }
+        derivedStateOf { isCreateCard || initialCard == null || hasCardChanged(initialCard, card) }
     }
 
     Scaffold(
         modifier = Modifier.imePadding(),
         topBar = {
             AppBar(
-                title = stringResource(if (initialCard != null) R.string.card_edit else R.string.card_add),
+                title = stringResource(if (!isCreateCard) R.string.card_edit else R.string.card_add),
                 onBack = { onBack() }
             )
         },
         floatingActionButton = {
             SaveFabComponent(
-                hadInitialValue = initialCard != null,
+                hadInitialValue = !isCreateCard,
                 hasChanges = hasChanges,
                 isValid = isValid,
                 onSave = { onSave(card) }
@@ -145,6 +154,7 @@ fun EditCardScreenComponent(
 @Composable
 fun PreviewEditCardScreenComponent() {
     EditCardScreenComponent(
+        isCreateCard = false,
         initialCard = EXAMPLE_CARD_WITH_LABELS,
         labels = EXAMPLE_LABEL_LIST,
         onBack = {},
@@ -157,6 +167,7 @@ fun PreviewEditCardScreenComponent() {
 @Composable
 fun PreviewEditCardScreenComponentEmpty() {
     EditCardScreenComponent(
+        isCreateCard = true,
         initialCard = null,
         labels = listOf(),
         onBack = {},
