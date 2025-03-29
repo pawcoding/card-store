@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "de.pawcode.cardstore"
-        minSdk = 33
+        minSdk = 31
         targetSdk = 35
 
         val properties = Properties()
