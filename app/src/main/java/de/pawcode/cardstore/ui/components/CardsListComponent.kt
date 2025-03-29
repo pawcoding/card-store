@@ -49,6 +49,7 @@ fun CardsListComponent(
         }
     } else {
         LazyVerticalGrid(
+            modifier = Modifier.fillMaxSize(),
             state = listState,
             columns = GridCells.Adaptive(minSize = 300.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
