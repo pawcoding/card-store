@@ -40,6 +40,7 @@ jobs:
 
       - name: 🚀 Release APK
         uses: cycjimmy/semantic-release-action@v4
+        id: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -51,3 +52,17 @@ jobs:
             @semantic-release/changelog
             @semantic-release/git
             @semantic-release/exec
+
+      - name: 📤 Upload bundle to PlayStore
+        if: steps.release.outputs.new_release_published == 'true'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: de.pawcode.cardstore
+          track: ${{ github.ref == 'refs/heads/master' && 'production' || 'beta' }}
+          releaseName: ${{ steps.release.outputs.new_release_version }}
+          status: draft
+          mappingFile: app/build/outputs/mapping/release/mapping.txt
+          debugSymbols: app/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
+          changesNotSentForReview: true
