@@ -65,4 +65,3 @@ jobs:
           status: draft
           mappingFile: app/build/outputs/mapping/release/mapping.txt
           debugSymbols: app/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
-          changesNotSentForReview: true
