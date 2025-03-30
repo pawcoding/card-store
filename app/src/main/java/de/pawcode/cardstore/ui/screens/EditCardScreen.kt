@@ -19,6 +19,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,6 +31,7 @@ import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.classes.CardWithLabels
 import de.pawcode.cardstore.data.database.classes.EXAMPLE_CARD_WITH_LABELS
 import de.pawcode.cardstore.data.database.classes.emptyCardWithLabels
+import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
 import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.services.SnackbarService
@@ -39,7 +42,10 @@ import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 import de.pawcode.cardstore.utils.classifyLabelsForUpdate
 import de.pawcode.cardstore.utils.hasCardChanged
 import de.pawcode.cardstore.utils.isCardValid
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun EditCardScreen(
     navController: NavController,
@@ -51,68 +57,79 @@ fun EditCardScreen(
     val scope = rememberCoroutineScope()
 
     val labels by viewModel.allLabels.collectAsState(initial = emptyList())
-    val initialCard by viewModel.getCardById(
-        id = cardId,
-        cardNumber = cardNumber,
-        barcodeType = barcodeType
-    ).collectAsState(initial = null)
+    val initialCard = if (cardId != null) {
+        viewModel.getCardById(cardId).collectAsState(initial = null).value
+    } else {
+        CardWithLabels(
+            card = CardEntity(
+                cardId = Uuid.random().toString(),
+                storeName = "",
+                cardNumber = cardNumber ?: "",
+                barcodeFormat = barcodeType ?: BarcodeType.QR_CODE,
+                color = Color.White.toArgb()
+            ),
+            labels = emptyList()
+        )
+    }
 
     val snackbarMessage = stringResource(
-        if (initialCard != null) R.string.card_updated else R.string.card_added
+        if (cardId != null) R.string.card_updated else R.string.card_added
     )
 
-    EditCardScreenComponent(
-        isCreateCard = cardId == null,
-        initialCard = initialCard,
-        labels = labels,
-        onBack = { navController.popBackStack() },
-        onSave = { card ->
-            if (cardId != null && initialCard != null) {
-                viewModel.updateCard(card.card)
+    initialCard?.let {
+        EditCardScreenComponent(
+            isCreateCard = cardId == null,
+            initialCard = it,
+            labels = labels,
+            onBack = { navController.popBackStack() },
+            onSave = { card ->
+                if (cardId != null) {
+                    viewModel.updateCard(card.card)
 
-                val (labelsToAdd, labelsToRemove) = classifyLabelsForUpdate(
-                    initialCard!!.labels,
-                    card.labels
+                    val (labelsToAdd, labelsToRemove) = classifyLabelsForUpdate(
+                        initialCard.labels,
+                        card.labels
+                    )
+                    viewModel.removeLabelsFromCard(
+                        initialCard.card.cardId,
+                        labelsToRemove
+                    )
+                    viewModel.addLabelsToCard(initialCard.card.cardId, labelsToAdd)
+                } else {
+                    viewModel.insertCard(card.card)
+                    viewModel.addLabelsToCard(
+                        card.card.cardId,
+                        card.labels.map { it.labelId })
+                }
+
+                navController.popBackStack()
+
+                SnackbarService.showSnackbar(
+                    message = snackbarMessage,
+                    scope = scope
                 )
-                viewModel.removeLabelsFromCard(
-                    initialCard!!.card.cardId,
-                    labelsToRemove
-                )
-                viewModel.addLabelsToCard(initialCard!!.card.cardId, labelsToAdd)
-            } else {
-                viewModel.insertCard(card.card)
-                viewModel.addLabelsToCard(
-                    card.card.cardId,
-                    card.labels.map { it.labelId })
             }
-
-            navController.popBackStack()
-
-            SnackbarService.showSnackbar(
-                message = snackbarMessage,
-                scope = scope
-            )
-        }
-    )
+        )
+    }
 }
 
 @Composable
 fun EditCardScreenComponent(
     isCreateCard: Boolean,
-    initialCard: CardWithLabels?,
+    initialCard: CardWithLabels,
     labels: List<LabelEntity>,
     onBack: () -> Unit,
     onSave: (CardWithLabels) -> Unit
 ) {
-    var card by remember { mutableStateOf(initialCard ?: emptyCardWithLabels()) }
+    var card by remember { mutableStateOf(initialCard) }
 
-    LaunchedEffect(initialCard) {
-        card = initialCard ?: emptyCardWithLabels()
+    LaunchedEffect(initialCard.card.cardId) {
+        card = initialCard
     }
 
     val isValid by remember { derivedStateOf { isCardValid(card.card) } }
     val hasChanges by remember {
-        derivedStateOf { isCreateCard || initialCard == null || hasCardChanged(initialCard, card) }
+        derivedStateOf { isCreateCard || hasCardChanged(initialCard, card) }
     }
 
     Scaffold(
@@ -141,7 +158,7 @@ fun EditCardScreenComponent(
         ) {
             EditCardForm(
                 modifier = Modifier.widthIn(max = 500.dp),
-                initialCard = card,
+                card = card,
                 labels = labels,
                 onCardUpdate = { card = it }
             )
@@ -168,7 +185,7 @@ fun PreviewEditCardScreenComponent() {
 fun PreviewEditCardScreenComponentEmpty() {
     EditCardScreenComponent(
         isCreateCard = true,
-        initialCard = null,
+        initialCard = emptyCardWithLabels(),
         labels = listOf(),
         onBack = {},
         onSave = {}

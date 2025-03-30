@@ -33,11 +33,11 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,27 +65,22 @@ import de.pawcode.cardstore.utils.mapBarcodeFormat
 @Composable
 fun EditCardForm(
     modifier: Modifier = Modifier,
-    initialCard: CardWithLabels? = null,
+    card: CardWithLabels,
     labels: List<LabelEntity>,
     onCardUpdate: (CardWithLabels) -> Unit
 ) {
     var showColorPicker by remember { mutableStateOf(false) }
     var showBarcodeScanner by remember { mutableStateOf(false) }
 
-    var card by remember { mutableStateOf(initialCard?.copy() ?: emptyCardWithLabels()) }
-    val color by remember { derivedStateOf { Color(card.card.color) } }
+    val cardState by rememberUpdatedState(card)
+    val color by remember { derivedStateOf { Color(cardState.card.color) } }
     val isLightColor by remember { derivedStateOf { isLightColor(color) } }
-
     val formatValid by remember {
-        derivedStateOf { card.card.cardNumber == "" || card.card.barcodeFormat.isValueValid(card.card.cardNumber) }
-    }
-
-    LaunchedEffect(initialCard) {
-        card = initialCard?.copy() ?: emptyCardWithLabels()
-    }
-
-    LaunchedEffect(card) {
-        onCardUpdate(card)
+        derivedStateOf {
+            cardState.card.cardNumber == "" || cardState.card.barcodeFormat.isValueValid(
+                cardState.card.cardNumber
+            )
+        }
     }
 
     Column(
@@ -113,7 +108,7 @@ fun EditCardForm(
 
         OutlinedTextField(
             value = card.card.storeName,
-            onValueChange = { card = card.copy(card = card.card.copy(storeName = it)) },
+            onValueChange = { onCardUpdate(card.copy(card = card.card.copy(storeName = it))) },
             label = { Text(stringResource(R.string.card_store_name) + "*") },
             supportingText = { Text("*" + stringResource(R.string.common_required)) },
             modifier = Modifier.fillMaxWidth(),
@@ -171,7 +166,7 @@ fun EditCardForm(
         ) {
             OutlinedTextField(
                 value = card.card.cardNumber,
-                onValueChange = { card = card.copy(card = card.card.copy(cardNumber = it)) },
+                onValueChange = { onCardUpdate(card.copy(card = card.card.copy(cardNumber = it))) },
                 label = { Text(stringResource(R.string.card_number) + "*") },
                 supportingText = { Text("*" + stringResource(R.string.common_required)) },
                 modifier = Modifier.weight(3f),
@@ -216,7 +211,7 @@ fun EditCardForm(
                     BarcodeType.entries.sortedBy { it.name }.forEach { type ->
                         DropdownMenuItem(
                             onClick = {
-                                card = card.copy(card = card.card.copy(barcodeFormat = type))
+                                onCardUpdate(card.copy(card = card.card.copy(barcodeFormat = type)))
                                 expanded = false
                             },
                             text = { Text(type.name) }
@@ -302,12 +297,15 @@ fun EditCardForm(
                     FilterChip(
                         selected = chipSelected,
                         onClick = {
-                            if (chipSelected) {
-                                card =
-                                    card.copy(labels = card.labels.filter { it.labelId != label.labelId })
-                            } else {
-                                card = card.copy(labels = card.labels + label)
-                            }
+                            onCardUpdate(
+                                card.copy(
+                                    labels = if (chipSelected) {
+                                        card.labels.filter { it.labelId != label.labelId }
+                                    } else {
+                                        card.labels + label
+                                    }
+                                )
+                            )
                         },
                         label = {
                             Text(
@@ -341,7 +339,9 @@ fun EditCardForm(
             color = color,
             onDismiss = { newColor ->
                 if (newColor != null) {
-                    card = card.copy(card = card.card.copy(color = newColor.toArgb()))
+                    onCardUpdate(
+                        card.copy(card = card.card.copy(color = newColor.toArgb()))
+                    )
                 }
                 showColorPicker = false
             }
@@ -351,13 +351,14 @@ fun EditCardForm(
     if (showBarcodeScanner) {
         BarcodeScanner(
             onBarcodeDetected = { barcode ->
-                card = card.copy(
-                    card = card.card.copy(
-                        cardNumber = barcode.rawValue ?: "",
-                        barcodeFormat = mapBarcodeFormat(barcode.format)
+                onCardUpdate(
+                    card.copy(
+                        card = card.card.copy(
+                            cardNumber = barcode.rawValue ?: "",
+                            barcodeFormat = mapBarcodeFormat(barcode.format)
+                        )
                     )
                 )
-
                 showBarcodeScanner = false
             },
             onCancel = { showBarcodeScanner = false }
@@ -371,6 +372,7 @@ fun EditCardForm(
 @Composable
 fun PreviewEditCardForm() {
     EditCardForm(
+        card = emptyCardWithLabels(),
         labels = EXAMPLE_LABEL_LIST,
         onCardUpdate = {}
     )
