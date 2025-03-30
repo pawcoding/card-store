@@ -55,7 +55,7 @@ const config = {
         '@semantic-release/github',
         {
             assets: ['app/build/outputs/apk/release/*.apk'],
-            successCommentCondition: '<% return !nextRelease.channel || !issue.labels.some(label => label.name === "released on @next"); %>'
+            successCommentCondition: '<% return issue.pull_request || !nextRelease.channel || !issue.labels.some(label => label.name === "released on @next"); %>'
         }
     ]
   ]
