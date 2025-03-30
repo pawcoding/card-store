@@ -15,7 +15,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,8 +53,6 @@ fun EditCardScreen(
     barcodeType: BarcodeType? = null,
     viewModel: CardViewModel = viewModel()
 ) {
-    val scope = rememberCoroutineScope()
-
     val labels by viewModel.allLabels.collectAsState(initial = emptyList())
     val initialCard = if (cardId != null) {
         viewModel.getCardById(cardId).collectAsState(initial = null).value
@@ -102,12 +99,11 @@ fun EditCardScreen(
                         card.labels.map { it.labelId })
                 }
 
-                navController.popBackStack()
-
                 SnackbarService.showSnackbar(
                     message = snackbarMessage,
-                    scope = scope
                 )
+
+                navController.popBackStack()
             }
         )
     }

@@ -51,7 +51,7 @@ fun EditLabelScreen(
     labelId: String? = null,
     viewModel: CardViewModel = viewModel()
 ) {
-    val scope = rememberCoroutineScope()
+    rememberCoroutineScope()
 
     val initialLabel by viewModel.getLabelById(labelId).collectAsState(initial = null)
 
@@ -73,7 +73,6 @@ fun EditLabelScreen(
 
             SnackbarService.showSnackbar(
                 message = snackbarMessage,
-                scope = scope
             )
         }
     )
