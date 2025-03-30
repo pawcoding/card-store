@@ -23,59 +23,52 @@ import de.pawcode.cardstore.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
-    title: String,
-    onBack: (() -> Unit)? = null,
-    actions: @Composable (RowScope.() -> Unit)? = null
+  title: String,
+  onBack: (() -> Unit)? = null,
+  actions: @Composable (RowScope.() -> Unit)? = null,
 ) {
-    TopAppBar(
-        title = { Text(text = title) },
-        navigationIcon = {
-            if (onBack != null) {
-                IconButton(
-                    onClick = { onBack() }
-                ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.common_back)
-                    )
-                }
-            }
-        },
-        actions = actions ?: {},
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.primary
-        )
-    )
+  TopAppBar(
+    title = { Text(text = title) },
+    navigationIcon = {
+      if (onBack != null) {
+        IconButton(onClick = { onBack() }) {
+          Icon(
+            Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = stringResource(R.string.common_back),
+          )
+        }
+      }
+    },
+    actions = actions ?: {},
+    colors =
+      TopAppBarDefaults.topAppBarColors(
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        titleContentColor = MaterialTheme.colorScheme.primary,
+      ),
+  )
 }
 
 @Preview
 @Composable
 fun PreviewAppBar() {
-    AppBar(
-        title = "Card Store",
-    )
+  AppBar(title = "Card Store")
 }
 
 @Preview
 @Composable
 fun PreviewAppBarActions() {
-    AppBar(
-        title = "Card Store",
-        onBack = {},
-        actions = {
-            Box(
-                modifier = Modifier.padding(16.dp)
-            ) {
-                IconButton(
-                    onClick = {}
-                ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.Sort,
-                        contentDescription = stringResource(R.string.cards_sort)
-                    )
-                }
-            }
+  AppBar(
+    title = "Card Store",
+    onBack = {},
+    actions = {
+      Box(modifier = Modifier.padding(16.dp)) {
+        IconButton(onClick = {}) {
+          Icon(
+            Icons.AutoMirrored.Filled.Sort,
+            contentDescription = stringResource(R.string.cards_sort),
+          )
         }
-    )
+      }
+    },
+  )
 }

@@ -33,82 +33,72 @@ import de.pawcode.cardstore.utils.isLightColor
 
 @Composable
 fun ViewCardSheet(card: CardEntity) {
-    val aspectRatio by remember { mutableFloatStateOf(calculateBarcodeAspectRatio(card.barcodeFormat)) }
-    val color by remember { mutableStateOf(Color(card.color)) }
-    val isLightColor by remember { derivedStateOf { isLightColor(color) } }
+  val aspectRatio by remember {
+    mutableFloatStateOf(calculateBarcodeAspectRatio(card.barcodeFormat))
+  }
+  val color by remember { mutableStateOf(Color(card.color)) }
+  val isLightColor by remember { derivedStateOf { isLightColor(color) } }
 
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 32.dp)
-            .clip(MaterialTheme.shapes.large)
-            .fillMaxWidth()
-            .background(color)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text(
-            text = card.storeName,
-            style = MaterialTheme.typography.headlineMedium,
-            color = if (isLightColor) Color.Black else Color.White
+  Column(
+    modifier =
+      Modifier.padding(horizontal = 32.dp)
+        .clip(MaterialTheme.shapes.large)
+        .fillMaxWidth()
+        .background(color)
+        .padding(16.dp),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.spacedBy(16.dp),
+  ) {
+    Text(
+      text = card.storeName,
+      style = MaterialTheme.typography.headlineMedium,
+      color = if (isLightColor) Color.Black else Color.White,
+    )
+
+    HorizontalDivider(color = if (isLightColor) Color(0, 0, 0, 128) else Color(255, 255, 255, 128))
+
+    if (card.barcodeFormat.isValueValid(card.cardNumber)) {
+      Box(
+        modifier =
+          Modifier.fillMaxWidth(0.7f * aspectRatio)
+            .aspectRatio(aspectRatio)
+            .clip(MaterialTheme.shapes.medium)
+            .background(Color.White)
+            .padding(8.dp)
+      ) {
+        Barcode(
+          modifier = Modifier.fillMaxWidth(),
+          resolutionFactor = 5,
+          value = card.cardNumber,
+          type = card.barcodeFormat,
+          width = (128 * aspectRatio).dp,
+          height = 128.dp,
         )
-
-        HorizontalDivider(
-            color = if (isLightColor) Color(0, 0, 0, 128) else Color(255, 255, 255, 128)
-        )
-
-        if (card.barcodeFormat.isValueValid(card.cardNumber)) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.7f * aspectRatio)
-                    .aspectRatio(aspectRatio)
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(Color.White)
-                    .padding(8.dp)
-            ) {
-                Barcode(
-                    modifier = Modifier.fillMaxWidth(),
-                    resolutionFactor = 5,
-                    value = card.cardNumber,
-                    type = card.barcodeFormat,
-                    width = (128 * aspectRatio).dp,
-                    height = 128.dp
-                )
-            }
-        } else {
-            Text(stringResource(R.string.card_invalid_barcode_format))
-        }
-
-        Text(
-            text = card.cardNumber, color = if (isLightColor) Color.Black else Color.White
-        )
+      }
+    } else {
+      Text(stringResource(R.string.card_invalid_barcode_format))
     }
+
+    Text(text = card.cardNumber, color = if (isLightColor) Color.Black else Color.White)
+  }
 }
 
 @Preview
 @Composable
 fun PreviewViewCardSheet() {
-    ViewCardSheet(EXAMPLE_CARD)
+  ViewCardSheet(EXAMPLE_CARD)
 }
 
 @Preview
 @Composable
 fun PreviewViewCardSheetBarcode() {
-    ViewCardSheet(
-        EXAMPLE_CARD.copy(
-            cardNumber = "123456789012",
-            barcodeFormat = BarcodeType.EAN_13
-        )
-    )
+  ViewCardSheet(EXAMPLE_CARD.copy(cardNumber = "123456789012", barcodeFormat = BarcodeType.EAN_13))
 }
 
 @Preview
 @Composable
 fun PreviewViewCardSheetBarcode2() {
-    ViewCardSheet(
-        EXAMPLE_CARD.copy(
-            cardNumber = "123456789012",
-            barcodeFormat = BarcodeType.CODE_128
-        )
-    )
+  ViewCardSheet(
+    EXAMPLE_CARD.copy(cardNumber = "123456789012", barcodeFormat = BarcodeType.CODE_128)
+  )
 }

@@ -8,25 +8,23 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 object SnackbarService {
-    val snackbarHostState = SnackbarHostState()
+  val snackbarHostState = SnackbarHostState()
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+  private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
-    fun showSnackbar(
-        message: String,
-        actionLabel: String? = null,
-        onAction: (() -> Unit)? = null
-    ) {
-        scope.launch {
-            snackbarHostState.showSnackbar(
-                message = message,
-                actionLabel = actionLabel,
-                withDismissAction = onAction != null,
-            ).let { result ->
-                if (result == SnackbarResult.ActionPerformed && onAction != null) {
-                    onAction()
-                }
-            }
+  fun showSnackbar(message: String, actionLabel: String? = null, onAction: (() -> Unit)? = null) {
+    scope.launch {
+      snackbarHostState
+        .showSnackbar(
+          message = message,
+          actionLabel = actionLabel,
+          withDismissAction = onAction != null,
+        )
+        .let { result ->
+          if (result == SnackbarResult.ActionPerformed && onAction != null) {
+            onAction()
+          }
         }
     }
+  }
 }

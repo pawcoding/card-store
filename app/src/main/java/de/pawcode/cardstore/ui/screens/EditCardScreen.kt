@@ -47,143 +47,130 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 @Composable
 fun EditCardScreen(
-    navController: NavController,
-    cardId: String? = null,
-    cardNumber: String? = null,
-    barcodeType: BarcodeType? = null,
-    viewModel: CardViewModel = viewModel()
+  navController: NavController,
+  cardId: String? = null,
+  cardNumber: String? = null,
+  barcodeType: BarcodeType? = null,
+  viewModel: CardViewModel = viewModel(),
 ) {
-    val labels by viewModel.allLabels.collectAsState(initial = emptyList())
-    val initialCard = if (cardId != null) {
-        viewModel.getCardById(cardId).collectAsState(initial = null).value
+  val labels by viewModel.allLabels.collectAsState(initial = emptyList())
+  val initialCard =
+    if (cardId != null) {
+      viewModel.getCardById(cardId).collectAsState(initial = null).value
     } else {
-        CardWithLabels(
-            card = CardEntity(
-                cardId = Uuid.random().toString(),
-                storeName = "",
-                cardNumber = cardNumber ?: "",
-                barcodeFormat = barcodeType ?: BarcodeType.QR_CODE,
-                color = Color.White.toArgb()
-            ),
-            labels = emptyList()
-        )
+      CardWithLabels(
+        card =
+          CardEntity(
+            cardId = Uuid.random().toString(),
+            storeName = "",
+            cardNumber = cardNumber ?: "",
+            barcodeFormat = barcodeType ?: BarcodeType.QR_CODE,
+            color = Color.White.toArgb(),
+          ),
+        labels = emptyList(),
+      )
     }
 
-    val snackbarMessage = stringResource(
-        if (cardId != null) R.string.card_updated else R.string.card_added
+  val snackbarMessage =
+    stringResource(if (cardId != null) R.string.card_updated else R.string.card_added)
+
+  initialCard?.let {
+    EditCardScreenComponent(
+      isCreateCard = cardId == null,
+      initialCard = it,
+      labels = labels,
+      onBack = { navController.popBackStack() },
+      onSave = { card ->
+        if (cardId != null) {
+          viewModel.updateCard(card.card)
+
+          val (labelsToAdd, labelsToRemove) =
+            classifyLabelsForUpdate(initialCard.labels, card.labels)
+          viewModel.removeLabelsFromCard(initialCard.card.cardId, labelsToRemove)
+          viewModel.addLabelsToCard(initialCard.card.cardId, labelsToAdd)
+        } else {
+          viewModel.insertCard(card.card)
+          viewModel.addLabelsToCard(card.card.cardId, card.labels.map { it.labelId })
+        }
+
+        SnackbarService.showSnackbar(message = snackbarMessage)
+
+        navController.popBackStack()
+      },
     )
-
-    initialCard?.let {
-        EditCardScreenComponent(
-            isCreateCard = cardId == null,
-            initialCard = it,
-            labels = labels,
-            onBack = { navController.popBackStack() },
-            onSave = { card ->
-                if (cardId != null) {
-                    viewModel.updateCard(card.card)
-
-                    val (labelsToAdd, labelsToRemove) = classifyLabelsForUpdate(
-                        initialCard.labels,
-                        card.labels
-                    )
-                    viewModel.removeLabelsFromCard(
-                        initialCard.card.cardId,
-                        labelsToRemove
-                    )
-                    viewModel.addLabelsToCard(initialCard.card.cardId, labelsToAdd)
-                } else {
-                    viewModel.insertCard(card.card)
-                    viewModel.addLabelsToCard(
-                        card.card.cardId,
-                        card.labels.map { it.labelId })
-                }
-
-                SnackbarService.showSnackbar(
-                    message = snackbarMessage,
-                )
-
-                navController.popBackStack()
-            }
-        )
-    }
+  }
 }
 
 @Composable
 fun EditCardScreenComponent(
-    isCreateCard: Boolean,
-    initialCard: CardWithLabels,
-    labels: List<LabelEntity>,
-    onBack: () -> Unit,
-    onSave: (CardWithLabels) -> Unit
+  isCreateCard: Boolean,
+  initialCard: CardWithLabels,
+  labels: List<LabelEntity>,
+  onBack: () -> Unit,
+  onSave: (CardWithLabels) -> Unit,
 ) {
-    var card by remember { mutableStateOf(initialCard) }
+  var card by remember { mutableStateOf(initialCard) }
 
-    LaunchedEffect(initialCard.card.cardId) {
-        card = initialCard
-    }
+  LaunchedEffect(initialCard.card.cardId) { card = initialCard }
 
-    val isValid by remember { derivedStateOf { isCardValid(card.card) } }
-    val hasChanges by remember {
-        derivedStateOf { isCreateCard || hasCardChanged(initialCard, card) }
-    }
+  val isValid by remember { derivedStateOf { isCardValid(card.card) } }
+  val hasChanges by remember {
+    derivedStateOf { isCreateCard || hasCardChanged(initialCard, card) }
+  }
 
-    Scaffold(
-        modifier = Modifier.imePadding(),
-        topBar = {
-            AppBar(
-                title = stringResource(if (!isCreateCard) R.string.card_edit else R.string.card_add),
-                onBack = { onBack() }
-            )
-        },
-        floatingActionButton = {
-            SaveFabComponent(
-                hadInitialValue = !isCreateCard,
-                hasChanges = hasChanges,
-                isValid = isValid,
-                onSave = { onSave(card) }
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            EditCardForm(
-                modifier = Modifier.widthIn(max = 500.dp),
-                card = card,
-                labels = labels,
-                onCardUpdate = { card = it }
-            )
-        }
+  Scaffold(
+    modifier = Modifier.imePadding(),
+    topBar = {
+      AppBar(
+        title = stringResource(if (!isCreateCard) R.string.card_edit else R.string.card_add),
+        onBack = { onBack() },
+      )
+    },
+    floatingActionButton = {
+      SaveFabComponent(
+        hadInitialValue = !isCreateCard,
+        hasChanges = hasChanges,
+        isValid = isValid,
+        onSave = { onSave(card) },
+      )
+    },
+  ) { innerPadding ->
+    Column(
+      modifier = Modifier.padding(innerPadding).fillMaxSize().verticalScroll(rememberScrollState()),
+      horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+      EditCardForm(
+        modifier = Modifier.widthIn(max = 500.dp),
+        card = card,
+        labels = labels,
+        onCardUpdate = { card = it },
+      )
     }
+  }
 }
 
 @Preview
 @Preview(device = "id:pixel_tablet")
 @Composable
 fun PreviewEditCardScreenComponent() {
-    EditCardScreenComponent(
-        isCreateCard = false,
-        initialCard = EXAMPLE_CARD_WITH_LABELS,
-        labels = EXAMPLE_LABEL_LIST,
-        onBack = {},
-        onSave = {}
-    )
+  EditCardScreenComponent(
+    isCreateCard = false,
+    initialCard = EXAMPLE_CARD_WITH_LABELS,
+    labels = EXAMPLE_LABEL_LIST,
+    onBack = {},
+    onSave = {},
+  )
 }
 
 @Preview
 @Preview(device = "id:pixel_tablet")
 @Composable
 fun PreviewEditCardScreenComponentEmpty() {
-    EditCardScreenComponent(
-        isCreateCard = true,
-        initialCard = emptyCardWithLabels(),
-        labels = listOf(),
-        onBack = {},
-        onSave = {}
-    )
+  EditCardScreenComponent(
+    isCreateCard = true,
+    initialCard = emptyCardWithLabels(),
+    labels = listOf(),
+    onBack = {},
+    onSave = {},
+  )
 }

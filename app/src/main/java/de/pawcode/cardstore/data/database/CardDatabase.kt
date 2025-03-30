@@ -11,32 +11,31 @@ import de.pawcode.cardstore.data.database.entities.CardLabelCrossRef
 import de.pawcode.cardstore.data.database.entities.LabelEntity
 
 @Database(
-    entities = [
-        CardEntity::class,
-        LabelEntity::class,
-        CardLabelCrossRef::class
-    ],
-    version = 1,
-    exportSchema = false
+  entities = [CardEntity::class, LabelEntity::class, CardLabelCrossRef::class],
+  version = 1,
+  exportSchema = false,
 )
 abstract class CardDatabase : RoomDatabase() {
-    abstract fun cardDao(): CardDao
-    abstract fun labelDao(): LabelDao
+  abstract fun cardDao(): CardDao
 
-    companion object {
-        @Volatile
-        private var INSTANCE: CardDatabase? = null
+  abstract fun labelDao(): LabelDao
 
-        fun getDatabase(context: Context): CardDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    CardDatabase::class.java,
-                    "card_database"
-                ).build()
-                INSTANCE = instance
-                instance
-            }
+  companion object {
+    @Volatile private var INSTANCE: CardDatabase? = null
+
+    fun getDatabase(context: Context): CardDatabase {
+      return INSTANCE
+        ?: synchronized(this) {
+          val instance =
+            Room.databaseBuilder(
+                context.applicationContext,
+                CardDatabase::class.java,
+                "card_database",
+              )
+              .build()
+          INSTANCE = instance
+          instance
         }
     }
+  }
 }

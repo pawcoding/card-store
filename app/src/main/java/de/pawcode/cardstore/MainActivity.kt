@@ -13,22 +13,19 @@ import de.pawcode.cardstore.navigation.Navigation
 import de.pawcode.cardstore.ui.theme.CardStoreTheme
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+  override fun onCreate(savedInstanceState: Bundle?) {
+    installSplashScreen()
 
-        super.onCreate(savedInstanceState)
+    super.onCreate(savedInstanceState)
 
-        enableEdgeToEdge()
+    enableEdgeToEdge()
 
-        setContent {
-            CardStoreTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Navigation()
-                }
-            }
+    setContent {
+      CardStoreTheme {
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+          Navigation()
         }
+      }
     }
+  }
 }

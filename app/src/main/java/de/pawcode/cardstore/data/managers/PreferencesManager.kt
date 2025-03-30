@@ -13,19 +13,16 @@ import kotlinx.coroutines.flow.map
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class PreferencesManager(private val context: Context) {
-    companion object {
-        private val SORT_ATTRIBUTE = stringPreferencesKey("sort_attribute")
+  companion object {
+    private val SORT_ATTRIBUTE = stringPreferencesKey("sort_attribute")
+  }
+
+  val sortAttribute: Flow<SortAttribute> =
+    context.dataStore.data.map { preferences ->
+      preferences[SORT_ATTRIBUTE]?.let { SortAttribute.valueOf(it) } ?: SortAttribute.ALPHABETICALLY
     }
 
-    val sortAttribute: Flow<SortAttribute> = context.dataStore.data
-        .map { preferences ->
-            preferences[SORT_ATTRIBUTE]?.let { SortAttribute.valueOf(it) }
-                ?: SortAttribute.ALPHABETICALLY
-        }
-
-    suspend fun saveSortAttribute(sortAttribute: SortAttribute) {
-        context.dataStore.edit { preferences ->
-            preferences[SORT_ATTRIBUTE] = sortAttribute.name
-        }
-    }
+  suspend fun saveSortAttribute(sortAttribute: SortAttribute) {
+    context.dataStore.edit { preferences -> preferences[SORT_ATTRIBUTE] = sortAttribute.name }
+  }
 }

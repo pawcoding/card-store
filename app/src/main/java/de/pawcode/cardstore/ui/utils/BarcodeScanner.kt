@@ -7,23 +7,20 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 
 @Composable
-fun BarcodeScanner(
-    onBarcodeDetected: (Barcode) -> Unit,
-    onCancel: () -> Unit,
-) {
-    val context = LocalContext.current
+fun BarcodeScanner(onBarcodeDetected: (Barcode) -> Unit, onCancel: () -> Unit) {
+  val context = LocalContext.current
 
-    val options = GmsBarcodeScannerOptions.Builder()
-        .setBarcodeFormats(
-            Barcode.FORMAT_ALL_FORMATS
-        )
-        .enableAutoZoom()
-        .build()
+  val options =
+    GmsBarcodeScannerOptions.Builder()
+      .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS)
+      .enableAutoZoom()
+      .build()
 
-    val scanner = GmsBarcodeScanning.getClient(context, options)
+  val scanner = GmsBarcodeScanning.getClient(context, options)
 
-    scanner.startScan()
-        .addOnSuccessListener { onBarcodeDetected(it) }
-        .addOnCanceledListener { onCancel }
-        .addOnFailureListener { onCancel }
+  scanner
+    .startScan()
+    .addOnSuccessListener { onBarcodeDetected(it) }
+    .addOnCanceledListener { onCancel }
+    .addOnFailureListener { onCancel }
 }

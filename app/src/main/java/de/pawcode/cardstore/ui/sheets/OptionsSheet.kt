@@ -20,62 +20,42 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-/**
- * Option to be displayed in the [OptionSheet].
- */
+/** Option to be displayed in the [OptionSheet]. */
 data class Option(
-    /**
-     * Label that is shown to the user.
-     */
-    val label: String,
-    /**
-     * Icons that is shown in front of the label.
-     */
-    val icon: ImageVector,
-    /**
-     * Action that is executed when the option is clicked.
-     */
-    val onClick: () -> Unit
+  /** Label that is shown to the user. */
+  val label: String,
+  /** Icons that is shown in front of the label. */
+  val icon: ImageVector,
+  /** Action that is executed when the option is clicked. */
+  val onClick: () -> Unit,
 )
 
 @Composable
-fun OptionSheet(
-    vararg options: Option
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-    ) {
-        options.forEach {
-            Row(
-                modifier = Modifier
-                    .clickable { it.onClick() }
-                    .clip(MaterialTheme.shapes.medium)
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Icon(it.icon, contentDescription = null)
+fun OptionSheet(vararg options: Option) {
+  Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+    options.forEach {
+      Row(
+        modifier =
+          Modifier.clickable { it.onClick() }
+            .clip(MaterialTheme.shapes.medium)
+            .padding(16.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+      ) {
+        Icon(it.icon, contentDescription = null)
 
-                Text(it.label)
-            }
-        }
+        Text(it.label)
+      }
     }
+  }
 }
 
-@Preview(
-    showBackground = true
-)
+@Preview(showBackground = true)
 @Composable
 fun PreviewOptionSheet() {
-    OptionSheet(
-        Option(
-            label = "Edit card", icon = Icons.Filled.Edit, onClick = {}
-        ),
-        Option(
-            label = "Delete card", icon = Icons.Filled.DeleteForever, onClick = {}
-        )
-    )
+  OptionSheet(
+    Option(label = "Edit card", icon = Icons.Filled.Edit, onClick = {}),
+    Option(label = "Delete card", icon = Icons.Filled.DeleteForever, onClick = {}),
+  )
 }

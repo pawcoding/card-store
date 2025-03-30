@@ -13,64 +13,47 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 class CardViewModel(application: Application) : AndroidViewModel(application) {
-    private val cardRepository = CardRepository(application)
-    private val labelRepository = LabelRepository(application)
+  private val cardRepository = CardRepository(application)
+  private val labelRepository = LabelRepository(application)
 
-    val allCards: Flow<List<CardWithLabels>> = cardRepository.allCards
-    val allLabels = labelRepository.allLabels
+  val allCards: Flow<List<CardWithLabels>> = cardRepository.allCards
+  val allLabels = labelRepository.allLabels
 
-    fun getCardById(
-        id: String,
-    ): Flow<CardWithLabels?> = flow {
-        cardRepository.getCardById(id).collect { emit(it) }
+  fun getCardById(id: String): Flow<CardWithLabels?> = flow {
+    cardRepository.getCardById(id).collect { emit(it) }
+  }
+
+  fun getLabelById(id: String?): Flow<LabelEntity?> = flow {
+    if (id == null) {
+      emit(null)
+    } else {
+      labelRepository.getLabelById(id).collect { emit(it) }
+    }
+  }
+
+  fun insertCard(card: CardEntity) = viewModelScope.launch { cardRepository.insertCard(card) }
+
+  fun insertLabel(label: LabelEntity) = viewModelScope.launch { labelRepository.insertLabel(label) }
+
+  fun addLabelsToCard(cardId: String, labelIds: List<String>) =
+    viewModelScope.launch { cardRepository.addLabelsToCard(cardId, labelIds) }
+
+  fun updateCard(card: CardEntity) = viewModelScope.launch { cardRepository.updateCard(card) }
+
+  fun updateLabel(label: LabelEntity) = viewModelScope.launch { labelRepository.updateLabel(label) }
+
+  fun addUsage(card: CardEntity) =
+    viewModelScope.launch {
+      val updatedCard =
+        card.copy(useCount = card.useCount + 1, lastUsed = System.currentTimeMillis())
+
+      updateCard(updatedCard)
     }
 
-    fun getLabelById(id: String?): Flow<LabelEntity?> = flow {
-        if (id == null) {
-            emit(null)
-        } else {
-            labelRepository.getLabelById(id).collect { emit(it) }
-        }
-    }
+  fun deleteCard(card: CardEntity) = viewModelScope.launch { cardRepository.deleteCard(card) }
 
-    fun insertCard(card: CardEntity) = viewModelScope.launch {
-        cardRepository.insertCard(card)
-    }
+  fun deleteLabel(label: LabelEntity) = viewModelScope.launch { labelRepository.deleteLabel(label) }
 
-    fun insertLabel(label: LabelEntity) = viewModelScope.launch {
-        labelRepository.insertLabel(label)
-    }
-
-    fun addLabelsToCard(cardId: String, labelIds: List<String>) = viewModelScope.launch {
-        cardRepository.addLabelsToCard(cardId, labelIds)
-    }
-
-    fun updateCard(card: CardEntity) = viewModelScope.launch {
-        cardRepository.updateCard(card)
-    }
-
-    fun updateLabel(label: LabelEntity) = viewModelScope.launch {
-        labelRepository.updateLabel(label)
-    }
-
-    fun addUsage(card: CardEntity) = viewModelScope.launch {
-        val updatedCard = card.copy(
-            useCount = card.useCount + 1,
-            lastUsed = System.currentTimeMillis()
-        )
-
-        updateCard(updatedCard)
-    }
-
-    fun deleteCard(card: CardEntity) = viewModelScope.launch {
-        cardRepository.deleteCard(card)
-    }
-
-    fun deleteLabel(label: LabelEntity) = viewModelScope.launch {
-        labelRepository.deleteLabel(label)
-    }
-
-    fun removeLabelsFromCard(cardId: String, labelIds: List<String>) = viewModelScope.launch {
-        cardRepository.removeLabelsFromCard(cardId, labelIds)
-    }
+  fun removeLabelsFromCard(cardId: String, labelIds: List<String>) =
+    viewModelScope.launch { cardRepository.removeLabelsFromCard(cardId, labelIds) }
 }

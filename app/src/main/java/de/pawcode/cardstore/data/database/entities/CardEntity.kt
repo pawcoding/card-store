@@ -10,62 +10,37 @@ import com.simonsickle.compose.barcodes.BarcodeType
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-/**
- * Entity representing a card.
- */
+/** Entity representing a card. */
 @Entity(tableName = "cards")
 data class CardEntity(
-    /**
-     * Unique identifier of the card.
-     */
-    @PrimaryKey
-    @ColumnInfo(name = "card_id")
-    val cardId: String,
+  /** Unique identifier of the card. */
+  @PrimaryKey @ColumnInfo(name = "card_id") val cardId: String,
 
-    /**
-     * Store where the card is used.
-     */
-    val storeName: String,
+  /** Store where the card is used. */
+  val storeName: String,
 
-    /**
-     * Number of the card.
-     */
-    @ColumnInfo(name = "card_number")
-    val cardNumber: String,
+  /** Number of the card. */
+  @ColumnInfo(name = "card_number") val cardNumber: String,
 
-    /**
-     * Format of the barcode.
-     */
-    @ColumnInfo(name = "barcode_format")
-    val barcodeFormat: BarcodeType,
+  /** Format of the barcode. */
+  @ColumnInfo(name = "barcode_format") val barcodeFormat: BarcodeType,
 
-    /**
-     * Color of the card (ARGB int).
-     */
-    val color: Int,
+  /** Color of the card (ARGB int). */
+  val color: Int,
 
-    /**
-     * Logo of the store.
-     */
-    val logo: String? = null,
+  /** Logo of the store. */
+  val logo: String? = null,
 
-    /**
-     * Last used date of the card.
-     */
-    @ColumnInfo(name = "last_used")
-    val lastUsed: Long? = null,
+  /** Last used date of the card. */
+  @ColumnInfo(name = "last_used") val lastUsed: Long? = null,
 
-    /**
-     * Number of times the card was used.
-     */
-    @ColumnInfo(name = "use_count")
-    val useCount: Int = 0
+  /** Number of times the card was used. */
+  @ColumnInfo(name = "use_count") val useCount: Int = 0,
 )
 
-/**
- * Example card used to preview components.
- */
-val EXAMPLE_CARD: CardEntity = CardEntity(
+/** Example card used to preview components. */
+val EXAMPLE_CARD: CardEntity =
+  CardEntity(
     cardId = "06c96a85-7dcd-4cfc-b886-2c95e8ea7c62",
     storeName = "pawcode Development",
     cardNumber = "1234567890",
@@ -73,16 +48,16 @@ val EXAMPLE_CARD: CardEntity = CardEntity(
     color = "#4472c4".toColorInt(),
     logo = null,
     lastUsed = null,
-    useCount = 0
-)
+    useCount = 0,
+  )
 
 @OptIn(ExperimentalUuidApi::class)
 fun emptyCard(): CardEntity {
-    return CardEntity(
-        cardId = Uuid.random().toString(),
-        storeName = "",
-        cardNumber = "",
-        barcodeFormat = BarcodeType.QR_CODE,
-        color = Color.White.toArgb()
-    )
+  return CardEntity(
+    cardId = Uuid.random().toString(),
+    storeName = "",
+    cardNumber = "",
+    barcodeFormat = BarcodeType.QR_CODE,
+    color = Color.White.toArgb(),
+  )
 }

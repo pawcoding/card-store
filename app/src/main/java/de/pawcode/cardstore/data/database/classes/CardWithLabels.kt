@@ -11,27 +11,17 @@ import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.database.entities.emptyCard
 
 data class CardWithLabels(
-    @Embedded
-    val card: CardEntity,
-
-    @Relation(
-        parentColumn = "card_id",
-        entityColumn = "label_id",
-        associateBy = Junction(CardLabelCrossRef::class)
-    )
-    val labels: List<LabelEntity>
+  @Embedded val card: CardEntity,
+  @Relation(
+    parentColumn = "card_id",
+    entityColumn = "label_id",
+    associateBy = Junction(CardLabelCrossRef::class),
+  )
+  val labels: List<LabelEntity>,
 )
 
-val EXAMPLE_CARD_WITH_LABELS = CardWithLabels(
-    EXAMPLE_CARD,
-    listOf(
-        EXAMPLE_LABEL
-    )
-)
+val EXAMPLE_CARD_WITH_LABELS = CardWithLabels(EXAMPLE_CARD, listOf(EXAMPLE_LABEL))
 
 fun emptyCardWithLabels(): CardWithLabels {
-    return CardWithLabels(
-        emptyCard(),
-        listOf()
-    )
+  return CardWithLabels(emptyCard(), listOf())
 }

@@ -29,86 +29,74 @@ import de.pawcode.cardstore.data.database.entities.LabelEntity
 
 @Composable
 fun LabelsListComponent(
-    labels: List<LabelEntity>,
-    selected: String?,
-    onLabelClick: (LabelEntity) -> Unit,
-    onEdit: () -> Unit
+  labels: List<LabelEntity>,
+  selected: String?,
+  onLabelClick: (LabelEntity) -> Unit,
+  onEdit: () -> Unit,
 ) {
-    val scrollState = rememberScrollState()
+  val scrollState = rememberScrollState()
 
+  Row(
+    modifier = Modifier.fillMaxWidth(),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.SpaceBetween,
+  ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+      modifier = Modifier.weight(1f).horizontalScroll(scrollState),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Row(
-            modifier = Modifier
-                .weight(1f)
-                .horizontalScroll(scrollState),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            if (labels.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.labels_none),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            } else {
-                labels.forEach { label ->
-                    val chipSelected = label.labelId == selected
-                    FilterChip(
-                        selected = chipSelected,
-                        onClick = { onLabelClick(label) },
-                        label = {
-                            Text(
-                                modifier = Modifier.padding(vertical = 8.dp),
-                                text = label.name,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        },
-                        leadingIcon = {
-                            if (chipSelected) {
-                                Icon(
-                                    Icons.Filled.Check,
-                                    contentDescription = null
-                                )
-                            }
-                        }
-                    )
-                }
-            }
+      if (labels.isEmpty()) {
+        Text(
+          text = stringResource(R.string.labels_none),
+          style = MaterialTheme.typography.bodyLarge,
+        )
+      } else {
+        labels.forEach { label ->
+          val chipSelected = label.labelId == selected
+          FilterChip(
+            selected = chipSelected,
+            onClick = { onLabelClick(label) },
+            label = {
+              Text(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = label.name,
+                style = MaterialTheme.typography.bodyLarge,
+              )
+            },
+            leadingIcon = {
+              if (chipSelected) {
+                Icon(Icons.Filled.Check, contentDescription = null)
+              }
+            },
+          )
         }
-
-        FilledTonalIconButton(
-            onClick = { onEdit() }
-        ) {
-            Icon(
-                imageVector = if (labels.isNotEmpty()) Icons.Filled.EditNote else Icons.Filled.Add,
-                contentDescription = stringResource(R.string.labels_edit),
-                modifier = Modifier.size(32.dp)
-            )
-        }
+      }
     }
+
+    FilledTonalIconButton(onClick = { onEdit() }) {
+      Icon(
+        imageVector = if (labels.isNotEmpty()) Icons.Filled.EditNote else Icons.Filled.Add,
+        contentDescription = stringResource(R.string.labels_edit),
+        modifier = Modifier.size(32.dp),
+      )
+    }
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewLabelsListComponent() {
-    LabelsListComponent(
-        labels = EXAMPLE_LABEL_LIST,
-        selected = EXAMPLE_LABEL.labelId,
-        onLabelClick = {},
-        onEdit = {}
-    )
+  LabelsListComponent(
+    labels = EXAMPLE_LABEL_LIST,
+    selected = EXAMPLE_LABEL.labelId,
+    onLabelClick = {},
+    onEdit = {},
+  )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewLabelsListComponentEmpty() {
-    LabelsListComponent(
-        labels = listOf(),
-        selected = null,
-        onLabelClick = {},
-        onEdit = {}
-    )
+  LabelsListComponent(labels = listOf(), selected = null, onLabelClick = {}, onEdit = {})
 }
