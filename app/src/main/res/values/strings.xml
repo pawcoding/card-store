@@ -30,6 +30,8 @@
     <string name="common_required">required</string>
     <string name="common_save">Save</string>
     <string name="common_update">Update</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="copy_error">Copy</string>
     <string name="github_issues">Open an issue on GitHub</string>
     <string name="github_repository">Open project on GitHub</string>
     <string name="label_add">Add label</string>
@@ -47,6 +49,7 @@
     <string name="labels_options">Options</string>
     <string name="report_issue">Report an issue</string>
     <string name="scan_barcode">Scan barcode</string>
+    <string name="scan_error">Error while trying to scan barcode</string>
     <string name="sort_alphabetically">Alphabetically</string>
     <string name="sort_most_used">Most used</string>
     <string name="sort_recently_used">Recently used</string>
