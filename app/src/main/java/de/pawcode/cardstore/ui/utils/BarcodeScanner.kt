@@ -53,10 +53,11 @@ fun BarcodeScanner(onBarcodeDetected: (Barcode) -> Unit, onCancel: () -> Unit) {
   }
 
   val moduleInstallClient = ModuleInstall.getClient(context)
-  val barcodeScanner = GmsBarcodeScanning.getClient(context, options)
+  val barcodeScannerModule = GmsBarcodeScanning.getClient(context)
 
   /** Starts the barcode scanning process. */
   fun scan() {
+    val barcodeScanner = GmsBarcodeScanning.getClient(context, options)
     barcodeScanner
       .startScan()
       .addOnSuccessListener { onBarcodeDetected(it) }
@@ -66,14 +67,15 @@ fun BarcodeScanner(onBarcodeDetected: (Barcode) -> Unit, onCancel: () -> Unit) {
 
   // Check if the barcode scanner module is available
   moduleInstallClient
-    .areModulesAvailable(barcodeScanner)
+    .areModulesAvailable(barcodeScannerModule)
     .addOnSuccessListener {
       if (it.areModulesAvailable()) {
         // Module is already available, start scanning
         scan()
       } else {
         // Module is not available, request installation
-        val moduleInstallRequest = ModuleInstallRequest.newBuilder().addApi(barcodeScanner).build()
+        val moduleInstallRequest =
+          ModuleInstallRequest.newBuilder().addApi(barcodeScannerModule).build()
 
         moduleInstallClient
           .installModules(moduleInstallRequest)
