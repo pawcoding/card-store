@@ -23,75 +23,65 @@ import androidx.compose.ui.unit.dp
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.enums.SortAttribute
 
-
-data class DropdownOption<TValue : Enum<TValue>>(
-    val title: String,
-    val value: TValue
-)
+data class DropdownOption<TValue : Enum<TValue>>(val title: String, val value: TValue)
 
 @Composable
 fun <TValue : Enum<TValue>> SelectDropdownMenu(
-    icon: ImageVector,
-    title: String,
-    value: TValue,
-    values: List<DropdownOption<TValue>>,
-    onValueChange: (TValue) -> Unit,
-    initiallyExpanded: Boolean = false
+  icon: ImageVector,
+  title: String,
+  value: TValue?,
+  values: List<DropdownOption<TValue>>,
+  onValueChange: (TValue) -> Unit,
+  initiallyExpanded: Boolean = false,
 ) {
-    var dropdownExpanded by remember { mutableStateOf(initiallyExpanded) }
+  var dropdownExpanded by remember { mutableStateOf(initiallyExpanded) }
 
-    Box(
-        modifier = Modifier.padding(16.dp)
-    ) {
-        IconButton(
-            onClick = { dropdownExpanded = !dropdownExpanded }
-        ) {
-            Icon(icon, contentDescription = title)
-        }
-        DropdownMenu(
-            expanded = dropdownExpanded,
-            onDismissRequest = { dropdownExpanded = false }
-        ) {
-            values.forEach { option ->
-                DropdownMenuItem(
-                    text = { Text(option.title) },
-                    trailingIcon = {
-                        if (value == option.value) {
-                            Icon(Icons.Filled.Check, contentDescription = null)
-                        }
-                    },
-                    onClick = {
-                        onValueChange(option.value)
-                        dropdownExpanded = false
-                    }
-                )
-            }
-        }
+  Box(modifier = Modifier.padding(16.dp)) {
+    IconButton(onClick = { dropdownExpanded = !dropdownExpanded }) {
+      Icon(icon, contentDescription = title)
     }
+    DropdownMenu(expanded = dropdownExpanded, onDismissRequest = { dropdownExpanded = false }) {
+      values.forEach { option ->
+        DropdownMenuItem(
+          text = { Text(option.title) },
+          trailingIcon = {
+            if (value == option.value) {
+              Icon(Icons.Filled.Check, contentDescription = null)
+            }
+          },
+          onClick = {
+            onValueChange(option.value)
+            dropdownExpanded = false
+          },
+        )
+      }
+    }
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewSelectDropdownMenu() {
-    SelectDropdownMenu(
-        icon = Icons.AutoMirrored.Filled.Sort,
-        title = stringResource(R.string.cards_sort),
-        value = SortAttribute.ALPHABETICALLY,
-        values = listOf(
-            DropdownOption(
-                title = stringResource(R.string.sort_alphabetically),
-                value = SortAttribute.ALPHABETICALLY
-            ),
-            DropdownOption(
-                title = stringResource(R.string.sort_most_used),
-                value = SortAttribute.MOST_USED
-            ),
-            DropdownOption(
-                title = stringResource(R.string.sort_recently_used),
-                value = SortAttribute.RECENTLY_USED
-            )
+  SelectDropdownMenu(
+    icon = Icons.AutoMirrored.Filled.Sort,
+    title = stringResource(R.string.cards_sort),
+    value = SortAttribute.ALPHABETICALLY,
+    values =
+      listOf(
+        DropdownOption(
+          title = stringResource(R.string.sort_alphabetically),
+          value = SortAttribute.ALPHABETICALLY,
         ),
-        onValueChange = {},
-        initiallyExpanded = true
-    )
+        DropdownOption(
+          title = stringResource(R.string.sort_most_used),
+          value = SortAttribute.MOST_USED,
+        ),
+        DropdownOption(
+          title = stringResource(R.string.sort_recently_used),
+          value = SortAttribute.RECENTLY_USED,
+        ),
+      ),
+    onValueChange = {},
+    initiallyExpanded = true,
+  )
 }

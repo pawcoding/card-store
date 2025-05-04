@@ -26,89 +26,80 @@ import kotlin.uuid.Uuid
 
 @Composable
 fun CardsListComponent(
-    cards: List<CardEntity>,
-    isFiltered: Boolean,
-    listState: LazyGridState,
-    onCardClicked: (CardEntity) -> Unit,
-    onCardLongPressed: (CardEntity) -> Unit,
+  cards: List<CardEntity>,
+  isFiltered: Boolean,
+  listState: LazyGridState,
+  onCardClicked: (CardEntity) -> Unit,
+  onCardLongPressed: (CardEntity) -> Unit,
 ) {
-    if (cards.isEmpty()) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = stringResource(
-                    if (isFiltered) R.string.cards_list_empty_filtered else R.string.cards_list_empty
-                ),
-                style = MaterialTheme.typography.headlineMedium,
-                textAlign = TextAlign.Center
-            )
-        }
-    } else {
-        LazyVerticalGrid(
-            state = listState,
-            columns = GridCells.Adaptive(minSize = 300.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(
-                items = cards,
-                key = { card -> card.cardId }
-            ) { card ->
-                CardComponent(
-                    card = card,
-                    onClick = {
-                        onCardClicked(card)
-                    },
-                    onLongPress = {
-                        onCardLongPressed(card)
-                    }
-                )
-            }
-        }
+  if (cards.isEmpty()) {
+    Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
+      Text(
+        text =
+          stringResource(
+            if (isFiltered) R.string.cards_list_empty_filtered else R.string.cards_list_empty
+          ),
+        style = MaterialTheme.typography.headlineMedium,
+        textAlign = TextAlign.Center,
+      )
     }
+  } else {
+    LazyVerticalGrid(
+      modifier = Modifier.fillMaxSize(),
+      state = listState,
+      columns = GridCells.Adaptive(minSize = 300.dp),
+      verticalArrangement = Arrangement.spacedBy(16.dp),
+      horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+      items(items = cards, key = { card -> card.cardId }) { card ->
+        CardComponent(
+          card = card,
+          onClick = { onCardClicked(card) },
+          onLongPress = { onCardLongPressed(card) },
+        )
+      }
+    }
+  }
 }
 
 @OptIn(ExperimentalUuidApi::class)
 @Preview(showBackground = true)
 @Composable
 fun PreviewCardsListComponent() {
-    CardsListComponent(
-        cards = listOf(
-            EXAMPLE_CARD,
-            EXAMPLE_CARD.copy(cardId = Uuid.random().toString()),
-            EXAMPLE_CARD.copy(cardId = Uuid.random().toString())
-        ),
-        isFiltered = false,
-        listState = rememberLazyGridState(),
-        onCardClicked = {},
-        onCardLongPressed = {}
-    )
+  CardsListComponent(
+    cards =
+      listOf(
+        EXAMPLE_CARD,
+        EXAMPLE_CARD.copy(cardId = Uuid.random().toString()),
+        EXAMPLE_CARD.copy(cardId = Uuid.random().toString()),
+      ),
+    isFiltered = false,
+    listState = rememberLazyGridState(),
+    onCardClicked = {},
+    onCardLongPressed = {},
+  )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewCardsListComponentEmpty() {
-    CardsListComponent(
-        cards = listOf(),
-        isFiltered = false,
-        listState = rememberLazyGridState(),
-        onCardClicked = {},
-        onCardLongPressed = {}
-    )
+  CardsListComponent(
+    cards = listOf(),
+    isFiltered = false,
+    listState = rememberLazyGridState(),
+    onCardClicked = {},
+    onCardLongPressed = {},
+  )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewCardsListComponentEmptyFiltered() {
-    CardsListComponent(
-        cards = listOf(),
-        isFiltered = true,
-        listState = rememberLazyGridState(),
-        onCardClicked = {},
-        onCardLongPressed = {}
-    )
+  CardsListComponent(
+    cards = listOf(),
+    isFiltered = true,
+    listState = rememberLazyGridState(),
+    onCardClicked = {},
+    onCardLongPressed = {},
+  )
 }

@@ -24,40 +24,33 @@ import de.pawcode.cardstore.utils.isLightColor
 
 @Composable
 fun CardComponent(card: CardEntity, onClick: () -> Unit, onLongPress: () -> Unit) {
-    val color = Color(card.color)
-    val isLightColor = isLightColor(color)
+  val color = Color(card.color)
+  val isLightColor = isLightColor(color)
 
-    ElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1.586f)
-            .pointerInput(Unit) {
-                detectTapGestures(onTap = { onClick() }, onLongPress = { onLongPress() })
-            },
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 8.dp
-        ),
-        colors = CardDefaults.cardColors(
-            containerColor = color
-        ),
+  ElevatedCard(
+    modifier =
+      Modifier.fillMaxWidth().aspectRatio(1.586f).pointerInput(Unit) {
+        detectTapGestures(onTap = { onClick() }, onLongPress = { onLongPress() })
+      },
+    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+    colors = CardDefaults.cardColors(containerColor = color),
+  ) {
+    Column(
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.Center,
+      modifier = Modifier.padding(8.dp).fillMaxSize(),
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxSize()
-        ) {
-            Text(
-                text = card.storeName, style = MaterialTheme.typography.headlineMedium,
-                color = if (isLightColor) Color.Black else Color.White
-            )
-        }
+      Text(
+        text = card.storeName,
+        style = MaterialTheme.typography.headlineMedium,
+        color = if (isLightColor) Color.Black else Color.White,
+      )
     }
+  }
 }
 
 @Preview
 @Composable
 fun PreviewCardComponent() {
-    CardComponent(card = EXAMPLE_CARD, onClick = {}, onLongPress = {})
+  CardComponent(card = EXAMPLE_CARD, onClick = {}, onLongPress = {})
 }

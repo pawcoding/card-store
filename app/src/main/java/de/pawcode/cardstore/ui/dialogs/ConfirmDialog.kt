@@ -14,58 +14,35 @@ import de.pawcode.cardstore.R
 
 @Composable
 fun ConfirmDialog(
-    onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
-    dialogTitle: String,
-    dialogText: String,
-    confirmText: String,
-    icon: ImageVector,
+  onDismissRequest: () -> Unit,
+  onConfirmation: () -> Unit,
+  dialogTitle: String,
+  dialogText: String,
+  confirmText: String,
+  icon: ImageVector,
 ) {
-    AlertDialog(
-        icon = {
-            Icon(icon, contentDescription = dialogTitle)
-        },
-        title = {
-            Text(dialogTitle)
-        },
-        text = {
-            Text(dialogText)
-        },
-        onDismissRequest = {
-            onDismissRequest()
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirmation()
-                }
-            ) {
-                Text(confirmText)
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    onDismissRequest()
-                }
-            ) {
-                Text(stringResource(R.string.common_cancel))
-            }
-        }
-    )
+  AlertDialog(
+    icon = { Icon(icon, contentDescription = dialogTitle) },
+    title = { Text(dialogTitle) },
+    text = { Text(dialogText) },
+    onDismissRequest = { onDismissRequest() },
+    confirmButton = { TextButton(onClick = { onConfirmation() }) { Text(confirmText) } },
+    dismissButton = {
+      TextButton(onClick = { onDismissRequest() }) { Text(stringResource(R.string.common_cancel)) }
+    },
+  )
 }
 
-@Preview(
-    showBackground = true
-)
+@Preview(showBackground = true)
 @Composable
 fun PreviewConfirmDialog() {
-    ConfirmDialog(
-        onDismissRequest = {},
-        onConfirmation = {},
-        dialogTitle = "Example",
-        dialogText = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam",
-        confirmText = "Confirm",
-        Icons.TwoTone.AccountCircle
-    )
+  ConfirmDialog(
+    onDismissRequest = {},
+    onConfirmation = {},
+    dialogTitle = "Example",
+    dialogText =
+      "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam",
+    confirmText = "Confirm",
+    Icons.TwoTone.AccountCircle,
+  )
 }

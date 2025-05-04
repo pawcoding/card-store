@@ -47,139 +47,122 @@ import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 
 @Composable
 fun EditLabelScreen(
-    navController: NavController,
-    labelId: String? = null,
-    viewModel: CardViewModel = viewModel()
+  navController: NavController,
+  labelId: String? = null,
+  viewModel: CardViewModel = viewModel(),
 ) {
-    val scope = rememberCoroutineScope()
+  rememberCoroutineScope()
 
-    val initialLabel by viewModel.getLabelById(labelId).collectAsState(initial = null)
+  val initialLabel by viewModel.getLabelById(labelId).collectAsState(initial = null)
 
-    val snackbarMessage = stringResource(
-        if (initialLabel != null) R.string.label_updated else R.string.label_added
-    )
+  val snackbarMessage =
+    stringResource(if (initialLabel != null) R.string.label_updated else R.string.label_added)
 
-    EditLabelScreenComponent(
-        initialLabel = initialLabel,
-        onBack = { navController.popBackStack() },
-        onSave = { label ->
-            if (initialLabel != null) {
-                viewModel.updateLabel(label)
-            } else {
-                viewModel.insertLabel(label)
-            }
+  EditLabelScreenComponent(
+    initialLabel = initialLabel,
+    onBack = { navController.popBackStack() },
+    onSave = { label ->
+      if (initialLabel != null) {
+        viewModel.updateLabel(label)
+      } else {
+        viewModel.insertLabel(label)
+      }
 
-            navController.popBackStack()
+      navController.popBackStack()
 
-            SnackbarService.showSnackbar(
-                message = snackbarMessage,
-                scope = scope
-            )
-        }
-    )
+      SnackbarService.showSnackbar(message = snackbarMessage)
+    },
+  )
 }
 
 @Composable
 fun EditLabelScreenComponent(
-    initialLabel: LabelEntity?,
-    onBack: () -> Unit,
-    onSave: (LabelEntity) -> Unit
+  initialLabel: LabelEntity?,
+  onBack: () -> Unit,
+  onSave: (LabelEntity) -> Unit,
 ) {
-    var label by remember { mutableStateOf(initialLabel ?: emptyLabel()) }
+  var label by remember { mutableStateOf(initialLabel ?: emptyLabel()) }
 
-    LaunchedEffect(initialLabel) {
-        label = initialLabel ?: emptyLabel()
-    }
+  LaunchedEffect(initialLabel) { label = initialLabel ?: emptyLabel() }
 
-    val isValid by remember { derivedStateOf { label.name.isNotEmpty() } }
-    val hasChanges by remember {
-        derivedStateOf { initialLabel == null || initialLabel.name != label.name }
-    }
+  val isValid by remember { derivedStateOf { label.name.isNotEmpty() } }
+  val hasChanges by remember {
+    derivedStateOf { initialLabel == null || initialLabel.name != label.name }
+  }
 
-    Scaffold(
-        modifier = Modifier.imePadding(),
-        topBar = {
-            AppBar(
-                title = stringResource(if (initialLabel != null) R.string.label_edit else R.string.label_add),
-                onBack = { onBack() }
-            )
-        },
-        floatingActionButton = {
-            SaveFabComponent(
-                hadInitialValue = initialLabel != null,
-                hasChanges = hasChanges,
-                isValid = isValid,
-                onSave = { onSave(label) }
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+  Scaffold(
+    modifier = Modifier.imePadding(),
+    topBar = {
+      AppBar(
+        title =
+          stringResource(if (initialLabel != null) R.string.label_edit else R.string.label_add),
+        onBack = { onBack() },
+      )
+    },
+    floatingActionButton = {
+      SaveFabComponent(
+        hadInitialValue = initialLabel != null,
+        hasChanges = hasChanges,
+        isValid = isValid,
+        onSave = { onSave(label) },
+      )
+    },
+  ) { innerPadding ->
+    Column(
+      modifier = Modifier.padding(innerPadding).fillMaxSize(),
+      horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+      Column(
+        modifier = Modifier.widthIn(max = 500.dp).fillMaxWidth().padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+      ) {
+        Row(
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Column(
-                modifier = Modifier
-                    .widthIn(max = 500.dp)
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Icon(
-                        Icons.Filled.NewLabel,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(32.dp)
-                    )
+          Icon(
+            Icons.Filled.NewLabel,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(32.dp),
+          )
 
-                    Text(
-                        text = stringResource(R.string.label_name),
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-                }
-
-                OutlinedTextField(
-                    value = label.name,
-                    onValueChange = { label = label.copy(name = it) },
-                    label = { Text(stringResource(R.string.label_name) + "*") },
-                    supportingText = { Text("*" + stringResource(R.string.common_required)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        autoCorrectEnabled = true,
-                        capitalization = KeyboardCapitalization.Sentences,
-                        imeAction = ImeAction.Done
-                    )
-                )
-            }
+          Text(
+            text = stringResource(R.string.label_name),
+            style = MaterialTheme.typography.bodyLarge,
+          )
         }
+
+        OutlinedTextField(
+          value = label.name,
+          onValueChange = { label = label.copy(name = it) },
+          label = { Text(stringResource(R.string.label_name) + "*") },
+          supportingText = { Text("*" + stringResource(R.string.common_required)) },
+          modifier = Modifier.fillMaxWidth(),
+          singleLine = true,
+          keyboardOptions =
+            KeyboardOptions(
+              keyboardType = KeyboardType.Text,
+              autoCorrectEnabled = true,
+              capitalization = KeyboardCapitalization.Sentences,
+              imeAction = ImeAction.Done,
+            ),
+        )
+      }
     }
+  }
 }
 
 @Preview
 @Preview(device = "id:pixel_tablet")
 @Composable
 fun PreviewEditLabelScreenComponent() {
-    EditLabelScreenComponent(
-        initialLabel = EXAMPLE_LABEL,
-        onBack = {},
-        onSave = {}
-    )
+  EditLabelScreenComponent(initialLabel = EXAMPLE_LABEL, onBack = {}, onSave = {})
 }
 
 @Preview
 @Preview(device = "id:pixel_tablet")
 @Composable
 fun PreviewEditLabelScreenComponentEmpty() {
-    EditLabelScreenComponent(
-        initialLabel = null,
-        onBack = {},
-        onSave = {}
-    )
+  EditLabelScreenComponent(initialLabel = null, onBack = {}, onSave = {})
 }

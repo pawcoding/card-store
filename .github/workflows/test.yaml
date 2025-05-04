@@ -1,0 +1,36 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - '**'
+      - '!master'
+      - '!staging'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📦 Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: 📦 Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 🧹 Check format
+        run: |
+          ./gradlew ktfmtCheck
+
+      - name: 🛠️ Compile the app
+        run: |
+          ./gradlew assembleDebug

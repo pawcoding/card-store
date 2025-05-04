@@ -9,33 +9,33 @@ import de.pawcode.cardstore.data.database.entities.CardLabelCrossRef
 import kotlinx.coroutines.flow.Flow
 
 class CardRepository(context: Context) {
-    private val cardDao: CardDao = CardDatabase.getDatabase(context).cardDao()
+  private val cardDao: CardDao = CardDatabase.getDatabase(context).cardDao()
 
-    val allCards: Flow<List<CardWithLabels>> = cardDao.getAll()
+  val allCards: Flow<List<CardWithLabels>> = cardDao.getAll()
 
-    fun getCardById(id: String): Flow<CardWithLabels?> {
-        return cardDao.getById(id)
-    }
+  fun getCardById(id: String): Flow<CardWithLabels?> {
+    return cardDao.getById(id)
+  }
 
-    suspend fun insertCard(card: CardEntity) {
-        cardDao.insert(card)
-    }
+  suspend fun insertCard(card: CardEntity) {
+    cardDao.insert(card)
+  }
 
-    suspend fun addLabelsToCard(cardId: String, labelIds: List<String>) {
-        val cardLabels = labelIds.map { CardLabelCrossRef(cardId, it) }
-        cardDao.addLabelsToCard(cardLabels)
-    }
+  suspend fun addLabelsToCard(cardId: String, labelIds: List<String>) {
+    val cardLabels = labelIds.map { CardLabelCrossRef(cardId, it) }
+    cardDao.addLabelsToCard(cardLabels)
+  }
 
-    suspend fun updateCard(card: CardEntity) {
-        cardDao.update(card)
-    }
+  suspend fun updateCard(card: CardEntity) {
+    cardDao.update(card)
+  }
 
-    suspend fun deleteCard(card: CardEntity) {
-        cardDao.delete(card)
-    }
+  suspend fun deleteCard(card: CardEntity) {
+    cardDao.delete(card)
+  }
 
-    suspend fun removeLabelsFromCard(cardId: String, labelIds: List<String>) {
-        val cardLabels = labelIds.map { CardLabelCrossRef(cardId, it) }
-        cardDao.removeLabelsFromCard(cardLabels)
-    }
+  suspend fun removeLabelsFromCard(cardId: String, labelIds: List<String>) {
+    val cardLabels = labelIds.map { CardLabelCrossRef(cardId, it) }
+    cardDao.removeLabelsFromCard(cardLabels)
+  }
 }

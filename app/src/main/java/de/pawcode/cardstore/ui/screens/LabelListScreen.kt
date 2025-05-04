@@ -7,15 +7,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.twotone.DeleteForever
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -49,166 +54,139 @@ import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun LabelListScreen(
-    navController: NavController,
-    viewModel: CardViewModel = viewModel()
-) {
-    val scope = rememberCoroutineScope()
+fun LabelListScreen(navController: NavController, viewModel: CardViewModel = viewModel()) {
+  val scope = rememberCoroutineScope()
 
-    val labels by viewModel.allLabels.collectAsState(initial = emptyList())
+  val labels by viewModel.allLabels.collectAsState(initial = emptyList())
 
-    LabelListScreenComponent(
-        labels = labels,
-        onBack = { navController.popBackStack() },
-        onEdit = { label ->
-            if (label != null) {
-                navController.navigate(Screen.EditLabel.route + "?labelId=${label.labelId}")
-            } else {
-                navController.navigate(Screen.EditLabel.route)
-            }
-        },
-        onDelete = {
-            scope.launch {
-                viewModel.deleteLabel(it)
-            }
-        }
-    )
+  LabelListScreenComponent(
+    labels = labels,
+    onBack = { navController.popBackStack() },
+    onEdit = { label ->
+      if (label != null) {
+        navController.navigate(Screen.EditLabel.route + "?labelId=${label.labelId}")
+      } else {
+        navController.navigate(Screen.EditLabel.route)
+      }
+    },
+    onDelete = { scope.launch { viewModel.deleteLabel(it) } },
+  )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LabelListScreenComponent(
-    labels: List<LabelEntity>,
-    onBack: () -> Unit,
-    onEdit: (LabelEntity?) -> Unit,
-    onDelete: (LabelEntity) -> Unit
+  labels: List<LabelEntity>,
+  onBack: () -> Unit,
+  onEdit: (LabelEntity?) -> Unit,
+  onDelete: (LabelEntity) -> Unit,
 ) {
-    var showLabelOptionSheet by remember { mutableStateOf<LabelEntity?>(null) }
-    val cardOptionSheetState = rememberModalBottomSheetState()
+  var showLabelOptionSheet by remember { mutableStateOf<LabelEntity?>(null) }
+  val cardOptionSheetState = rememberModalBottomSheetState()
 
-    var openDeleteDialog by remember { mutableStateOf<LabelEntity?>(null) }
+  var openDeleteDialog by remember { mutableStateOf<LabelEntity?>(null) }
 
-    Scaffold(
-        topBar = {
-            AppBar(
-                title = stringResource(R.string.card_labels),
-                onBack = { onBack() }
-            )
-        },
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = {
-                    onEdit(null)
-                },
-                text = { Text(stringResource(R.string.labels_new)) },
-                icon = {
-                    Icon(
-                        Icons.Filled.Add,
-                        contentDescription = stringResource(R.string.labels_new)
-                    )
-                }
-            )
+  Scaffold(
+    topBar = { AppBar(title = stringResource(R.string.card_labels), onBack = { onBack() }) },
+    floatingActionButton = {
+      ExtendedFloatingActionButton(
+        onClick = { onEdit(null) },
+        text = { Text(stringResource(R.string.labels_new)) },
+        icon = { Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.labels_new)) },
+      )
+    },
+  ) { innerPadding ->
+    Column(
+      modifier = Modifier.fillMaxSize().padding(innerPadding),
+      horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+      if (labels.isEmpty()) {
+        Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
+          Text(
+            text = stringResource(R.string.labels_list_empty),
+            style = MaterialTheme.typography.headlineMedium,
+            textAlign = TextAlign.Center,
+          )
         }
-    ) { innerPadding ->
+      } else {
         Column(
-            modifier = Modifier
-                .padding(innerPadding)
+          modifier =
+            Modifier.widthIn(max = 500.dp).fillMaxWidth().verticalScroll(rememberScrollState())
         ) {
-            if (labels.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.labels_list_empty),
-                        style = MaterialTheme.typography.headlineMedium,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            } else {
-                labels.forEachIndexed { index, label ->
-                    Text(
-                        text = label.name,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(24.dp)
-                            .pointerInput(Unit) {
-                                detectTapGestures(
-                                    onTap = { showLabelOptionSheet = label }
-                                )
-                            }
-                    )
-
-                    HorizontalDivider()
-                }
-            }
-        }
-
-        showLabelOptionSheet?.let {
-            ModalBottomSheet(
-                modifier = Modifier.safeDrawingPadding(),
-                sheetState = cardOptionSheetState,
-                onDismissRequest = { showLabelOptionSheet = null }
-            ) {
-                OptionSheet(
-                    Option(
-                        label = stringResource(R.string.label_edit),
-                        icon = Icons.Filled.Edit,
-                        onClick = {
-                            onEdit(it)
-                            showLabelOptionSheet = null
-                        }
-                    ),
-                    Option(
-                        label = stringResource(R.string.label_delete_title),
-                        icon = Icons.Filled.DeleteForever,
-                        onClick = {
-                            openDeleteDialog = it
-                            showLabelOptionSheet = null
-                        }
-                    )
+          labels.forEachIndexed { index, label ->
+            ListItem(
+              headlineContent = { Text(label.name) },
+              trailingContent = {
+                Icon(
+                  Icons.Filled.MoreHoriz,
+                  contentDescription = stringResource(R.string.labels_options),
                 )
-            }
-        }
-
-        openDeleteDialog?.let {
-            ConfirmDialog(
-                onDismissRequest = { openDeleteDialog = null },
-                onConfirmation = {
-                    onDelete(it)
-                    openDeleteDialog = null
+              },
+              modifier =
+                Modifier.pointerInput(Unit) {
+                  detectTapGestures(onTap = { showLabelOptionSheet = label })
                 },
-                dialogTitle = stringResource(R.string.label_delete_title),
-                dialogText = stringResource(R.string.label_delete_description),
-                confirmText = stringResource(R.string.common_delete),
-                Icons.TwoTone.DeleteForever
             )
+
+            HorizontalDivider()
+          }
         }
+      }
     }
+
+    showLabelOptionSheet?.let {
+      ModalBottomSheet(
+        modifier = Modifier.safeDrawingPadding(),
+        sheetState = cardOptionSheetState,
+        onDismissRequest = { showLabelOptionSheet = null },
+      ) {
+        OptionSheet(
+          Option(
+            label = stringResource(R.string.label_edit),
+            icon = Icons.Filled.Edit,
+            onClick = {
+              onEdit(it)
+              showLabelOptionSheet = null
+            },
+          ),
+          Option(
+            label = stringResource(R.string.label_delete_title),
+            icon = Icons.Filled.DeleteForever,
+            onClick = {
+              openDeleteDialog = it
+              showLabelOptionSheet = null
+            },
+          ),
+        )
+      }
+    }
+
+    openDeleteDialog?.let {
+      ConfirmDialog(
+        onDismissRequest = { openDeleteDialog = null },
+        onConfirmation = {
+          onDelete(it)
+          openDeleteDialog = null
+        },
+        dialogTitle = stringResource(R.string.label_delete_title),
+        dialogText = stringResource(R.string.label_delete_description),
+        confirmText = stringResource(R.string.common_delete),
+        Icons.TwoTone.DeleteForever,
+      )
+    }
+  }
 }
 
 @Preview
 @Preview(device = "id:pixel_tablet")
 @Composable
 fun PreviewLabelListScreenComponent() {
-    LabelListScreenComponent(
-        labels = EXAMPLE_LABEL_LIST,
-        onBack = {},
-        onEdit = {},
-        onDelete = {}
-    )
+  LabelListScreenComponent(labels = EXAMPLE_LABEL_LIST, onBack = {}, onEdit = {}, onDelete = {})
 }
 
 @Preview
 @Preview(device = "id:pixel_tablet")
 @Composable
 fun PreviewLabelListScreenComponentEmpty() {
-    LabelListScreenComponent(
-        labels = listOf(),
-        onBack = {},
-        onEdit = {},
-        onDelete = {}
-    )
+  LabelListScreenComponent(labels = listOf(), onBack = {}, onEdit = {}, onDelete = {})
 }

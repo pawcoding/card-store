@@ -1,0 +1,71 @@
+name: Android Release
+
+on:
+  push:
+    branches:
+      - master
+      - staging
+
+permissions:
+  contents: write
+  issues: write
+  deployments: write
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📦 Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: 📦 Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 🧹 Check format
+        run: |
+          ./gradlew ktfmtCheck
+
+      - name: 🔐 Setup Keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          echo $KEYSTORE_BASE64 | base64 --decode > keystore.jks
+
+      - name: 🚀 Release APK
+        uses: cycjimmy/semantic-release-action@v4
+        id: release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        with:
+          semantic_version: 24
+          extra_plugins: |
+            @semantic-release/changelog
+            @semantic-release/git
+            @semantic-release/exec
+
+      - name: 📤 Upload bundle to PlayStore
+        if: steps.release.outputs.new_release_published == 'true'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: de.pawcode.cardstore
+          track: ${{ github.ref == 'refs/heads/master' && 'production' || 'beta' }}
+          releaseName: ${{ steps.release.outputs.new_release_version }}
+          status: draft
+          mappingFile: app/build/outputs/mapping/release/mapping.txt
+          debugSymbols: app/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
