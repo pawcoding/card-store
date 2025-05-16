@@ -1,5 +1,6 @@
 package de.pawcode.cardstore.ui.screens
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.QrCodeScanner
 import androidx.compose.material.icons.twotone.DeleteForever
@@ -39,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.classes.CardWithLabels
 import de.pawcode.cardstore.data.database.classes.EXAMPLE_CARD_WITH_LABELS
@@ -59,6 +62,8 @@ import de.pawcode.cardstore.ui.sheets.OptionSheet
 import de.pawcode.cardstore.ui.sheets.ViewCardSheet
 import de.pawcode.cardstore.ui.utils.BarcodeScanner
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
+import de.pawcode.cardstore.utils.mapBarcodeFormat
+import de.pawcode.cardstore.utils.parseDeeplink
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
@@ -78,12 +83,21 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
         append(Screen.EditCard.route)
         if (cardNumber != null || barcodeFormat != null) {
           append("?")
-          if (cardNumber != null) {
-            append("cardNumber=$cardNumber")
-          }
-          if (barcodeFormat != null) {
-            if (cardNumber != null) append("&")
-            append("barcodeFormat=$barcodeFormat")
+          val deeplink = parseDeeplink(cardNumber ?: "")
+          if (deeplink != null) {
+            for (entry in deeplink.entries) {
+              if (entry.value != null) {
+                append("${entry.key}=${entry.value}&")
+              }
+            }
+          } else {
+            if (cardNumber != null) {
+              append("cardNumber=$cardNumber")
+            }
+            if (barcodeFormat != null) {
+              if (cardNumber != null) append("&")
+              append("barcodeFormat=$barcodeFormat")
+            }
           }
         }
       }
@@ -97,6 +111,19 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     onViewLabels = { navController.navigate(Screen.LabelList.route) },
     onSortChange = { scope.launch { preferencesManager.saveSortAttribute(it) } },
     onShowAbout = { navController.navigate(Screen.About.route) },
+    onShareCard = {
+      val sendIntent =
+        Intent().apply {
+          action = Intent.ACTION_SEND
+          putExtra(
+            Intent.EXTRA_TEXT,
+            "https://cardstore.apps.pawcode.de/share-card?storeName=${it.storeName}&cardNumber=${it.cardNumber}&barcodeFormat=${it.barcodeFormat}&color=${it.color}",
+          )
+          type = "text/plain"
+        }
+      val shareIntent = Intent.createChooser(sendIntent, null)
+      context.startActivity(shareIntent)
+    },
   )
 }
 
@@ -106,13 +133,14 @@ fun CardListScreenComponent(
   cardsFlow: Flow<List<CardWithLabels>>,
   labelsFlow: Flow<List<LabelEntity>>,
   sortByFlow: Flow<SortAttribute?>,
-  onCreateCard: (cardNumber: String?, barcodeFormat: Int?) -> Unit,
+  onCreateCard: (cardNumber: String?, barcodeType: BarcodeType?) -> Unit,
   onEditCard: (CardEntity) -> Unit,
   onShowCard: (CardEntity) -> Unit,
   onDeleteCard: (CardEntity) -> Unit,
   onViewLabels: () -> Unit,
   onSortChange: (SortAttribute) -> Unit,
   onShowAbout: () -> Unit,
+  onShareCard: (CardEntity) -> Unit,
 ) {
   val cards by cardsFlow.collectAsState(initial = emptyList())
   val labels by labelsFlow.collectAsState(initial = emptyList())
@@ -239,6 +267,14 @@ fun CardListScreenComponent(
               },
             ),
             Option(
+              label = "Share card",
+              icon = Icons.Filled.Share,
+              onClick = {
+                onShareCard(it)
+                showCardOptionSheet = null
+              },
+            ),
+            Option(
               label = stringResource(R.string.card_delete_title),
               icon = Icons.Filled.DeleteForever,
               onClick = {
@@ -294,7 +330,7 @@ fun CardListScreenComponent(
       if (showBarcodeScanner) {
         BarcodeScanner(
           onBarcodeDetected = { barcode ->
-            onCreateCard(barcode.rawValue ?: "", barcode.format)
+            onCreateCard(barcode.rawValue ?: "", mapBarcodeFormat(barcode.format))
             showBarcodeScanner = false
           },
           onCancel = { showBarcodeScanner = false },
@@ -319,6 +355,7 @@ fun PreviewCardListScreenComponent() {
     onViewLabels = {},
     onSortChange = {},
     onShowAbout = {},
+    onShareCard = {},
   )
 }
 
@@ -337,5 +374,6 @@ fun PreviewCardListScreenComponentEmpty() {
     onViewLabels = {},
     onSortChange = {},
     onShowAbout = {},
+    onShareCard = {},
   )
 }
