@@ -92,13 +92,15 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
             }
           } else {
             if (cardNumber != null) {
-              append("cardNumber=$cardNumber")
+              append("cardNumber=$cardNumber&")
             }
             if (barcodeFormat != null) {
-              if (cardNumber != null) append("&")
-              append("barcodeFormat=$barcodeFormat")
+              append("barcodeFormat=$barcodeFormat&")
             }
           }
+        }
+        if (endsWith("&")) {
+          deleteCharAt(length - 1)
         }
       }
       navController.navigate(route)

@@ -18,7 +18,7 @@ fun mapBarcodeFormat(barcodeFormat: Int): BarcodeType {
     Barcode.FORMAT_QR_CODE -> BarcodeType.QR_CODE
     Barcode.FORMAT_UPC_A -> BarcodeType.UPC_A
     Barcode.FORMAT_UPC_E -> BarcodeType.UPC_E
-    else -> throw Error("Unknown barcode format")
+    else -> throw IllegalArgumentException("Unknown barcode format")
   }
 }
 
@@ -37,6 +37,6 @@ fun mapBarcodeFormat(barcodeFormat: String): BarcodeType {
     "QR_CODE" -> BarcodeType.QR_CODE
     "UPC_A" -> BarcodeType.UPC_A
     "UPC_E" -> BarcodeType.UPC_E
-    else -> throw Error("Unknown barcode format")
+    else -> throw IllegalArgumentException("Unknown barcode format")
   }
 }
