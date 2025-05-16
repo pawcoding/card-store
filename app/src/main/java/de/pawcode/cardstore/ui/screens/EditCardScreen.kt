@@ -49,8 +49,10 @@ import kotlin.uuid.Uuid
 fun EditCardScreen(
   navController: NavController,
   cardId: String? = null,
+  storeName: String? = null,
   cardNumber: String? = null,
   barcodeType: BarcodeType? = null,
+  color: Int? = null,
   viewModel: CardViewModel = viewModel(),
 ) {
   val labels by viewModel.allLabels.collectAsState(initial = emptyList())
@@ -62,10 +64,10 @@ fun EditCardScreen(
         card =
           CardEntity(
             cardId = Uuid.random().toString(),
-            storeName = "",
+            storeName = storeName ?: "",
             cardNumber = cardNumber ?: "",
             barcodeFormat = barcodeType ?: BarcodeType.QR_CODE,
-            color = Color.White.toArgb(),
+            color = color ?: Color.White.toArgb(),
           ),
         labels = emptyList(),
       )

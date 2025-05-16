@@ -18,6 +18,25 @@ fun mapBarcodeFormat(barcodeFormat: Int): BarcodeType {
     Barcode.FORMAT_QR_CODE -> BarcodeType.QR_CODE
     Barcode.FORMAT_UPC_A -> BarcodeType.UPC_A
     Barcode.FORMAT_UPC_E -> BarcodeType.UPC_E
-    else -> throw Error("Unknown barcode format")
+    else -> throw IllegalArgumentException("Unknown barcode format")
+  }
+}
+
+fun mapBarcodeFormat(barcodeFormat: String): BarcodeType {
+  return when (barcodeFormat) {
+    "AZTEC" -> BarcodeType.AZTEC
+    "CODABAR" -> BarcodeType.CODABAR
+    "CODE_128" -> BarcodeType.CODE_128
+    "CODE_39" -> BarcodeType.CODE_39
+    "CODE_93" -> BarcodeType.CODE_93
+    "DATA_MATRIX" -> BarcodeType.DATA_MATRIX
+    "EAN_13" -> BarcodeType.EAN_13
+    "EAN_8" -> BarcodeType.EAN_8
+    "ITF" -> BarcodeType.ITF
+    "PDF417" -> BarcodeType.PDF_417
+    "QR_CODE" -> BarcodeType.QR_CODE
+    "UPC_A" -> BarcodeType.UPC_A
+    "UPC_E" -> BarcodeType.UPC_E
+    else -> throw IllegalArgumentException("Unknown barcode format")
   }
 }
