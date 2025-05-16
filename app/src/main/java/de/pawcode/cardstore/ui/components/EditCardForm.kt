@@ -60,6 +60,7 @@ import de.pawcode.cardstore.ui.dialogs.ColorPickerDialog
 import de.pawcode.cardstore.ui.utils.BarcodeScanner
 import de.pawcode.cardstore.utils.isLightColor
 import de.pawcode.cardstore.utils.mapBarcodeFormat
+import de.pawcode.cardstore.utils.parseDeeplink
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -313,15 +314,30 @@ fun EditCardForm(
   if (showBarcodeScanner) {
     BarcodeScanner(
       onBarcodeDetected = { barcode ->
-        onCardUpdate(
-          card.copy(
-            card =
-              card.card.copy(
-                cardNumber = barcode.rawValue ?: "",
-                barcodeFormat = mapBarcodeFormat(barcode.format),
-              )
+        val deeplink = parseDeeplink(barcode.rawValue ?: "")
+        if (deeplink != null) {
+          onCardUpdate(
+            card.copy(
+              card =
+                card.card.copy(
+                  storeName = deeplink["storeName"] ?: "",
+                  cardNumber = deeplink["cardNumber"] ?: "",
+                  barcodeFormat = mapBarcodeFormat(deeplink["barcodeFormat"] ?: "QR_CODE"),
+                  color = deeplink["color"]?.toIntOrNull() ?: Color.White.toArgb(),
+                )
+            )
           )
-        )
+        } else {
+          onCardUpdate(
+            card.copy(
+              card =
+                card.card.copy(
+                  cardNumber = barcode.rawValue ?: "",
+                  barcodeFormat = mapBarcodeFormat(barcode.format),
+                )
+            )
+          )
+        }
         showBarcodeScanner = false
       },
       onCancel = { showBarcodeScanner = false },
