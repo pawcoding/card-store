@@ -1,8 +1,6 @@
 package de.pawcode.cardstore.data.managers
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -10,7 +8,7 @@ import de.pawcode.cardstore.data.enums.SortAttribute
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+private val Context.dataStore by preferencesDataStore(name = "settings")
 
 class PreferencesManager(private val context: Context) {
   companion object {
