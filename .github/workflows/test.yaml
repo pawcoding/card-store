@@ -31,6 +31,42 @@ jobs:
         run: |
           ./gradlew ktfmtCheck
 
+      - name: 🔎 Check if build is needed
+        id: check-build
+        shell: bash
+        run: |
+          if git show --oneline -s HEAD | grep -q '\[build\]'; then
+            echo "Found [build] in commit message"
+            echo "build_apk=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No [build] in commit message, skipping build"
+            echo "build_apk=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: 🛠️ Compile the app
+        if: steps.check-build.outputs.build_apk == 'false'
         run: |
           ./gradlew assembleDebug
+
+      - name: 🔐 Setup Keystore
+        if: steps.check-build.outputs.build_apk == 'true'
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          echo $KEYSTORE_BASE64 | base64 --decode > keystore.jks
+
+      - name: 🚀 Build APK
+        if: steps.check-build.outputs.build_apk == 'true'
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          ./scripts/build-apk.sh
+
+      - name: 📤 Upload APK as artifact
+        if: steps.check-build.outputs.build_apk == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release.apk
+          path: app/build/outputs/apk/release/app-release.apk
