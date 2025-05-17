@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Hopefully resolves the crash described in pawcoding/card-store#15
+# According to some issues on GitHub and Google IssueTracker this seems to be caused by obfuscation in combination with protobuf
+-shrinkunusedprotofields
