@@ -10,12 +10,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import de.pawcode.cardstore.data.services.DeeplinkService
 import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.ui.screens.AboutScreen
 import de.pawcode.cardstore.ui.screens.CardListScreen
@@ -23,8 +26,6 @@ import de.pawcode.cardstore.ui.screens.EditCardScreen
 import de.pawcode.cardstore.ui.screens.EditLabelScreen
 import de.pawcode.cardstore.ui.screens.LabelListScreen
 import de.pawcode.cardstore.utils.mapBarcodeFormat
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.launch
 
 @SuppressLint(
   "UnusedMaterial3ScaffoldPaddingParameter",
@@ -32,22 +33,16 @@ import kotlinx.coroutines.launch
   "CoroutineCreationDuringComposition",
 )
 @Composable
-fun Navigation(deeplinkFlow: SharedFlow<Map<String, String?>>) {
+fun Navigation() {
   val navController = rememberNavController()
-  val scope = rememberCoroutineScope()
+  val hasDeeplink by DeeplinkService.hasDeeplinkFlow.collectAsState(initial = false)
 
-  scope.launch {
-    deeplinkFlow.collect { deeplink ->
-      val route = buildString {
-        append(Screen.EditCard.route)
-        append("?")
-        for (entry in deeplink.entries) {
-          if (entry.value != null) {
-            append("${entry.key}=${entry.value}&")
-          }
-        }
+  LaunchedEffect(hasDeeplink) {
+    if (hasDeeplink && navController.currentDestination?.route != Screen.CardList.route) {
+      navController.navigate(Screen.CardList.route) {
+        popUpTo(Screen.CardList.route) { inclusive = true }
+        launchSingleTop = true
       }
-      navController.navigate(route)
     }
   }
 
