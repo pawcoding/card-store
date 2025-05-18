@@ -50,6 +50,8 @@ import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
 import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.enums.SortAttribute
 import de.pawcode.cardstore.data.managers.PreferencesManager
+import de.pawcode.cardstore.data.services.DeeplinkService
+import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.navigation.Screen
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.CardsListComponent
@@ -57,6 +59,7 @@ import de.pawcode.cardstore.ui.components.DropdownOption
 import de.pawcode.cardstore.ui.components.LabelsListComponent
 import de.pawcode.cardstore.ui.components.SelectDropdownMenu
 import de.pawcode.cardstore.ui.dialogs.ConfirmDialog
+import de.pawcode.cardstore.ui.sheets.ImportCardSheet
 import de.pawcode.cardstore.ui.sheets.Option
 import de.pawcode.cardstore.ui.sheets.OptionSheet
 import de.pawcode.cardstore.ui.sheets.ViewCardSheet
@@ -79,24 +82,23 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     labelsFlow = viewModel.allLabels,
     sortByFlow = preferencesManager.sortAttribute,
     onCreateCard = { cardNumber, barcodeFormat ->
+      if (cardNumber != null && barcodeFormat != null) {
+        val deeplink = parseDeeplink(cardNumber)
+        if (deeplink != null) {
+          DeeplinkService.deeplinkReceived(deeplink)
+          return@CardListScreenComponent
+        }
+      }
+
       val route = buildString {
         append(Screen.EditCard.route)
         if (cardNumber != null || barcodeFormat != null) {
           append("?")
-          val deeplink = parseDeeplink(cardNumber ?: "")
-          if (deeplink != null) {
-            for (entry in deeplink.entries) {
-              if (entry.value != null) {
-                append("${entry.key}=${entry.value}&")
-              }
-            }
-          } else {
-            if (cardNumber != null) {
-              append("cardNumber=$cardNumber&")
-            }
-            if (barcodeFormat != null) {
-              append("barcodeFormat=$barcodeFormat&")
-            }
+          if (cardNumber != null) {
+            append("cardNumber=$cardNumber&")
+          }
+          if (barcodeFormat != null) {
+            append("barcodeFormat=$barcodeFormat&")
           }
         }
         if (endsWith("&")) {
@@ -104,6 +106,11 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
         }
       }
       navController.navigate(route)
+    },
+    onImportCard = { card ->
+      viewModel.insertCard(card)
+      SnackbarService.showSnackbar("Card imported")
+      DeeplinkService.clearDeeplink()
     },
     onEditCard = { card ->
       navController.navigate(Screen.EditCard.route + "?cardId=${card.cardId}")
@@ -136,6 +143,7 @@ fun CardListScreenComponent(
   labelsFlow: Flow<List<LabelEntity>>,
   sortByFlow: Flow<SortAttribute?>,
   onCreateCard: (cardNumber: String?, barcodeType: BarcodeType?) -> Unit,
+  onImportCard: (CardEntity) -> Unit,
   onEditCard: (CardEntity) -> Unit,
   onShowCard: (CardEntity) -> Unit,
   onDeleteCard: (CardEntity) -> Unit,
@@ -153,9 +161,11 @@ fun CardListScreenComponent(
   var showCardCreateSheet by remember { mutableStateOf(false) }
   var openDeleteDialog by remember { mutableStateOf<CardEntity?>(null) }
   var showBarcodeScanner by remember { mutableStateOf(false) }
+  val showCardImportSheet by DeeplinkService.deeplinkFlow.collectAsState(initial = null)
 
   val listState = rememberLazyGridState()
   val cardSheetState = rememberModalBottomSheetState()
+  val cardImportSheetState = rememberModalBottomSheetState()
   val cardOptionSheetState = rememberModalBottomSheetState()
   val cardCreateSheetState = rememberModalBottomSheetState()
 
@@ -250,6 +260,20 @@ fun CardListScreenComponent(
           onDismissRequest = { showCardSheet = null },
         ) {
           ViewCardSheet(it)
+        }
+      }
+
+      showCardImportSheet?.let {
+        ModalBottomSheet(
+          modifier = Modifier.fillMaxHeight().safeDrawingPadding(),
+          sheetState = cardImportSheetState,
+          onDismissRequest = { DeeplinkService.clearDeeplink() },
+        ) {
+          ImportCardSheet(
+            card = it,
+            onImport = { onImportCard(it) },
+            onCancel = { DeeplinkService.clearDeeplink() },
+          )
         }
       }
 
@@ -351,6 +375,7 @@ fun PreviewCardListScreenComponent() {
     labelsFlow = flowOf(EXAMPLE_LABEL_LIST),
     sortByFlow = flowOf(SortAttribute.ALPHABETICALLY),
     onCreateCard = { _, _ -> },
+    onImportCard = {},
     onEditCard = {},
     onShowCard = {},
     onDeleteCard = {},
@@ -370,6 +395,7 @@ fun PreviewCardListScreenComponentEmpty() {
     labelsFlow = flowOf(emptyList()),
     sortByFlow = flowOf(SortAttribute.ALPHABETICALLY),
     onCreateCard = { _, _ -> },
+    onImportCard = {},
     onEditCard = {},
     onShowCard = {},
     onDeleteCard = {},
