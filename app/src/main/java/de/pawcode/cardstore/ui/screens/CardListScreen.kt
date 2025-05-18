@@ -1,6 +1,5 @@
 package de.pawcode.cardstore.ui.screens
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -62,6 +61,7 @@ import de.pawcode.cardstore.ui.dialogs.ConfirmDialog
 import de.pawcode.cardstore.ui.sheets.ImportCardSheet
 import de.pawcode.cardstore.ui.sheets.Option
 import de.pawcode.cardstore.ui.sheets.OptionSheet
+import de.pawcode.cardstore.ui.sheets.ShareCardSheet
 import de.pawcode.cardstore.ui.sheets.ViewCardSheet
 import de.pawcode.cardstore.ui.utils.BarcodeScanner
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
@@ -120,19 +120,6 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     onViewLabels = { navController.navigate(Screen.LabelList.route) },
     onSortChange = { scope.launch { preferencesManager.saveSortAttribute(it) } },
     onShowAbout = { navController.navigate(Screen.About.route) },
-    onShareCard = {
-      val sendIntent =
-        Intent().apply {
-          action = Intent.ACTION_SEND
-          putExtra(
-            Intent.EXTRA_TEXT,
-            "https://cardstore.apps.pawcode.de/share-card?storeName=${it.storeName}&cardNumber=${it.cardNumber}&barcodeFormat=${it.barcodeFormat}&color=${it.color}",
-          )
-          type = "text/plain"
-        }
-      val shareIntent = Intent.createChooser(sendIntent, null)
-      context.startActivity(shareIntent)
-    },
   )
 }
 
@@ -150,7 +137,6 @@ fun CardListScreenComponent(
   onViewLabels: () -> Unit,
   onSortChange: (SortAttribute) -> Unit,
   onShowAbout: () -> Unit,
-  onShareCard: (CardEntity) -> Unit,
 ) {
   val cards by cardsFlow.collectAsState(initial = emptyList())
   val labels by labelsFlow.collectAsState(initial = emptyList())
@@ -158,6 +144,7 @@ fun CardListScreenComponent(
 
   var showCardSheet by remember { mutableStateOf<CardEntity?>(null) }
   var showCardOptionSheet by remember { mutableStateOf<CardEntity?>(null) }
+  var showCardShareSheet by remember { mutableStateOf<CardEntity?>(null) }
   var showCardCreateSheet by remember { mutableStateOf(false) }
   var openDeleteDialog by remember { mutableStateOf<CardEntity?>(null) }
   var showBarcodeScanner by remember { mutableStateOf(false) }
@@ -165,6 +152,7 @@ fun CardListScreenComponent(
 
   val listState = rememberLazyGridState()
   val cardSheetState = rememberModalBottomSheetState()
+  val cardShareSheetState = rememberModalBottomSheetState()
   val cardImportSheetState = rememberModalBottomSheetState()
   val cardOptionSheetState = rememberModalBottomSheetState()
   val cardCreateSheetState = rememberModalBottomSheetState()
@@ -265,7 +253,7 @@ fun CardListScreenComponent(
 
       showCardImportSheet?.let {
         ModalBottomSheet(
-          modifier = Modifier.fillMaxHeight().safeDrawingPadding(),
+          modifier = Modifier.safeDrawingPadding(),
           sheetState = cardImportSheetState,
           onDismissRequest = { DeeplinkService.clearDeeplink() },
         ) {
@@ -274,6 +262,16 @@ fun CardListScreenComponent(
             onImport = { onImportCard(it) },
             onCancel = { DeeplinkService.clearDeeplink() },
           )
+        }
+      }
+
+      showCardShareSheet?.let {
+        ModalBottomSheet(
+          modifier = Modifier.safeDrawingPadding(),
+          sheetState = cardShareSheetState,
+          onDismissRequest = { showCardShareSheet = null },
+        ) {
+          ShareCardSheet(card = it)
         }
       }
 
@@ -293,10 +291,10 @@ fun CardListScreenComponent(
               },
             ),
             Option(
-              label = "Share card",
+              label = stringResource(R.string.card_share),
               icon = Icons.Filled.Share,
               onClick = {
-                onShareCard(it)
+                showCardShareSheet = it
                 showCardOptionSheet = null
               },
             ),
@@ -382,7 +380,6 @@ fun PreviewCardListScreenComponent() {
     onViewLabels = {},
     onSortChange = {},
     onShowAbout = {},
-    onShareCard = {},
   )
 }
 
@@ -402,6 +399,5 @@ fun PreviewCardListScreenComponentEmpty() {
     onViewLabels = {},
     onSortChange = {},
     onShowAbout = {},
-    onShareCard = {},
   )
 }

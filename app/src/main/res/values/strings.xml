@@ -18,6 +18,7 @@
     <string name="card_number">Card number</string>
     <string name="card_pick_color">Pick a color</string>
     <string name="card_save">Save card</string>
+    <string name="card_share">Share card</string>
     <string name="card_store_name">Store name</string>
     <string name="card_updated">Card updated</string>
     <string name="cards_list_empty">Create your first card</string>
@@ -51,6 +52,7 @@
     <string name="report_issue">Report an issue</string>
     <string name="scan_barcode">Scan barcode</string>
     <string name="scan_error">Error while trying to scan barcode</string>
+    <string name="share_card_title">Share your card</string>
     <string name="sort_alphabetically">Alphabetically</string>
     <string name="sort_most_used">Most used</string>
     <string name="sort_recently_used">Recently used</string>

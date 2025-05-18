@@ -19,6 +19,7 @@
     <string name="card_number">Kartennummer</string>
     <string name="card_pick_color">Wähle eine Farbe</string>
     <string name="card_save">Karte speichern</string>
+    <string name="card_share">Karte teilen</string>
     <string name="card_store_name">Name des Geschäfts</string>
     <string name="card_updated">Karte aktualisiert</string>
     <string name="cards_list_empty">Erstelle deine erste Karte</string>
@@ -52,6 +53,7 @@
     <string name="report_issue">Ein Problem entdeckt?</string>
     <string name="scan_barcode">Barcode scannen</string>
     <string name="scan_error">Fehler beim Scannen</string>
+    <string name="share_card_title">Teile deine Karte</string>
     <string name="sort_alphabetically">Alphabetisch</string>
     <string name="sort_most_used">Am häufigsten verwendet</string>
     <string name="sort_recently_used">Kürzlich verwendet</string>
