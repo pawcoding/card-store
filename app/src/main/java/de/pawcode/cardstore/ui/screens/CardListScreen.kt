@@ -2,9 +2,11 @@ package de.pawcode.cardstore.ui.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
@@ -243,7 +245,7 @@ fun CardListScreenComponent(
 
       showCardSheet?.let {
         ModalBottomSheet(
-          modifier = Modifier.fillMaxHeight().safeDrawingPadding(),
+          modifier = Modifier.fillMaxHeight().windowInsetsPadding(WindowInsets.statusBars),
           sheetState = cardSheetState,
           onDismissRequest = { showCardSheet = null },
         ) {
@@ -253,8 +255,8 @@ fun CardListScreenComponent(
 
       showCardImportSheet?.let {
         ModalBottomSheet(
-          modifier = Modifier.safeDrawingPadding(),
           sheetState = cardImportSheetState,
+          dragHandle = {},
           onDismissRequest = { DeeplinkService.clearDeeplink() },
         ) {
           ImportCardSheet(
@@ -267,18 +269,18 @@ fun CardListScreenComponent(
 
       showCardShareSheet?.let {
         ModalBottomSheet(
-          modifier = Modifier.safeDrawingPadding(),
+          modifier = Modifier.fillMaxHeight().windowInsetsPadding(WindowInsets.statusBars),
           sheetState = cardShareSheetState,
           onDismissRequest = { showCardShareSheet = null },
         ) {
-          ShareCardSheet(card = it)
+          ShareCardSheet(it)
         }
       }
 
       showCardOptionSheet?.let {
         ModalBottomSheet(
-          modifier = Modifier.safeDrawingPadding(),
           sheetState = cardOptionSheetState,
+          dragHandle = {},
           onDismissRequest = { showCardOptionSheet = null },
         ) {
           OptionSheet(
@@ -312,8 +314,8 @@ fun CardListScreenComponent(
 
       if (showCardCreateSheet) {
         ModalBottomSheet(
-          modifier = Modifier.safeDrawingPadding(),
           sheetState = cardCreateSheetState,
+          dragHandle = {},
           onDismissRequest = { showCardCreateSheet = false },
         ) {
           OptionSheet(
