@@ -35,7 +35,10 @@ fun ShareCardSheet(card: CardEntity) {
     verticalArrangement = Arrangement.spacedBy(16.dp),
   ) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-      Text(stringResource(R.string.share_card_title))
+      Text(
+        text = stringResource(R.string.share_card_title),
+        style = MaterialTheme.typography.headlineSmall,
+      )
     }
 
     Box(
