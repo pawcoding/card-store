@@ -12,6 +12,7 @@
     <string name="card_delete_description">Möchtest du die Karte wirklich löschen? Sie kann nicht wiederhergestellt werden.</string>
     <string name="card_delete_title">Karte löschen</string>
     <string name="card_edit">Karte bearbeiten</string>
+    <string name="card_import">Karte importieren</string>
     <string name="card_invalid_barcode_format">Ungültiges Format</string>
     <string name="card_labels">Labels</string>
     <string name="card_no_labels">Keine Labels verfügbar</string>

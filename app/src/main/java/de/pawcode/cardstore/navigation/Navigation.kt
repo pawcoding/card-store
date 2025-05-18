@@ -40,7 +40,7 @@ fun Navigation() {
   LaunchedEffect(hasDeeplink) {
     if (hasDeeplink && navController.currentDestination?.route != Screen.CardList.route) {
       navController.navigate(Screen.CardList.route) {
-        popUpTo(0) { inclusive = true }
+        popUpTo(Screen.CardList.route) { inclusive = true }
         launchSingleTop = true
       }
     }

@@ -11,8 +11,10 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
 
 object DeeplinkService {
-  val deeplinkFlow = MutableSharedFlow<CardEntity?>(replay = 1)
-  val hasDeeplinkFlow = deeplinkFlow.map { card -> card != null }
+  private val _deeplinkFlow = MutableSharedFlow<CardEntity?>(replay = 1)
+
+  val deeplinkFlow = _deeplinkFlow.map { it }
+  val hasDeeplinkFlow = _deeplinkFlow.map { card -> card != null }
 
   @OptIn(ExperimentalUuidApi::class)
   fun deeplinkReceived(deeplink: Map<String, String?>) {
@@ -25,10 +27,10 @@ object DeeplinkService {
           deeplink["barcodeFormat"]?.let { mapBarcodeFormat(it) } ?: BarcodeType.QR_CODE,
         color = deeplink["color"]?.toIntOrNull() ?: Color.White.toArgb(),
       )
-    deeplinkFlow.tryEmit(card)
+    _deeplinkFlow.tryEmit(card)
   }
 
   fun clearDeeplink() {
-    deeplinkFlow.tryEmit(null)
+    _deeplinkFlow.tryEmit(null)
   }
 }
