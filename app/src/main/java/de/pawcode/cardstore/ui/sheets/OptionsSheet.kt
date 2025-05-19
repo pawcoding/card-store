@@ -1,24 +1,38 @@
 package de.pawcode.cardstore.ui.sheets
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.twotone.CreditCard
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import de.pawcode.cardstore.data.database.entities.EXAMPLE_CARD
+import de.pawcode.cardstore.utils.isLightColor
 
 /** Option to be displayed in the [OptionSheet]. */
 data class Option(
@@ -31,8 +45,14 @@ data class Option(
 )
 
 @Composable
-fun OptionSheet(vararg options: Option) {
+fun OptionSheet(vararg options: Option, content: @Composable (() -> Unit)? = null) {
   Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+    if (content != null) {
+      content()
+
+      HorizontalDivider()
+    }
+
     options.forEach { option ->
       ListItem(
         leadingContent = { Icon(option.icon, contentDescription = null) },
@@ -48,8 +68,40 @@ fun OptionSheet(vararg options: Option) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewOptionSheet() {
+  val card = EXAMPLE_CARD
+
+  val color by remember { mutableStateOf(Color(card.color)) }
+  val isLightColor by remember { derivedStateOf { isLightColor(color) } }
+
   OptionSheet(
     Option(label = "Edit card", icon = Icons.Filled.Edit, onClick = {}),
     Option(label = "Delete card", icon = Icons.Filled.DeleteForever, onClick = {}),
-  )
+  ) {
+    Row(
+      modifier = Modifier.padding(16.dp),
+      horizontalArrangement = Arrangement.spacedBy(12.dp),
+      verticalAlignment = Alignment.CenterVertically,
+    ) {
+      Box(
+        modifier = Modifier.size(64.dp).clip(MaterialTheme.shapes.small).background(color),
+        contentAlignment = Alignment.Center,
+      ) {
+        Icon(
+          Icons.TwoTone.CreditCard,
+          contentDescription = null,
+          modifier = Modifier.size(48.dp),
+          tint = if (isLightColor) Color.Black else Color.White,
+        )
+      }
+
+      Column {
+        Text(card.storeName, style = MaterialTheme.typography.titleLarge)
+        Text(
+          card.cardNumber,
+          style = MaterialTheme.typography.titleSmall,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+      }
+    }
+  }
 }
