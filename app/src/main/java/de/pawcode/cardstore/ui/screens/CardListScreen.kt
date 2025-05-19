@@ -115,7 +115,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     },
     onImportCard = { card ->
       viewModel.insertCard(card)
-      SnackbarService.showSnackbar("Card imported")
+      SnackbarService.showSnackbar(context.getString(R.string.import_card_success))
       DeeplinkService.clearDeeplink()
     },
     onEditCard = { card ->

@@ -6,7 +6,6 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import com.google.android.gms.common.moduleinstall.ModuleInstall
 import com.google.android.gms.common.moduleinstall.ModuleInstallRequest
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -26,16 +25,11 @@ fun BarcodeScanner(onBarcodeDetected: (Barcode) -> Unit, onCancel: () -> Unit) {
       .enableAutoZoom()
       .build()
 
-  // Prepare error messages in composable context
-  val errorMessage = stringResource(R.string.scan_error)
-  val reportError = stringResource(R.string.copy_error)
-  val errorCopied = stringResource(R.string.copied_to_clipboard)
-
   /** Handles errors during the barcode scanning process. */
   fun handleError(exception: Exception) {
     SnackbarService.showSnackbar(
-      message = errorMessage,
-      actionLabel = reportError,
+      message = context.getString(R.string.scan_error),
+      actionLabel = context.getString(R.string.copy_error),
       onAction = {
         val clipboardManager =
           context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -46,7 +40,7 @@ fun BarcodeScanner(onBarcodeDetected: (Barcode) -> Unit, onCancel: () -> Unit) {
           )
         clipboardManager.setPrimaryClip(clip)
 
-        SnackbarService.showSnackbar(message = errorCopied)
+        SnackbarService.showSnackbar(message = context.getString(R.string.copied_to_clipboard))
       },
     )
     onCancel()

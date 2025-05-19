@@ -37,6 +37,7 @@
     <string name="github_issues">Open an issue on GitHub</string>
     <string name="github_repository">Open project on GitHub</string>
     <string name="import_card_description">Someone shared this card with you. Click on the card to add it to your collection.</string>
+    <string name="import_card_success">Card imported successfully</string>
     <string name="import_card_title">Import this card</string>
     <string name="label_add">Add label</string>
     <string name="label_added">Label added</string>

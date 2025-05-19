@@ -38,6 +38,7 @@
     <string name="github_issues">Ticket auf GitHub öffnen</string>
     <string name="github_repository">Projekt auf GitHub öffnen</string>
     <string name="import_card_description">Jemand hat diese Karte mit dir geteilt. Klicke auf die Karte, um sie zu deiner Sammlung hinzuzufügen.</string>
+    <string name="import_card_success">Karte erfolgreich importiert</string>
     <string name="import_card_title">Diese Karte importieren</string>
     <string name="label_add">Label hinzufügen</string>
     <string name="label_added">Label hinzugefügt</string>
