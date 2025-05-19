@@ -1,6 +1,6 @@
 package de.pawcode.cardstore.ui.screens
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,13 +8,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.twotone.DeleteForever
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -34,12 +36,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import de.charlex.compose.RevealSwipe
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
 import de.pawcode.cardstore.data.database.entities.LabelEntity
@@ -112,16 +116,54 @@ fun LabelListScreenComponent(
             Modifier.widthIn(max = 500.dp).fillMaxWidth().verticalScroll(rememberScrollState())
         ) {
           labels.forEachIndexed { index, label ->
-            ListItem(
-              headlineContent = { Text(label.name) },
-              trailingContent = {
+            RevealSwipe(
+              shape = RoundedCornerShape(0.dp),
+              backgroundStartActionLabel = stringResource(R.string.label_edit),
+              backgroundCardStartColor = MaterialTheme.colorScheme.primaryContainer,
+              hiddenContentStart = {
                 Icon(
-                  Icons.Filled.MoreHoriz,
-                  contentDescription = stringResource(R.string.labels_options),
+                  Icons.Filled.Edit,
+                  contentDescription = stringResource(R.string.label_edit),
+                  tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
               },
-              modifier = Modifier.padding(4.dp).clickable { showLabelOptionSheet = label },
-            )
+              onBackgroundStartClick = {
+                onEdit(label)
+                true
+              },
+              backgroundEndActionLabel = stringResource(R.string.label_delete_title),
+              backgroundCardEndColor = MaterialTheme.colorScheme.errorContainer,
+              hiddenContentEnd = {
+                Icon(
+                  Icons.Filled.DeleteForever,
+                  contentDescription = stringResource(R.string.label_delete_title),
+                  tint = MaterialTheme.colorScheme.onErrorContainer,
+                )
+              },
+              onBackgroundEndClick = {
+                openDeleteDialog = label
+                true
+              },
+              onContentClick = { showLabelOptionSheet = label },
+              onContentLongClick = { showLabelOptionSheet = label },
+              card = { shape, content ->
+                Card(
+                  modifier = Modifier.matchParentSize(),
+                  colors =
+                    CardDefaults.cardColors(
+                      contentColor = MaterialTheme.colorScheme.onBackground,
+                      containerColor = Color.Transparent,
+                    ),
+                  shape = shape,
+                  content = content,
+                )
+              },
+            ) {
+              ListItem(
+                modifier = Modifier.background(MaterialTheme.colorScheme.background).padding(4.dp),
+                headlineContent = { Text(label.name) },
+              )
+            }
 
             HorizontalDivider()
           }
