@@ -41,7 +41,7 @@ fun AppBar(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+        actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       ),
   )
 }

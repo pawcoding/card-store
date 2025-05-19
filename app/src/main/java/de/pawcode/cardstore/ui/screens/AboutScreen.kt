@@ -40,7 +40,10 @@ val TECHNOLOGIES =
     Technology(name = "Room", url = "https://developer.android.com/jetpack/androidx/releases/room"),
     Technology(name = "Material Design 3", url = "https://m3.material.io/"),
     Technology(name = "ML Kit", url = "https://developers.google.com/ml-kit"),
-    Technology(name = "Google Code-Scanner", url = "https://developers.google.com/ml-kit/vision/barcode-scanning/code-scanner"),
+    Technology(
+      name = "Google Code-Scanner",
+      url = "https://developers.google.com/ml-kit/vision/barcode-scanning/code-scanner",
+    ),
     Technology(name = "ColorPickerView", url = "https://github.com/skydoves/ColorPickerView"),
     Technology(name = "ComposedBarcodes", url = "https://github.com/simonsickle/ComposedBarcodes"),
     Technology(name = "RevealSwipe", url = "https://github.com/ch4rl3x/RevealSwipe"),
@@ -93,9 +96,7 @@ fun AboutScreenComponent(
           headlineContent = {
             Text(stringResource(R.string.version) + if (isDebug) " (debug)" else "")
           },
-          supportingContent = {
-            Text(versionName + " (${packageInfo.longVersionCode})")
-          },
+          supportingContent = { Text(versionName + " (${packageInfo.longVersionCode})") },
           trailingContent = {
             if (hasVersionName) {
               Icon(
