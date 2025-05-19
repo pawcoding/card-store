@@ -37,6 +37,8 @@
     <string name="copy_error">Kopieren</string>
     <string name="github_issues">Ticket auf GitHub öffnen</string>
     <string name="github_repository">Projekt auf GitHub öffnen</string>
+    <string name="import_card_description">Jemand hat diese Karte mit dir geteilt. Klicke auf die Karte, um sie zu deiner Sammlung hinzuzufügen.</string>
+    <string name="import_card_title">Diese Karte importieren</string>
     <string name="label_add">Label hinzufügen</string>
     <string name="label_added">Label hinzugefügt</string>
     <string name="label_delete_description">Möchtest Du das Label wirklich löschen? Es kann nicht wiederhergestellt werden.</string>
@@ -53,6 +55,7 @@
     <string name="report_issue">Ein Problem entdeckt?</string>
     <string name="scan_barcode">Barcode scannen</string>
     <string name="scan_error">Fehler beim Scannen</string>
+    <string name="share_card_description">Lass jemand anderen diesen QR-Code scannen, um diese Karte zu importieren.</string>
     <string name="share_card_title">Teile deine Karte</string>
     <string name="sort_alphabetically">Alphabetisch</string>
     <string name="sort_most_used">Am häufigsten verwendet</string>

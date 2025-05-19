@@ -36,6 +36,8 @@
     <string name="copy_error">Copy</string>
     <string name="github_issues">Open an issue on GitHub</string>
     <string name="github_repository">Open project on GitHub</string>
+    <string name="import_card_description">Someone shared this card with you. Click on the card to add it to your collection.</string>
+    <string name="import_card_title">Import this card</string>
     <string name="label_add">Add label</string>
     <string name="label_added">Label added</string>
     <string name="label_delete_description">Are you sure you want to delete the label? It cannot be restored.</string>
@@ -52,6 +54,7 @@
     <string name="report_issue">Report an issue</string>
     <string name="scan_barcode">Scan barcode</string>
     <string name="scan_error">Error while trying to scan barcode</string>
+    <string name="share_card_description">Let someone else scan this QR code to import this card.</string>
     <string name="share_card_title">Share your card</string>
     <string name="sort_alphabetically">Alphabetically</string>
     <string name="sort_most_used">Most used</string>

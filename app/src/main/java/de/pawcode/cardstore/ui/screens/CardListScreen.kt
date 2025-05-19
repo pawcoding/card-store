@@ -263,11 +263,7 @@ fun CardListScreenComponent(
           dragHandle = {},
           onDismissRequest = { DeeplinkService.clearDeeplink() },
         ) {
-          ImportCardSheet(
-            card = it,
-            onImport = { onImportCard(it) },
-            onCancel = { DeeplinkService.clearDeeplink() },
-          )
+          ImportCardSheet(card = it, onImport = { onImportCard(it) })
         }
       }
 

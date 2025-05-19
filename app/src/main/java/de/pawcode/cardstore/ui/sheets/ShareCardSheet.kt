@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,30 +31,35 @@ fun ShareCardSheet(card: CardEntity) {
   Column(
     modifier = Modifier.padding(16.dp).fillMaxWidth(),
     horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.spacedBy(16.dp),
+    verticalArrangement = Arrangement.spacedBy(20.dp),
   ) {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+    Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
       Text(
         text = stringResource(R.string.share_card_title),
         style = MaterialTheme.typography.headlineSmall,
+      )
+      Text(
+        text = stringResource(R.string.share_card_description),
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
       )
     }
 
     Box(
       modifier =
-        Modifier.fillMaxWidth(0.7f)
+        Modifier.fillMaxWidth(0.6f)
           .aspectRatio(1f)
           .clip(MaterialTheme.shapes.medium)
           .background(Color.White)
-          .padding(8.dp)
+          .padding(4.dp)
     ) {
       Barcode(
         modifier = Modifier.fillMaxWidth(),
         resolutionFactor = 5,
         value = deeplink,
         type = BarcodeType.QR_CODE,
-        width = 128.dp,
-        height = 128.dp,
+        width = 80.dp,
+        height = 80.dp,
       )
     }
   }
