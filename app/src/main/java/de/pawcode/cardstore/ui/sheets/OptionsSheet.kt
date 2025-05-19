@@ -65,6 +65,40 @@ fun OptionSheet(vararg options: Option, content: @Composable (() -> Unit)? = nul
   }
 }
 
+@Composable
+fun OptionSheetInfo(
+  backgroundColor: Color,
+  iconTint: Color,
+  icon: ImageVector,
+  title: String,
+  subtitle: String? = null,
+) {
+  Row(
+    modifier = Modifier.padding(16.dp),
+    horizontalArrangement = Arrangement.spacedBy(12.dp),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    Box(
+      modifier = Modifier.size(64.dp).clip(MaterialTheme.shapes.small).background(backgroundColor),
+      contentAlignment = Alignment.Center,
+    ) {
+      Icon(icon, contentDescription = null, modifier = Modifier.size(48.dp), tint = iconTint)
+    }
+
+    Column {
+      Text(title, style = MaterialTheme.typography.titleLarge)
+
+      if (subtitle != null) {
+        Text(
+          subtitle,
+          style = MaterialTheme.typography.titleSmall,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+      }
+    }
+  }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewOptionSheet() {
@@ -77,31 +111,12 @@ fun PreviewOptionSheet() {
     Option(label = "Edit card", icon = Icons.Filled.Edit, onClick = {}),
     Option(label = "Delete card", icon = Icons.Filled.DeleteForever, onClick = {}),
   ) {
-    Row(
-      modifier = Modifier.padding(16.dp),
-      horizontalArrangement = Arrangement.spacedBy(12.dp),
-      verticalAlignment = Alignment.CenterVertically,
-    ) {
-      Box(
-        modifier = Modifier.size(64.dp).clip(MaterialTheme.shapes.small).background(color),
-        contentAlignment = Alignment.Center,
-      ) {
-        Icon(
-          Icons.TwoTone.CreditCard,
-          contentDescription = null,
-          modifier = Modifier.size(48.dp),
-          tint = if (isLightColor) Color.Black else Color.White,
-        )
-      }
-
-      Column {
-        Text(card.storeName, style = MaterialTheme.typography.titleLarge)
-        Text(
-          card.cardNumber,
-          style = MaterialTheme.typography.titleSmall,
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-      }
-    }
+    OptionSheetInfo(
+      backgroundColor = color,
+      iconTint = if (isLightColor) Color.Black else Color.White,
+      icon = Icons.TwoTone.CreditCard,
+      title = card.storeName,
+      subtitle = card.cardNumber,
+    )
   }
 }
