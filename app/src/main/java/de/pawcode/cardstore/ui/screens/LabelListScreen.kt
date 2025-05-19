@@ -121,12 +121,12 @@ fun LabelListScreenComponent(
             RevealSwipe(
               shape = RoundedCornerShape(0.dp),
               backgroundStartActionLabel = stringResource(R.string.label_edit),
-              backgroundCardStartColor = MaterialTheme.colorScheme.primaryContainer,
+              backgroundCardStartColor = MaterialTheme.colorScheme.secondaryContainer,
               hiddenContentStart = {
                 Icon(
                   Icons.Filled.Edit,
                   contentDescription = stringResource(R.string.label_edit),
-                  tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                  tint = MaterialTheme.colorScheme.onSecondaryContainer,
                 )
               },
               onBackgroundStartClick = {
