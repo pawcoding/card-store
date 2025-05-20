@@ -367,7 +367,10 @@ fun CardListScreenComponent(
       if (showBarcodeScanner) {
         BarcodeScanner(
           onBarcodeDetected = { barcode ->
-            onCreateCard(barcode.rawValue ?: "", mapBarcodeFormat(barcode.format))
+            onCreateCard(
+              barcode.rawValue ?: barcode.displayValue ?: "",
+              mapBarcodeFormat(barcode.format),
+            )
             showBarcodeScanner = false
           },
           onCancel = { showBarcodeScanner = false },

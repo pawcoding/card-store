@@ -314,7 +314,7 @@ fun EditCardForm(
   if (showBarcodeScanner) {
     BarcodeScanner(
       onBarcodeDetected = { barcode ->
-        val deeplink = parseDeeplink(barcode.rawValue ?: "")
+        val deeplink = parseDeeplink(barcode.rawValue ?: barcode.displayValue ?: "")
         if (deeplink != null) {
           onCardUpdate(
             card.copy(
@@ -332,7 +332,7 @@ fun EditCardForm(
             card.copy(
               card =
                 card.card.copy(
-                  cardNumber = barcode.rawValue ?: "",
+                  cardNumber = barcode.rawValue ?: barcode.displayValue ?: "",
                   barcodeFormat = mapBarcodeFormat(barcode.format),
                 )
             )
