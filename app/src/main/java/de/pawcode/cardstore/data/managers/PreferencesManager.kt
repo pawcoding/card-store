@@ -16,11 +16,9 @@ class PreferencesManager(private val context: Context) {
   }
 
   val sortAttribute: Flow<SortAttribute> =
-    context.dataStore.data.map { preferences ->
-      preferences[SORT_ATTRIBUTE]?.let { SortAttribute.valueOf(it) } ?: SortAttribute.ALPHABETICALLY
-    }
+    context.dataStore.data.map { preferences -> SortAttribute.fromKey(preferences[SORT_ATTRIBUTE]) }
 
   suspend fun saveSortAttribute(sortAttribute: SortAttribute) {
-    context.dataStore.edit { preferences -> preferences[SORT_ATTRIBUTE] = sortAttribute.name }
+    context.dataStore.edit { preferences -> preferences[SORT_ATTRIBUTE] = sortAttribute.key }
   }
 }
