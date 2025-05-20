@@ -63,6 +63,8 @@ android {
   kotlinOptions { jvmTarget = "19" }
 
   buildFeatures { compose = true }
+
+  androidResources { generateLocaleConfig = true }
 }
 
 dependencies {
