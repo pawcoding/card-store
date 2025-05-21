@@ -64,4 +64,5 @@
     <string name="technologies">Technologies</string>
     <string name="version">Version</string>
     <string name="website">Visit website</string>
+    <string name="website_link"><![CDATA[https://pawcode.de/?mtm_campaign=CardStore&mtm_kwd=About&mtm_source=App]]></string>
 </resources>

@@ -2,7 +2,7 @@ package de.pawcode.cardstore.ui.screens
 
 import android.content.Intent
 import android.content.pm.PackageInfo
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,6 +72,8 @@ fun AboutScreenComponent(
   onBack: () -> Unit,
   onOpenWebsite: (String) -> Unit,
 ) {
+  val context = LocalContext.current
+
   val hasVersionName = packageInfo.versionName != null
   val versionName = packageInfo.versionName ?: "Unknown version"
   val isDebug = packageInfo.packageName.endsWith(".debug")
@@ -109,14 +110,8 @@ fun AboutScreenComponent(
           },
           modifier =
             if (hasVersionName) {
-              Modifier.pointerInput(Unit) {
-                detectTapGestures(
-                  onTap = {
-                    onOpenWebsite(
-                      "https://github.com/pawcoding/card-store/releases/tag/v$versionName"
-                    )
-                  }
-                )
+              Modifier.clickable {
+                onOpenWebsite("https://github.com/pawcoding/card-store/releases/tag/v$versionName")
               }
             } else {
               Modifier
@@ -131,16 +126,7 @@ fun AboutScreenComponent(
           trailingContent = {
             Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = null)
           },
-          modifier =
-            Modifier.pointerInput(Unit) {
-              detectTapGestures(
-                onTap = {
-                  onOpenWebsite(
-                    "https://pawcode.de/?mtm_campaign=CardStore&mtm_kwd=About&mtm_source=App"
-                  )
-                }
-              )
-            },
+          modifier = Modifier.clickable { onOpenWebsite(context.getString(R.string.website_link)) },
         )
 
         HorizontalDivider()
@@ -151,12 +137,7 @@ fun AboutScreenComponent(
           trailingContent = {
             Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = null)
           },
-          modifier =
-            Modifier.pointerInput(Unit) {
-              detectTapGestures(
-                onTap = { onOpenWebsite("https://github.com/pawcoding/card-store") }
-              )
-            },
+          modifier = Modifier.clickable { onOpenWebsite("https://github.com/pawcoding/card-store") },
         )
 
         HorizontalDivider()
@@ -168,11 +149,7 @@ fun AboutScreenComponent(
             Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = null)
           },
           modifier =
-            Modifier.pointerInput(Unit) {
-              detectTapGestures(
-                onTap = { onOpenWebsite("https://github.com/pawcoding/card-store/issues") }
-              )
-            },
+            Modifier.clickable { onOpenWebsite("https://github.com/pawcoding/card-store/issues") },
         )
 
         HorizontalDivider()
@@ -191,10 +168,7 @@ fun AboutScreenComponent(
             trailingContent = {
               Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = null)
             },
-            modifier =
-              Modifier.pointerInput(Unit) {
-                detectTapGestures(onTap = { onOpenWebsite(technology.url) })
-              },
+            modifier = Modifier.clickable { onOpenWebsite(technology.url) },
           )
 
           HorizontalDivider()
