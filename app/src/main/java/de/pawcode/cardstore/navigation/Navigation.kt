@@ -34,9 +34,7 @@ import de.pawcode.cardstore.utils.mapBarcodeFormat
   "CoroutineCreationDuringComposition",
 )
 @Composable
-fun Navigation(
-  modifier: Modifier = Modifier
-) {
+fun Navigation(modifier: Modifier = Modifier) {
   val navController = rememberNavController()
   val hasDeeplink by DeeplinkService.hasDeeplinkFlow.collectAsState(initial = false)
 
@@ -63,7 +61,7 @@ fun Navigation(
           )
         },
       )
-    }
+    },
   ) { _ ->
     NavHost(
       navController = navController,

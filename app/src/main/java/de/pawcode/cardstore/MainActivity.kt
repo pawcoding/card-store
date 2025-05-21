@@ -33,11 +33,7 @@ class MainActivity : ComponentActivity() {
 
     handleIncomingIntent(intent)
 
-    setContent {
-      CardStoreTheme {
-        Navigation()
-      }
-    }
+    setContent { CardStoreTheme { Navigation() } }
   }
 
   override fun onNewIntent(intent: Intent) {

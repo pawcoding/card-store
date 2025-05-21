@@ -220,7 +220,9 @@ fun CardListScreenComponent(
       ExtendedFloatingActionButton(
         onClick = { showCardCreateSheet = true },
         text = { Text(stringResource(R.string.cards_new)) },
-        icon = { Icon(Icons.Filled.AddCard, contentDescription = stringResource(R.string.cards_new)) },
+        icon = {
+          Icon(Icons.Filled.AddCard, contentDescription = stringResource(R.string.cards_new))
+        },
       )
     },
   ) { innerPadding ->
@@ -244,7 +246,7 @@ fun CardListScreenComponent(
             showCardSheet = card
           },
           onCardLongPressed = { showCardOptionSheet = it },
-          onCardCreate = { showCardCreateSheet = true }
+          onCardCreate = { showCardCreateSheet = true },
         )
       }
 
