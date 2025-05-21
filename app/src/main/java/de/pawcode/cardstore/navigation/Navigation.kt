@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,7 +34,9 @@ import de.pawcode.cardstore.utils.mapBarcodeFormat
   "CoroutineCreationDuringComposition",
 )
 @Composable
-fun Navigation() {
+fun Navigation(
+  modifier: Modifier = Modifier
+) {
   val navController = rememberNavController()
   val hasDeeplink by DeeplinkService.hasDeeplinkFlow.collectAsState(initial = false)
 
@@ -47,6 +50,7 @@ fun Navigation() {
   }
 
   Scaffold(
+    modifier = modifier,
     snackbarHost = {
       SnackbarHost(
         hostState = SnackbarService.snackbarHostState,
