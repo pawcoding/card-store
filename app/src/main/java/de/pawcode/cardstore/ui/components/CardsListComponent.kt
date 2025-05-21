@@ -31,14 +31,12 @@ fun CardsListComponent(
   listState: LazyGridState,
   onCardClicked: (CardEntity) -> Unit,
   onCardLongPressed: (CardEntity) -> Unit,
+  onCardCreate: () -> Unit,
 ) {
-  if (cards.isEmpty()) {
+  if (cards.isEmpty() && isFiltered) {
     Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
       Text(
-        text =
-          stringResource(
-            if (isFiltered) R.string.cards_list_empty_filtered else R.string.cards_list_empty
-          ),
+        text = stringResource(R.string.cards_list_empty_filtered),
         style = MaterialTheme.typography.headlineMedium,
         textAlign = TextAlign.Center,
       )
@@ -57,6 +55,10 @@ fun CardsListComponent(
           onClick = { onCardClicked(card) },
           onLongPress = { onCardLongPressed(card) },
         )
+      }
+
+      if (!isFiltered) {
+        item { AddCardComponent(hasCards = !cards.isEmpty(), onClick = { onCardCreate() }) }
       }
     }
   }
@@ -77,6 +79,7 @@ fun PreviewCardsListComponent() {
     listState = rememberLazyGridState(),
     onCardClicked = {},
     onCardLongPressed = {},
+    onCardCreate = {},
   )
 }
 
@@ -89,6 +92,7 @@ fun PreviewCardsListComponentEmpty() {
     listState = rememberLazyGridState(),
     onCardClicked = {},
     onCardLongPressed = {},
+    onCardCreate = {},
   )
 }
 
@@ -101,5 +105,6 @@ fun PreviewCardsListComponentEmptyFiltered() {
     listState = rememberLazyGridState(),
     onCardClicked = {},
     onCardLongPressed = {},
+    onCardCreate = {},
   )
 }

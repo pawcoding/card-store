@@ -244,6 +244,7 @@ fun CardListScreenComponent(
             showCardSheet = card
           },
           onCardLongPressed = { showCardOptionSheet = it },
+          onCardCreate = { showCardCreateSheet = true }
         )
       }
 
