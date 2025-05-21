@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Share
@@ -220,7 +220,7 @@ fun CardListScreenComponent(
       ExtendedFloatingActionButton(
         onClick = { showCardCreateSheet = true },
         text = { Text(stringResource(R.string.cards_new)) },
-        icon = { Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.cards_new)) },
+        icon = { Icon(Icons.Filled.AddCard, contentDescription = stringResource(R.string.cards_new)) },
       )
     },
   ) { innerPadding ->
