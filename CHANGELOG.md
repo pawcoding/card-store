@@ -1,3 +1,26 @@
+# [1.1.0](https://github.com/pawcoding/card-store/compare/v1.0.0...v1.1.0) (2025-05-21)
+
+
+### Bug Fixes
+
+* **code-scanner:** correctly handle scanned codes with umlauts ([b73327d](https://github.com/pawcoding/card-store/commit/b73327d0e4c5956c861dec46b7617aaada945fa1))
+* **cards-list:** prevent crashes when updating sort attribute ([10309e8](https://github.com/pawcoding/card-store/commit/10309e8a82151b834db5a1618b86b6e06b322404))
+* **cards-list:** prevent crashes when updating sort attribute ([689e6e9](https://github.com/pawcoding/card-store/commit/689e6e98f529f3f758fd1d703ca9b58fba7995e6))
+* **snackbar:** use correct colors for snackbar ([c4ac047](https://github.com/pawcoding/card-store/commit/c4ac0471ca90ad356214bd9fe1f2d8d291e27d3e))
+
+
+### Features
+
+* add haptic feedback for long click and card scan ([36228bc](https://github.com/pawcoding/card-store/commit/36228bc55e54577fe49bd6aac6f5b210d0de2664))
+* **cards-list:** add virtual card to add a new card ([d31b217](https://github.com/pawcoding/card-store/commit/d31b217b668f40e89c5aaa45c23de76be0f0cdc4))
+* **options-sheet:** display info about item ([840ede9](https://github.com/pawcoding/card-store/commit/840ede94a7a62325acb9e83a2099a5b9ce19844e))
+* **label-list-screen:** enable swipe actions for labels ([a1dca3f](https://github.com/pawcoding/card-store/commit/a1dca3fef08024bddf9b3bd85d0dfaa2293f7c3f))
+* **share:** share and import card via deeplink ([62951ce](https://github.com/pawcoding/card-store/commit/62951cee0acae16c0ff4d6a6ca382712e1b5811a))
+* **share:** show bottom sheet with qr code ([f4c3922](https://github.com/pawcoding/card-store/commit/f4c39220affd248bac21840a512582d64bfbd1e3))
+* **import:** show special "import a card" sheet ([25606b9](https://github.com/pawcoding/card-store/commit/25606b93c4c2c0ae20200888979aa91ef86ff603))
+* **i18n:** support per-app language preference ([6da4c59](https://github.com/pawcoding/card-store/commit/6da4c5925de3ff03aad7cd1026c98f78b3a77629))
+* **about:** update about page ([7f4c3f3](https://github.com/pawcoding/card-store/commit/7f4c3f34597ab9b3ef6e5ee7c6fd840dbe96a585))
+
 # 1.0.0 (2025-05-04)
 
 
