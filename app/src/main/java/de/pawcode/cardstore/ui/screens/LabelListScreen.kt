@@ -12,9 +12,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.Label
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.NewLabel
 import androidx.compose.material.icons.twotone.DeleteForever
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -38,6 +38,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -85,6 +87,8 @@ fun LabelListScreenComponent(
   onEdit: (LabelEntity?) -> Unit,
   onDelete: (LabelEntity) -> Unit,
 ) {
+  val haptics = LocalHapticFeedback.current
+
   var showLabelOptionSheet by remember { mutableStateOf<LabelEntity?>(null) }
   val cardOptionSheetState = rememberModalBottomSheetState()
 
@@ -96,7 +100,9 @@ fun LabelListScreenComponent(
       ExtendedFloatingActionButton(
         onClick = { onEdit(null) },
         text = { Text(stringResource(R.string.labels_new)) },
-        icon = { Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.labels_new)) },
+        icon = {
+          Icon(Icons.Filled.NewLabel, contentDescription = stringResource(R.string.labels_new))
+        },
       )
     },
   ) { innerPadding ->
@@ -147,7 +153,10 @@ fun LabelListScreenComponent(
                 true
               },
               onContentClick = { showLabelOptionSheet = label },
-              onContentLongClick = { showLabelOptionSheet = label },
+              onContentLongClick = {
+                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                showLabelOptionSheet = label
+              },
               card = { shape, content ->
                 Card(
                   modifier = Modifier.matchParentSize(),

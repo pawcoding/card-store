@@ -5,7 +5,9 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import com.google.android.gms.common.moduleinstall.ModuleInstall
 import com.google.android.gms.common.moduleinstall.ModuleInstallRequest
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -17,6 +19,7 @@ import de.pawcode.cardstore.data.services.SnackbarService
 @Composable
 fun BarcodeScanner(onBarcodeDetected: (Barcode) -> Unit, onCancel: () -> Unit) {
   val context = LocalContext.current
+  val haptics = LocalHapticFeedback.current
 
   // Set up the barcode scanner options
   val options =
@@ -54,7 +57,10 @@ fun BarcodeScanner(onBarcodeDetected: (Barcode) -> Unit, onCancel: () -> Unit) {
     val barcodeScanner = GmsBarcodeScanning.getClient(context, options)
     barcodeScanner
       .startScan()
-      .addOnSuccessListener { onBarcodeDetected(it) }
+      .addOnSuccessListener {
+        haptics.performHapticFeedback(HapticFeedbackType.Confirm)
+        onBarcodeDetected(it)
+      }
       .addOnCanceledListener { onCancel() }
       .addOnFailureListener { handleError(it) }
   }
