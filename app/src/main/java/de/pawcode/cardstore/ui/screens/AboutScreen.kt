@@ -2,7 +2,7 @@ package de.pawcode.cardstore.ui.screens
 
 import android.content.Intent
 import android.content.pm.PackageInfo
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,8 +39,13 @@ val TECHNOLOGIES =
     Technology(name = "Room", url = "https://developer.android.com/jetpack/androidx/releases/room"),
     Technology(name = "Material Design 3", url = "https://m3.material.io/"),
     Technology(name = "ML Kit", url = "https://developers.google.com/ml-kit"),
+    Technology(
+      name = "Google Code-Scanner",
+      url = "https://developers.google.com/ml-kit/vision/barcode-scanning/code-scanner",
+    ),
     Technology(name = "ColorPickerView", url = "https://github.com/skydoves/ColorPickerView"),
     Technology(name = "ComposedBarcodes", url = "https://github.com/simonsickle/ComposedBarcodes"),
+    Technology(name = "RevealSwipe", url = "https://github.com/ch4rl3x/RevealSwipe"),
   )
 
 @Composable
@@ -68,8 +72,11 @@ fun AboutScreenComponent(
   onBack: () -> Unit,
   onOpenWebsite: (String) -> Unit,
 ) {
+  val context = LocalContext.current
+
   val hasVersionName = packageInfo.versionName != null
   val versionName = packageInfo.versionName ?: "Unknown version"
+  val isDebug = packageInfo.packageName.endsWith(".debug")
 
   Scaffold(topBar = { AppBar(title = stringResource(R.string.app_name), onBack = { onBack() }) }) {
     innerPadding ->
@@ -87,7 +94,9 @@ fun AboutScreenComponent(
         HorizontalDivider()
 
         ListItem(
-          headlineContent = { Text(stringResource(R.string.version)) },
+          headlineContent = {
+            Text(stringResource(R.string.version) + if (isDebug) " (debug)" else "")
+          },
           supportingContent = { Text(versionName + " (${packageInfo.longVersionCode})") },
           trailingContent = {
             if (hasVersionName) {
@@ -101,14 +110,8 @@ fun AboutScreenComponent(
           },
           modifier =
             if (hasVersionName) {
-              Modifier.pointerInput(Unit) {
-                detectTapGestures(
-                  onTap = {
-                    onOpenWebsite(
-                      "https://github.com/pawcoding/card-store/releases/tag/v$versionName"
-                    )
-                  }
-                )
+              Modifier.clickable {
+                onOpenWebsite("https://github.com/pawcoding/card-store/releases/tag/v$versionName")
               }
             } else {
               Modifier
@@ -123,16 +126,7 @@ fun AboutScreenComponent(
           trailingContent = {
             Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = null)
           },
-          modifier =
-            Modifier.pointerInput(Unit) {
-              detectTapGestures(
-                onTap = {
-                  onOpenWebsite(
-                    "https://pawcode.de/?mtm_campaign=CardStore&mtm_kwd=About&mtm_source=App"
-                  )
-                }
-              )
-            },
+          modifier = Modifier.clickable { onOpenWebsite(context.getString(R.string.website_link)) },
         )
 
         HorizontalDivider()
@@ -143,12 +137,7 @@ fun AboutScreenComponent(
           trailingContent = {
             Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = null)
           },
-          modifier =
-            Modifier.pointerInput(Unit) {
-              detectTapGestures(
-                onTap = { onOpenWebsite("https://github.com/pawcoding/card-store") }
-              )
-            },
+          modifier = Modifier.clickable { onOpenWebsite("https://github.com/pawcoding/card-store") },
         )
 
         HorizontalDivider()
@@ -160,11 +149,7 @@ fun AboutScreenComponent(
             Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = null)
           },
           modifier =
-            Modifier.pointerInput(Unit) {
-              detectTapGestures(
-                onTap = { onOpenWebsite("https://github.com/pawcoding/card-store/issues") }
-              )
-            },
+            Modifier.clickable { onOpenWebsite("https://github.com/pawcoding/card-store/issues") },
         )
 
         HorizontalDivider()
@@ -183,10 +168,7 @@ fun AboutScreenComponent(
             trailingContent = {
               Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = null)
             },
-            modifier =
-              Modifier.pointerInput(Unit) {
-                detectTapGestures(onTap = { onOpenWebsite(technology.url) })
-              },
+            modifier = Modifier.clickable { onOpenWebsite(technology.url) },
           )
 
           HorizontalDivider()
@@ -201,6 +183,7 @@ fun AboutScreenComponent(
 @Composable
 fun PreviewAboutScreenComponent() {
   val packageInfo = PackageInfo()
+  packageInfo.packageName = "de.pawcode.cardstore.debug"
   packageInfo.longVersionCode = 0
   packageInfo.versionName = "0.0.0"
 

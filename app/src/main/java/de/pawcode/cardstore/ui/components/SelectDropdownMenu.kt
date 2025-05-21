@@ -1,7 +1,5 @@
 package de.pawcode.cardstore.ui.components
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Check
@@ -15,11 +13,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.enums.SortAttribute
 
@@ -36,25 +32,23 @@ fun <TValue : Enum<TValue>> SelectDropdownMenu(
 ) {
   var dropdownExpanded by remember { mutableStateOf(initiallyExpanded) }
 
-  Box(modifier = Modifier.padding(16.dp)) {
-    IconButton(onClick = { dropdownExpanded = !dropdownExpanded }) {
-      Icon(icon, contentDescription = title)
-    }
-    DropdownMenu(expanded = dropdownExpanded, onDismissRequest = { dropdownExpanded = false }) {
-      values.forEach { option ->
-        DropdownMenuItem(
-          text = { Text(option.title) },
-          trailingIcon = {
-            if (value == option.value) {
-              Icon(Icons.Filled.Check, contentDescription = null)
-            }
-          },
-          onClick = {
-            onValueChange(option.value)
-            dropdownExpanded = false
-          },
-        )
-      }
+  IconButton(onClick = { dropdownExpanded = !dropdownExpanded }) {
+    Icon(icon, contentDescription = title)
+  }
+  DropdownMenu(expanded = dropdownExpanded, onDismissRequest = { dropdownExpanded = false }) {
+    values.forEach { option ->
+      DropdownMenuItem(
+        text = { Text(option.title) },
+        trailingIcon = {
+          if (value == option.value) {
+            Icon(Icons.Filled.Check, contentDescription = null)
+          }
+        },
+        onClick = {
+          onValueChange(option.value)
+          dropdownExpanded = false
+        },
+      )
     }
   }
 }

@@ -1,8 +1,6 @@
 package de.pawcode.cardstore.ui.components
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Sort
@@ -14,10 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import de.pawcode.cardstore.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,7 +39,9 @@ fun AppBar(
     colors =
       TopAppBarDefaults.topAppBarColors(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
-        titleContentColor = MaterialTheme.colorScheme.primary,
+        navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       ),
   )
 }
@@ -61,13 +59,11 @@ fun PreviewAppBarActions() {
     title = "Card Store",
     onBack = {},
     actions = {
-      Box(modifier = Modifier.padding(16.dp)) {
-        IconButton(onClick = {}) {
-          Icon(
-            Icons.AutoMirrored.Filled.Sort,
-            contentDescription = stringResource(R.string.cards_sort),
-          )
-        }
+      IconButton(onClick = {}) {
+        Icon(
+          Icons.AutoMirrored.Filled.Sort,
+          contentDescription = stringResource(R.string.cards_sort),
+        )
       }
     },
   )

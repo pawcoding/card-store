@@ -11,12 +11,14 @@
     <string name="card_delete_description">Are you sure you want to delete the card? It cannot be restored.</string>
     <string name="card_delete_title">Delete card</string>
     <string name="card_edit">Edit card</string>
+    <string name="card_import">Import card</string>
     <string name="card_invalid_barcode_format">Invalid format</string>
     <string name="card_labels">Labels</string>
     <string name="card_no_labels">No labels created yet</string>
     <string name="card_number">Card number</string>
     <string name="card_pick_color">Pick a color</string>
     <string name="card_save">Save card</string>
+    <string name="card_share">Share card</string>
     <string name="card_store_name">Store name</string>
     <string name="card_updated">Card updated</string>
     <string name="cards_list_empty">Create your first card</string>
@@ -34,6 +36,9 @@
     <string name="copy_error">Copy</string>
     <string name="github_issues">Open an issue on GitHub</string>
     <string name="github_repository">Open project on GitHub</string>
+    <string name="import_card_description">Someone shared this card with you. Click on the card to add it to your collection.</string>
+    <string name="import_card_success">Card imported successfully</string>
+    <string name="import_card_title">Import this card</string>
     <string name="label_add">Add label</string>
     <string name="label_added">Label added</string>
     <string name="label_delete_description">Are you sure you want to delete the label? It cannot be restored.</string>
@@ -50,6 +55,8 @@
     <string name="report_issue">Report an issue</string>
     <string name="scan_barcode">Scan barcode</string>
     <string name="scan_error">Error while trying to scan barcode</string>
+    <string name="share_card_description">Let someone else scan this QR code to import this card.</string>
+    <string name="share_card_title">Share your card</string>
     <string name="sort_alphabetically">Alphabetically</string>
     <string name="sort_most_used">Most used</string>
     <string name="sort_recently_used">Recently used</string>
@@ -57,4 +64,5 @@
     <string name="technologies">Technologies</string>
     <string name="version">Version</string>
     <string name="website">Visit website</string>
+    <string name="website_link"><![CDATA[https://pawcode.de/?mtm_campaign=CardStore&mtm_kwd=About&mtm_source=App]]></string>
 </resources>

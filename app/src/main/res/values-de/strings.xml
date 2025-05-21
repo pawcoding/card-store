@@ -12,12 +12,14 @@
     <string name="card_delete_description">Möchtest du die Karte wirklich löschen? Sie kann nicht wiederhergestellt werden.</string>
     <string name="card_delete_title">Karte löschen</string>
     <string name="card_edit">Karte bearbeiten</string>
+    <string name="card_import">Karte importieren</string>
     <string name="card_invalid_barcode_format">Ungültiges Format</string>
     <string name="card_labels">Labels</string>
     <string name="card_no_labels">Keine Labels verfügbar</string>
     <string name="card_number">Kartennummer</string>
     <string name="card_pick_color">Wähle eine Farbe</string>
     <string name="card_save">Karte speichern</string>
+    <string name="card_share">Karte teilen</string>
     <string name="card_store_name">Name des Geschäfts</string>
     <string name="card_updated">Karte aktualisiert</string>
     <string name="cards_list_empty">Erstelle deine erste Karte</string>
@@ -35,6 +37,9 @@
     <string name="copy_error">Kopieren</string>
     <string name="github_issues">Ticket auf GitHub öffnen</string>
     <string name="github_repository">Projekt auf GitHub öffnen</string>
+    <string name="import_card_description">Jemand hat diese Karte mit dir geteilt. Klicke auf die Karte, um sie zu deiner Sammlung hinzuzufügen.</string>
+    <string name="import_card_success">Karte erfolgreich importiert</string>
+    <string name="import_card_title">Diese Karte importieren</string>
     <string name="label_add">Label hinzufügen</string>
     <string name="label_added">Label hinzugefügt</string>
     <string name="label_delete_description">Möchtest Du das Label wirklich löschen? Es kann nicht wiederhergestellt werden.</string>
@@ -51,6 +56,8 @@
     <string name="report_issue">Ein Problem entdeckt?</string>
     <string name="scan_barcode">Barcode scannen</string>
     <string name="scan_error">Fehler beim Scannen</string>
+    <string name="share_card_description">Lass jemand anderen diesen QR-Code scannen, um diese Karte zu importieren.</string>
+    <string name="share_card_title">Teile deine Karte</string>
     <string name="sort_alphabetically">Alphabetisch</string>
     <string name="sort_most_used">Am häufigsten verwendet</string>
     <string name="sort_recently_used">Kürzlich verwendet</string>
@@ -58,4 +65,5 @@
     <string name="technologies">Technologien</string>
     <string name="version">Version</string>
     <string name="website">Webseite besuchen</string>
+    <string name="website_link"><![CDATA[https://pawcode.de/de/?mtm_campaign=CardStore&mtm_kwd=About&mtm_source=App]]></string>
 </resources>

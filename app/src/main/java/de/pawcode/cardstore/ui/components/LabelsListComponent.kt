@@ -74,7 +74,7 @@ fun LabelsListComponent(
       }
     }
 
-    FilledTonalIconButton(onClick = { onEdit() }) {
+    FilledTonalIconButton(shape = MaterialTheme.shapes.small, onClick = { onEdit() }) {
       Icon(
         imageVector = if (labels.isNotEmpty()) Icons.Filled.EditNote else Icons.Filled.Add,
         contentDescription = stringResource(R.string.labels_edit),

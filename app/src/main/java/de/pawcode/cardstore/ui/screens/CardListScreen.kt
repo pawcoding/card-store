@@ -2,17 +2,21 @@ package de.pawcode.cardstore.ui.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.QrCodeScanner
+import androidx.compose.material.icons.twotone.CreditCard
 import androidx.compose.material.icons.twotone.DeleteForever
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -33,12 +37,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.classes.CardWithLabels
 import de.pawcode.cardstore.data.database.classes.EXAMPLE_CARD_WITH_LABELS
@@ -47,6 +53,8 @@ import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
 import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.enums.SortAttribute
 import de.pawcode.cardstore.data.managers.PreferencesManager
+import de.pawcode.cardstore.data.services.DeeplinkService
+import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.navigation.Screen
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.CardsListComponent
@@ -54,11 +62,17 @@ import de.pawcode.cardstore.ui.components.DropdownOption
 import de.pawcode.cardstore.ui.components.LabelsListComponent
 import de.pawcode.cardstore.ui.components.SelectDropdownMenu
 import de.pawcode.cardstore.ui.dialogs.ConfirmDialog
+import de.pawcode.cardstore.ui.sheets.ImportCardSheet
 import de.pawcode.cardstore.ui.sheets.Option
 import de.pawcode.cardstore.ui.sheets.OptionSheet
+import de.pawcode.cardstore.ui.sheets.OptionSheetInfo
+import de.pawcode.cardstore.ui.sheets.ShareCardSheet
 import de.pawcode.cardstore.ui.sheets.ViewCardSheet
 import de.pawcode.cardstore.ui.utils.BarcodeScanner
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
+import de.pawcode.cardstore.utils.isLightColor
+import de.pawcode.cardstore.utils.mapBarcodeFormat
+import de.pawcode.cardstore.utils.parseDeeplink
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
@@ -74,20 +88,35 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     labelsFlow = viewModel.allLabels,
     sortByFlow = preferencesManager.sortAttribute,
     onCreateCard = { cardNumber, barcodeFormat ->
+      if (cardNumber != null && barcodeFormat != null) {
+        val deeplink = parseDeeplink(cardNumber)
+        if (deeplink != null) {
+          DeeplinkService.deeplinkReceived(deeplink)
+          return@CardListScreenComponent
+        }
+      }
+
       val route = buildString {
         append(Screen.EditCard.route)
         if (cardNumber != null || barcodeFormat != null) {
           append("?")
           if (cardNumber != null) {
-            append("cardNumber=$cardNumber")
+            append("cardNumber=$cardNumber&")
           }
           if (barcodeFormat != null) {
-            if (cardNumber != null) append("&")
-            append("barcodeFormat=$barcodeFormat")
+            append("barcodeFormat=$barcodeFormat&")
           }
+        }
+        if (endsWith("&")) {
+          deleteCharAt(length - 1)
         }
       }
       navController.navigate(route)
+    },
+    onImportCard = { card ->
+      viewModel.insertCard(card)
+      SnackbarService.showSnackbar(context.getString(R.string.import_card_success))
+      DeeplinkService.clearDeeplink()
     },
     onEditCard = { card ->
       navController.navigate(Screen.EditCard.route + "?cardId=${card.cardId}")
@@ -106,7 +135,8 @@ fun CardListScreenComponent(
   cardsFlow: Flow<List<CardWithLabels>>,
   labelsFlow: Flow<List<LabelEntity>>,
   sortByFlow: Flow<SortAttribute?>,
-  onCreateCard: (cardNumber: String?, barcodeFormat: Int?) -> Unit,
+  onCreateCard: (cardNumber: String?, barcodeType: BarcodeType?) -> Unit,
+  onImportCard: (CardEntity) -> Unit,
   onEditCard: (CardEntity) -> Unit,
   onShowCard: (CardEntity) -> Unit,
   onDeleteCard: (CardEntity) -> Unit,
@@ -120,12 +150,16 @@ fun CardListScreenComponent(
 
   var showCardSheet by remember { mutableStateOf<CardEntity?>(null) }
   var showCardOptionSheet by remember { mutableStateOf<CardEntity?>(null) }
+  var showCardShareSheet by remember { mutableStateOf<CardEntity?>(null) }
   var showCardCreateSheet by remember { mutableStateOf(false) }
   var openDeleteDialog by remember { mutableStateOf<CardEntity?>(null) }
   var showBarcodeScanner by remember { mutableStateOf(false) }
+  val showCardImportSheet by DeeplinkService.deeplinkFlow.collectAsState(initial = null)
 
   val listState = rememberLazyGridState()
   val cardSheetState = rememberModalBottomSheetState()
+  val cardShareSheetState = rememberModalBottomSheetState()
+  val cardImportSheetState = rememberModalBottomSheetState()
   val cardOptionSheetState = rememberModalBottomSheetState()
   val cardCreateSheetState = rememberModalBottomSheetState()
 
@@ -186,7 +220,9 @@ fun CardListScreenComponent(
       ExtendedFloatingActionButton(
         onClick = { showCardCreateSheet = true },
         text = { Text(stringResource(R.string.cards_new)) },
-        icon = { Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.cards_new)) },
+        icon = {
+          Icon(Icons.Filled.AddCard, contentDescription = stringResource(R.string.cards_new))
+        },
       )
     },
   ) { innerPadding ->
@@ -210,12 +246,13 @@ fun CardListScreenComponent(
             showCardSheet = card
           },
           onCardLongPressed = { showCardOptionSheet = it },
+          onCardCreate = { showCardCreateSheet = true },
         )
       }
 
       showCardSheet?.let {
         ModalBottomSheet(
-          modifier = Modifier.fillMaxHeight().safeDrawingPadding(),
+          modifier = Modifier.fillMaxHeight().windowInsetsPadding(WindowInsets.statusBars),
           sheetState = cardSheetState,
           onDismissRequest = { showCardSheet = null },
         ) {
@@ -223,10 +260,30 @@ fun CardListScreenComponent(
         }
       }
 
+      showCardImportSheet?.let {
+        ModalBottomSheet(
+          sheetState = cardImportSheetState,
+          dragHandle = {},
+          onDismissRequest = { DeeplinkService.clearDeeplink() },
+        ) {
+          ImportCardSheet(card = it, onImport = { onImportCard(it) })
+        }
+      }
+
+      showCardShareSheet?.let {
+        ModalBottomSheet(
+          modifier = Modifier.fillMaxHeight().windowInsetsPadding(WindowInsets.statusBars),
+          sheetState = cardShareSheetState,
+          onDismissRequest = { showCardShareSheet = null },
+        ) {
+          ShareCardSheet(it)
+        }
+      }
+
       showCardOptionSheet?.let {
         ModalBottomSheet(
-          modifier = Modifier.safeDrawingPadding(),
           sheetState = cardOptionSheetState,
+          dragHandle = {},
           onDismissRequest = { showCardOptionSheet = null },
         ) {
           OptionSheet(
@@ -239,6 +296,14 @@ fun CardListScreenComponent(
               },
             ),
             Option(
+              label = stringResource(R.string.card_share),
+              icon = Icons.Filled.Share,
+              onClick = {
+                showCardShareSheet = it
+                showCardOptionSheet = null
+              },
+            ),
+            Option(
               label = stringResource(R.string.card_delete_title),
               icon = Icons.Filled.DeleteForever,
               onClick = {
@@ -246,14 +311,25 @@ fun CardListScreenComponent(
                 showCardOptionSheet = null
               },
             ),
-          )
+          ) {
+            val color by remember { mutableStateOf(Color(it.color)) }
+            val isLightColor by remember { derivedStateOf { isLightColor(color) } }
+
+            OptionSheetInfo(
+              backgroundColor = color,
+              iconTint = if (isLightColor) Color.Black else Color.White,
+              icon = Icons.TwoTone.CreditCard,
+              title = it.storeName,
+              subtitle = it.cardNumber,
+            )
+          }
         }
       }
 
       if (showCardCreateSheet) {
         ModalBottomSheet(
-          modifier = Modifier.safeDrawingPadding(),
           sheetState = cardCreateSheetState,
+          dragHandle = {},
           onDismissRequest = { showCardCreateSheet = false },
         ) {
           OptionSheet(
@@ -294,7 +370,10 @@ fun CardListScreenComponent(
       if (showBarcodeScanner) {
         BarcodeScanner(
           onBarcodeDetected = { barcode ->
-            onCreateCard(barcode.rawValue ?: "", barcode.format)
+            onCreateCard(
+              barcode.rawValue ?: barcode.displayValue ?: "",
+              mapBarcodeFormat(barcode.format),
+            )
             showBarcodeScanner = false
           },
           onCancel = { showBarcodeScanner = false },
@@ -313,6 +392,7 @@ fun PreviewCardListScreenComponent() {
     labelsFlow = flowOf(EXAMPLE_LABEL_LIST),
     sortByFlow = flowOf(SortAttribute.ALPHABETICALLY),
     onCreateCard = { _, _ -> },
+    onImportCard = {},
     onEditCard = {},
     onShowCard = {},
     onDeleteCard = {},
@@ -331,6 +411,7 @@ fun PreviewCardListScreenComponentEmpty() {
     labelsFlow = flowOf(emptyList()),
     sortByFlow = flowOf(SortAttribute.ALPHABETICALLY),
     onCreateCard = { _, _ -> },
+    onImportCard = {},
     onEditCard = {},
     onShowCard = {},
     onDeleteCard = {},

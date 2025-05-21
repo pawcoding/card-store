@@ -63,6 +63,8 @@ android {
   kotlinOptions { jvmTarget = "19" }
 
   buildFeatures { compose = true }
+
+  androidResources { generateLocaleConfig = true }
 }
 
 dependencies {
@@ -84,6 +86,7 @@ dependencies {
   implementation(libs.play.services.code.scanner)
   implementation(libs.barcode.scanning)
   implementation(libs.androidx.core.splashscreen)
+  implementation(libs.revealswipe)
   ksp(libs.androidx.room.compiler)
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
