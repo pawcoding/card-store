@@ -5,9 +5,9 @@ import android.net.Uri
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
-fun readPkpassContentFromUri(uri: Uri, contentResolver: ContentResolver): String {
+fun readPkpassContentFromUri(uri: Uri, contentResolver: ContentResolver): String? {
   try {
-    val inputStream = contentResolver.openInputStream(uri) ?: return ""
+    val inputStream = contentResolver.openInputStream(uri) ?: return null
 
     ZipInputStream(inputStream).use { zipInputStream ->
       var entry: ZipEntry?
@@ -19,8 +19,8 @@ fun readPkpassContentFromUri(uri: Uri, contentResolver: ContentResolver): String
     }
   } catch (exception: Exception) {
     println("Error reading content from file: ${exception.message}")
-    return ""
+    return null
   }
 
-  return ""
+  return null
 }

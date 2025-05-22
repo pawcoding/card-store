@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.outlined.FilePresent
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.QrCodeScanner
 import androidx.compose.material.icons.twotone.CreditCard
@@ -69,6 +70,7 @@ import de.pawcode.cardstore.ui.sheets.OptionSheetInfo
 import de.pawcode.cardstore.ui.sheets.ShareCardSheet
 import de.pawcode.cardstore.ui.sheets.ViewCardSheet
 import de.pawcode.cardstore.ui.utils.BarcodeScanner
+import de.pawcode.cardstore.ui.utils.PkpassFilePicker
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 import de.pawcode.cardstore.utils.isLightColor
 import de.pawcode.cardstore.utils.mapBarcodeFormat
@@ -154,6 +156,7 @@ fun CardListScreenComponent(
   var showCardCreateSheet by remember { mutableStateOf(false) }
   var openDeleteDialog by remember { mutableStateOf<CardEntity?>(null) }
   var showBarcodeScanner by remember { mutableStateOf(false) }
+  var showPkpassPicker by remember { mutableStateOf(false) }
   val showCardImportSheet by DeeplinkService.deeplinkFlow.collectAsState(initial = null)
 
   val listState = rememberLazyGridState()
@@ -342,6 +345,14 @@ fun CardListScreenComponent(
               },
             ),
             Option(
+              label = "Import pkPass file",
+              icon = Icons.Outlined.FilePresent,
+              onClick = {
+                showPkpassPicker = true
+                showCardCreateSheet = false
+              },
+            ),
+            Option(
               label = stringResource(R.string.card_create_manual),
               icon = Icons.Filled.Edit,
               onClick = {
@@ -377,6 +388,18 @@ fun CardListScreenComponent(
             showBarcodeScanner = false
           },
           onCancel = { showBarcodeScanner = false },
+        )
+      }
+
+      if (showPkpassPicker) {
+        PkpassFilePicker(
+          onFileRead = {
+            // TODO: parse JSON string with content to valid deeplink
+            println(it)
+
+            showPkpassPicker = false
+          },
+          onCancel = { showPkpassPicker = false },
         )
       }
     }
