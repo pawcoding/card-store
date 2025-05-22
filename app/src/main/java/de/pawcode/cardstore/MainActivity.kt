@@ -12,6 +12,7 @@ import de.pawcode.cardstore.data.services.DeeplinkService
 import de.pawcode.cardstore.navigation.Navigation
 import de.pawcode.cardstore.ui.theme.CardStoreTheme
 import de.pawcode.cardstore.utils.parseDeeplink
+import de.pawcode.cardstore.utils.parsePkpass
 import de.pawcode.cardstore.utils.readPkpassContentFromUri
 
 class MainActivity : ComponentActivity() {
@@ -58,8 +59,10 @@ class MainActivity : ComponentActivity() {
         // PKPASS file
         val content = readPkpassContentFromUri(data, contentResolver)
 
-        // TODO: parse JSON string with content to valid deeplink
-        println(content)
+        val deeplink = content?.let { parsePkpass(it) }
+        if (deeplink != null) {
+          DeeplinkService.deeplinkReceived(deeplink)
+        }
       }
     }
   }

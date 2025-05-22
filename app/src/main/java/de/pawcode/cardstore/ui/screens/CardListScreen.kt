@@ -75,6 +75,7 @@ import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 import de.pawcode.cardstore.utils.isLightColor
 import de.pawcode.cardstore.utils.mapBarcodeFormat
 import de.pawcode.cardstore.utils.parseDeeplink
+import de.pawcode.cardstore.utils.parsePkpass
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
@@ -393,9 +394,11 @@ fun CardListScreenComponent(
 
       if (showPkpassPicker) {
         PkpassFilePicker(
-          onFileRead = {
-            // TODO: parse JSON string with content to valid deeplink
-            println(it)
+          onFileRead = { content ->
+            val deeplink = parsePkpass(content)
+            if (deeplink != null) {
+              DeeplinkService.deeplinkReceived(deeplink)
+            }
 
             showPkpassPicker = false
           },
