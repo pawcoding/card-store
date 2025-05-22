@@ -78,7 +78,15 @@ fun AboutScreenComponent(
   val versionName = packageInfo.versionName ?: "Unknown version"
   val isDebug = packageInfo.packageName.endsWith(".debug")
 
-  Scaffold(topBar = { AppBar(title = stringResource(R.string.app_name), onBack = { onBack() }) }) {
+  Scaffold(
+    topBar = {
+      AppBar(
+        title = stringResource(R.string.app_name),
+        subtitle = stringResource(R.string.about),
+        onBack = { onBack() }
+      )
+    }
+  ) {
     innerPadding ->
     Column(
       modifier = Modifier.padding(innerPadding).fillMaxSize().verticalScroll(rememberScrollState()),
@@ -178,8 +186,8 @@ fun AboutScreenComponent(
   }
 }
 
-@Preview
-@Preview(device = "id:pixel_tablet")
+@Preview(showSystemUi = true)
+@Preview(device = "id:pixel_tablet", showSystemUi = true)
 @Composable
 fun PreviewAboutScreenComponent() {
   val packageInfo = PackageInfo()

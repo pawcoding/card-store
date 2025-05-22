@@ -1,18 +1,22 @@
 package de.pawcode.cardstore.ui.components
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,6 +25,7 @@ import de.pawcode.cardstore.data.enums.SortAttribute
 
 data class DropdownOption<TValue : Enum<TValue>>(val title: String, val value: TValue)
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun <TValue : Enum<TValue>> SelectDropdownMenu(
   icon: ImageVector,
@@ -32,8 +37,23 @@ fun <TValue : Enum<TValue>> SelectDropdownMenu(
 ) {
   var dropdownExpanded by remember { mutableStateOf(initiallyExpanded) }
 
-  IconButton(onClick = { dropdownExpanded = !dropdownExpanded }) {
-    Icon(icon, contentDescription = title)
+  FilledIconButton(
+    modifier =
+      Modifier.size(
+        IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Wide)
+      ),
+    onClick = { dropdownExpanded = !dropdownExpanded },
+    shapes =
+      IconButtonDefaults.shapes(
+        shape = IconButtonDefaults.smallRoundShape,
+        pressedShape = IconButtonDefaults.smallPressedShape,
+      ),
+  ) {
+    Icon(
+      imageVector = icon,
+      contentDescription = title,
+      modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+    )
   }
   DropdownMenu(expanded = dropdownExpanded, onDismissRequest = { dropdownExpanded = false }) {
     values.forEach { option ->
