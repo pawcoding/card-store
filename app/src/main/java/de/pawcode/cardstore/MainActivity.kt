@@ -47,6 +47,7 @@ class MainActivity : ComponentActivity() {
     val action = intent.action
     val data = intent.data
     val scheme = data?.scheme
+    val mimeType = intent.type
 
     if (action == Intent.ACTION_VIEW && data != null && scheme != null) {
       if (scheme.startsWith("http")) {
@@ -55,7 +56,7 @@ class MainActivity : ComponentActivity() {
         if (deeplink != null) {
           DeeplinkService.deeplinkReceived(deeplink)
         }
-      } else if (scheme.startsWith("content") && data.toString().endsWith(".pkpass")) {
+      } else if (scheme.startsWith("content") && mimeType == "application/vnd.apple.pkpass") {
         // PKPASS file
         val content = readPkpassContentFromUri(data, contentResolver)
 

@@ -39,7 +39,6 @@
 
                 <data android:scheme="file" />
                 <data android:host="*" />
-                <data android:pathPattern=".*\\.pkpass" />
                 <data android:mimeType="application/vnd.apple.pkpass" />
                 <data android:mimeType="application/octet-stream" />
             </intent-filter>
@@ -51,7 +50,6 @@
 
                 <data android:scheme="content" />
                 <data android:host="*" />
-                <data android:pathPattern=".*\\.pkpass" />
                 <data android:mimeType="application/vnd.apple.pkpass" />
                 <data android:mimeType="application/octet-stream" />
             </intent-filter>
