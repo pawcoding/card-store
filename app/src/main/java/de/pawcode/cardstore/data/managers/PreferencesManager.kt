@@ -31,7 +31,7 @@ class PreferencesManager(private val context: Context) {
           SortAttribute.fromKey(preferences[SORT_ATTRIBUTE])
         } catch (exception: Exception) {
           Log.e(TAG, "Failed to parse sort attribute: ${exception.message}", exception)
-          SortAttribute.ALPHABETICALLY
+          SortAttribute.INTELLIGENT
         }
       }
 
