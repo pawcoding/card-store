@@ -59,6 +59,7 @@
     <string name="share_card_description">Let someone else scan this QR code to import this card.</string>
     <string name="share_card_title">Share your card</string>
     <string name="sort_alphabetically">Alphabetically</string>
+    <string name="sort_intelligent">Intelligent</string>
     <string name="sort_most_used">Most used</string>
     <string name="sort_recently_used">Recently used</string>
     <string name="source_code">View source code</string>

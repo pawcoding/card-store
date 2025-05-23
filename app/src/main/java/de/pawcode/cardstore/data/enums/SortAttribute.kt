@@ -1,6 +1,7 @@
 package de.pawcode.cardstore.data.enums
 
 enum class SortAttribute(val key: String) {
+  INTELLIGENT("INTELLIGENT"),
   ALPHABETICALLY("ALPHABETICALLY"),
   RECENTLY_USED("RECENTLY_USED"),
   MOST_USED("MOST_USED");

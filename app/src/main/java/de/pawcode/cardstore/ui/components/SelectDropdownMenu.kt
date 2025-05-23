@@ -3,6 +3,7 @@ package de.pawcode.cardstore.ui.components
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material.icons.filled.AutoFixHigh
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.SortByAlpha
@@ -67,9 +68,14 @@ fun PreviewSelectDropdownMenu() {
   SelectDropdownMenu(
     icon = Icons.AutoMirrored.Filled.Sort,
     title = stringResource(R.string.cards_sort),
-    value = SortAttribute.ALPHABETICALLY,
+    value = SortAttribute.INTELLIGENT,
     values =
       listOf(
+        DropdownOption(
+          title = stringResource(R.string.sort_intelligent),
+          icon = Icons.Filled.AutoFixHigh,
+          value = SortAttribute.INTELLIGENT,
+        ),
         DropdownOption(
           title = stringResource(R.string.sort_alphabetically),
           icon = Icons.Filled.SortByAlpha,
