@@ -68,7 +68,7 @@ fun ImportCardSheet(card: CardEntity, onImport: () -> Unit) {
             cameraDistance = 12.dp.dpToPx(),
             rotationY = rotation,
             rotationZ = rotation / 4,
-            rotationX = 15f
+            rotationX = 15f,
           )
     ) {
       CardComponent(card = card, onClick = { onImport() }, onLongPress = { onImport() })
