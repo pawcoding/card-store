@@ -9,6 +9,7 @@
     <string name="card_color">Farbe</string>
     <string name="card_color_hex">Hex-Code</string>
     <string name="card_create_manual">Karte manuell erstellen</string>
+    <string name="card_create_pkpass">Digitale Karte importieren</string>
     <string name="card_delete_description">Möchtest du die Karte wirklich löschen? Sie kann nicht wiederhergestellt werden.</string>
     <string name="card_delete_title">Karte löschen</string>
     <string name="card_edit">Karte bearbeiten</string>

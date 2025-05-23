@@ -14,7 +14,7 @@ import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.outlined.FilePresent
+import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.QrCodeScanner
 import androidx.compose.material.icons.twotone.CreditCard
@@ -346,8 +346,8 @@ fun CardListScreenComponent(
               },
             ),
             Option(
-              label = "Import pkPass file",
-              icon = Icons.Outlined.FilePresent,
+              label = stringResource(R.string.card_create_pkpass),
+              icon = Icons.Outlined.FileOpen,
               onClick = {
                 showPkpassPicker = true
                 showCardCreateSheet = false
