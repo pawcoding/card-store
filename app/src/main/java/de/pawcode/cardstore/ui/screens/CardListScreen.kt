@@ -10,10 +10,13 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.SortByAlpha
 import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.QrCodeScanner
@@ -204,14 +207,17 @@ fun CardListScreenComponent(
               listOf(
                 DropdownOption(
                   title = stringResource(R.string.sort_alphabetically),
+                  icon = Icons.Filled.SortByAlpha,
                   value = SortAttribute.ALPHABETICALLY,
                 ),
                 DropdownOption(
                   title = stringResource(R.string.sort_most_used),
+                  icon = Icons.AutoMirrored.Filled.TrendingUp,
                   value = SortAttribute.MOST_USED,
                 ),
                 DropdownOption(
                   title = stringResource(R.string.sort_recently_used),
+                  icon = Icons.Filled.History,
                   value = SortAttribute.RECENTLY_USED,
                 ),
               ),
