@@ -12,6 +12,8 @@ import de.pawcode.cardstore.data.services.DeeplinkService
 import de.pawcode.cardstore.navigation.Navigation
 import de.pawcode.cardstore.ui.theme.CardStoreTheme
 import de.pawcode.cardstore.utils.parseDeeplink
+import de.pawcode.cardstore.utils.parsePkpass
+import de.pawcode.cardstore.utils.readPkpassContentFromUri
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,11 +46,24 @@ class MainActivity : ComponentActivity() {
   private fun handleIncomingIntent(intent: Intent) {
     val action = intent.action
     val data = intent.data
+    val scheme = data?.scheme
+    val mimeType = intent.type
 
-    if (action == Intent.ACTION_VIEW && data != null) {
-      val deeplink = parseDeeplink(data)
-      if (deeplink != null) {
-        DeeplinkService.deeplinkReceived(deeplink)
+    if (action == Intent.ACTION_VIEW && data != null && scheme != null) {
+      if (scheme.startsWith("http")) {
+        // Deeplink shared via internal share card feature
+        val deeplink = parseDeeplink(data)
+        if (deeplink != null) {
+          DeeplinkService.deeplinkReceived(deeplink)
+        }
+      } else if (scheme.startsWith("content") && mimeType == "application/vnd.apple.pkpass") {
+        // PKPASS file
+        val content = readPkpassContentFromUri(data, contentResolver)
+
+        val deeplink = content?.let { parsePkpass(it) }
+        if (deeplink != null) {
+          DeeplinkService.deeplinkReceived(deeplink)
+        }
       }
     }
   }
