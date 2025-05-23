@@ -2,6 +2,7 @@ package de.pawcode.cardstore.utils
 
 import android.content.ContentResolver
 import android.net.Uri
+import android.util.Log
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
@@ -18,7 +19,7 @@ fun readPkpassContentFromUri(uri: Uri, contentResolver: ContentResolver): String
       }
     }
   } catch (exception: Exception) {
-    println("Error reading content from file: ${exception.message}")
+    Log.e("readPkpassContent", "Error reading content from file", exception)
     return null
   }
 
