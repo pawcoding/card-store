@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.QrCodeScanner
 import androidx.compose.material.icons.twotone.CreditCard
@@ -69,10 +70,12 @@ import de.pawcode.cardstore.ui.sheets.OptionSheetInfo
 import de.pawcode.cardstore.ui.sheets.ShareCardSheet
 import de.pawcode.cardstore.ui.sheets.ViewCardSheet
 import de.pawcode.cardstore.ui.utils.BarcodeScanner
+import de.pawcode.cardstore.ui.utils.PkpassFilePicker
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 import de.pawcode.cardstore.utils.isLightColor
 import de.pawcode.cardstore.utils.mapBarcodeFormat
 import de.pawcode.cardstore.utils.parseDeeplink
+import de.pawcode.cardstore.utils.parsePkpass
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
@@ -154,6 +157,7 @@ fun CardListScreenComponent(
   var showCardCreateSheet by remember { mutableStateOf(false) }
   var openDeleteDialog by remember { mutableStateOf<CardEntity?>(null) }
   var showBarcodeScanner by remember { mutableStateOf(false) }
+  var showPkpassPicker by remember { mutableStateOf(false) }
   val showCardImportSheet by DeeplinkService.deeplinkFlow.collectAsState(initial = null)
 
   val listState = rememberLazyGridState()
@@ -342,6 +346,14 @@ fun CardListScreenComponent(
               },
             ),
             Option(
+              label = stringResource(R.string.card_create_pkpass),
+              icon = Icons.Outlined.FileOpen,
+              onClick = {
+                showPkpassPicker = true
+                showCardCreateSheet = false
+              },
+            ),
+            Option(
               label = stringResource(R.string.card_create_manual),
               icon = Icons.Filled.Edit,
               onClick = {
@@ -377,6 +389,20 @@ fun CardListScreenComponent(
             showBarcodeScanner = false
           },
           onCancel = { showBarcodeScanner = false },
+        )
+      }
+
+      if (showPkpassPicker) {
+        PkpassFilePicker(
+          onFileRead = { content ->
+            val deeplink = parsePkpass(content)
+            if (deeplink != null) {
+              DeeplinkService.deeplinkReceived(deeplink)
+            }
+
+            showPkpassPicker = false
+          },
+          onCancel = { showPkpassPicker = false },
         )
       }
     }

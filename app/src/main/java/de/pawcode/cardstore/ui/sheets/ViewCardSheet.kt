@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.simonsickle.compose.barcodes.Barcode
@@ -53,6 +54,8 @@ fun ViewCardSheet(card: CardEntity) {
       text = card.storeName,
       style = MaterialTheme.typography.headlineMedium,
       color = if (isLightColor) Color.Black else Color.White,
+      maxLines = 1,
+      overflow = TextOverflow.Ellipsis,
     )
 
     HorizontalDivider(color = if (isLightColor) Color(0, 0, 0, 128) else Color(255, 255, 255, 128))
