@@ -40,3 +40,13 @@ fun mapBarcodeFormat(barcodeFormat: String): BarcodeType {
     else -> throw IllegalArgumentException("Unknown barcode format")
   }
 }
+
+fun mapPkpassBarcodeFormat(pkpassBarcodeFormat: String): BarcodeType {
+  return when (pkpassBarcodeFormat) {
+    "PKBarcodeFormatQR" -> BarcodeType.QR_CODE
+    "PKBarcodeFormatPDF417" -> BarcodeType.PDF_417
+    "PKBarcodeFormatAztec" -> BarcodeType.AZTEC
+    "PKBarcodeFormatCode128" -> BarcodeType.CODE_128
+    else -> throw IllegalArgumentException("Unknown barcode format")
+  }
+}
