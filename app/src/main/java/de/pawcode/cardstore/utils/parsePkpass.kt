@@ -31,7 +31,7 @@ fun parsePkpass(passContent: String): Map<String, String?>? {
   return mapOf(
     "storeName" to description,
     "cardNumber" to content,
-    "barcodeFormat" to barcodeFormat.toString(),
-    "color" to color?.toArgb().toString(),
+    "barcodeFormat" to barcodeFormat?.toString(),
+    "color" to color?.toArgb()?.toString(),
   )
 }

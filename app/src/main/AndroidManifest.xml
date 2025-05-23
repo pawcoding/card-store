@@ -41,7 +41,6 @@
                 <data android:scheme="content" />
                 <data android:host="*" />
                 <data android:mimeType="application/vnd.apple.pkpass" />
-                <data android:mimeType="application/octet-stream" />
             </intent-filter>
         </activity>
 
