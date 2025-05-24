@@ -55,6 +55,7 @@ import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.enums.SortAttribute
 import de.pawcode.cardstore.data.managers.PreferencesManager
 import de.pawcode.cardstore.data.services.DeeplinkService
+import de.pawcode.cardstore.data.services.ReviewService
 import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.navigation.Screen
 import de.pawcode.cardstore.ui.components.AppBar
@@ -278,7 +279,10 @@ fun CardListScreenComponent(
         ModalBottomSheet(
           modifier = Modifier.fillMaxHeight().windowInsetsPadding(WindowInsets.statusBars),
           sheetState = cardShareSheetState,
-          onDismissRequest = { showCardShareSheet = null },
+          onDismissRequest = {
+            showCardShareSheet = null
+            ReviewService.sendReviewRequest()
+          },
         ) {
           ShareCardSheet(it)
         }
@@ -305,6 +309,7 @@ fun CardListScreenComponent(
               onClick = {
                 showCardShareSheet = it
                 showCardOptionSheet = null
+                ReviewService.prepareReviewRequest()
               },
             ),
             Option(
