@@ -1,5 +1,8 @@
 package de.pawcode.cardstore.data.services
 
+import kotlin.time.Duration.Companion.days
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 
@@ -23,6 +26,7 @@ object ReviewService {
 
   fun canRequestReview(lastPromptTime: Long): Boolean {
     val currentTime = System.currentTimeMillis()
-    return (currentTime - lastPromptTime) >= 30 * 24 * 60 * 60 * 1000 // 30 days
+    val durationSinceReview = (currentTime - lastPromptTime).toDuration(DurationUnit.MILLISECONDS)
+    return durationSinceReview >= 30.days
   }
 }
