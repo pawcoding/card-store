@@ -10,10 +10,14 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AddCard
+import androidx.compose.material.icons.filled.AutoFixHigh
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.SortByAlpha
 import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.QrCodeScanner
@@ -72,6 +76,7 @@ import de.pawcode.cardstore.ui.sheets.ViewCardSheet
 import de.pawcode.cardstore.ui.utils.BarcodeScanner
 import de.pawcode.cardstore.ui.utils.PkpassFilePicker
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
+import de.pawcode.cardstore.utils.calculateCardScore
 import de.pawcode.cardstore.utils.isLightColor
 import de.pawcode.cardstore.utils.mapBarcodeFormat
 import de.pawcode.cardstore.utils.parseDeeplink
@@ -179,6 +184,7 @@ fun CardListScreenComponent(
   val cardsSorted by
     rememberUpdatedState(
       when (sortBy) {
+        SortAttribute.INTELLIGENT -> cardsFiltered.sortedByDescending { calculateCardScore(it) }
         SortAttribute.ALPHABETICALLY -> cardsFiltered.sortedBy { it.storeName }
         SortAttribute.RECENTLY_USED -> cardsFiltered.sortedByDescending { it.lastUsed }
         SortAttribute.MOST_USED -> cardsFiltered.sortedByDescending { it.useCount }
@@ -203,15 +209,23 @@ fun CardListScreenComponent(
             values =
               listOf(
                 DropdownOption(
+                  title = stringResource(R.string.sort_intelligent),
+                  icon = Icons.Filled.AutoFixHigh,
+                  value = SortAttribute.INTELLIGENT,
+                ),
+                DropdownOption(
                   title = stringResource(R.string.sort_alphabetically),
+                  icon = Icons.Filled.SortByAlpha,
                   value = SortAttribute.ALPHABETICALLY,
                 ),
                 DropdownOption(
                   title = stringResource(R.string.sort_most_used),
+                  icon = Icons.AutoMirrored.Filled.TrendingUp,
                   value = SortAttribute.MOST_USED,
                 ),
                 DropdownOption(
                   title = stringResource(R.string.sort_recently_used),
+                  icon = Icons.Filled.History,
                   value = SortAttribute.RECENTLY_USED,
                 ),
               ),
@@ -416,7 +430,7 @@ fun PreviewCardListScreenComponent() {
   CardListScreenComponent(
     cardsFlow = flowOf(listOf(EXAMPLE_CARD_WITH_LABELS)),
     labelsFlow = flowOf(EXAMPLE_LABEL_LIST),
-    sortByFlow = flowOf(SortAttribute.ALPHABETICALLY),
+    sortByFlow = flowOf(SortAttribute.INTELLIGENT),
     onCreateCard = { _, _ -> },
     onImportCard = {},
     onEditCard = {},
@@ -435,7 +449,7 @@ fun PreviewCardListScreenComponentEmpty() {
   CardListScreenComponent(
     cardsFlow = flowOf(emptyList()),
     labelsFlow = flowOf(emptyList()),
-    sortByFlow = flowOf(SortAttribute.ALPHABETICALLY),
+    sortByFlow = flowOf(SortAttribute.INTELLIGENT),
     onCreateCard = { _, _ -> },
     onImportCard = {},
     onEditCard = {},

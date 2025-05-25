@@ -61,6 +61,7 @@
     <string name="share_card_description">Lass jemand anderen diesen QR-Code scannen, um diese Karte zu importieren.</string>
     <string name="share_card_title">Teile deine Karte</string>
     <string name="sort_alphabetically">Alphabetisch</string>
+    <string name="sort_intelligent">Intelligent</string>
     <string name="sort_most_used">Am häufigsten verwendet</string>
     <string name="sort_recently_used">Kürzlich verwendet</string>
     <string name="source_code">Quellcode anzeigen</string>
