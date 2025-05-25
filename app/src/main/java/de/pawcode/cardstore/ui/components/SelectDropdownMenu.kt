@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.enums.SortAttribute
@@ -38,7 +39,7 @@ fun <TValue : Enum<TValue>> SelectDropdownMenu(
   DropdownMenu(expanded = dropdownExpanded, onDismissRequest = { dropdownExpanded = false }) {
     values.forEach { option ->
       DropdownMenuItem(
-        text = { Text(option.title) },
+        text = { Text(text = option.title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         trailingIcon = {
           if (value == option.value) {
             Icon(Icons.Filled.Check, contentDescription = null)

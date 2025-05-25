@@ -48,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.simonsickle.compose.barcodes.BarcodeType
@@ -148,7 +149,11 @@ fun EditCardForm(
           modifier = Modifier.padding(end = 4.dp),
         )
 
-        Text(stringResource(R.string.scan_barcode))
+        Text(
+          text = stringResource(R.string.common_scan),
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis,
+        )
       }
     }
 

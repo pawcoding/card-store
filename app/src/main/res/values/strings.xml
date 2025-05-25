@@ -3,7 +3,7 @@
     <string name="app_name">CardStore</string>
     <string name="card_add">Add card</string>
     <string name="card_added">Card added</string>
-    <string name="card_barcode_type">Barcode type:</string>
+    <string name="card_barcode_type">Barcode type</string>
     <string name="card_code">Code</string>
     <string name="card_color">Color</string>
     <string name="card_color_hex">Hex code</string>
@@ -32,6 +32,7 @@
     <string name="common_delete">Delete</string>
     <string name="common_required">required</string>
     <string name="common_save">Save</string>
+    <string name="common_scan">Scan</string>
     <string name="common_update">Update</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="copy_error">Copy</string>
