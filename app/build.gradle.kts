@@ -87,6 +87,8 @@ dependencies {
   implementation(libs.kotlinx.serialization.json)
   implementation(libs.play.services.code.scanner)
   implementation(libs.revealswipe)
+  implementation(libs.review)
+  implementation(libs.review.ktx)
   implementation(platform(libs.androidx.compose.bom))
   ksp(libs.androidx.room.compiler)
   testImplementation(libs.junit)

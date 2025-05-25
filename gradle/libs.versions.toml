@@ -18,6 +18,7 @@ materialIconsExtended = "1.7.8"
 navigationCompose = "2.9.0"
 playServicesCodeScanner = "16.1.0"
 revealswipe = "3.0.0"
+review = "2.0.2"
 room = "2.7.1"
 
 [libraries]
@@ -48,6 +49,8 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 play-services-code-scanner = { group = "com.google.android.gms", name = "play-services-code-scanner", version.ref = "playServicesCodeScanner" }
 revealswipe = { group = "de.charlex.compose", name = "revealswipe", version.ref = "revealswipe" }
+review = { group = "com.google.android.play", name = "review", version.ref = "review" }
+review-ktx = { group = "com.google.android.play", name = "review-ktx", version.ref = "review" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
