@@ -1,22 +1,21 @@
 package de.pawcode.cardstore.utils
 
 import de.pawcode.cardstore.data.database.entities.CardEntity
-
-const val oneHourInMillis = 60 * 60 * 1000L
-const val oneDayInMillis = 24 * oneHourInMillis
-const val oneWeekInMillis = 7 * oneDayInMillis
-const val oneMonthInMillis = 30 * oneDayInMillis
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 fun calculateCardScore(card: CardEntity): Int {
   val now = System.currentTimeMillis()
-  val timeDifference = now - (card.lastUsed ?: 0)
+  val timeDifference = (now - (card.lastUsed ?: 0)).toDuration(DurationUnit.MILLISECONDS)
 
   val multiplier =
     when {
-      timeDifference <= oneHourInMillis -> 5
-      timeDifference <= oneDayInMillis -> 4
-      timeDifference <= oneWeekInMillis -> 3
-      timeDifference <= oneMonthInMillis -> 2
+      timeDifference <= 1.hours -> 5
+      timeDifference <= 1.days -> 4
+      timeDifference <= 7.days -> 3
+      timeDifference <= 30.days -> 2
       else -> 1
     }
 
