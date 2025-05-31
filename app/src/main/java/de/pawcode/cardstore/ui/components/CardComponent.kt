@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.pawcode.cardstore.data.database.entities.CardEntity
@@ -52,6 +53,7 @@ fun CardComponent(card: CardEntity, onClick: () -> Unit, onLongPress: () -> Unit
       Text(
         text = card.storeName,
         style = MaterialTheme.typography.headlineMedium,
+        textAlign = TextAlign.Center,
         color = if (isLightColor) Color.Black else Color.White,
       )
     }

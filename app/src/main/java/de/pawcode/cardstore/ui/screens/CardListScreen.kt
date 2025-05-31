@@ -10,10 +10,15 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AddCard
+import androidx.compose.material.icons.filled.AutoFixHigh
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.SortByAlpha
+import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.QrCodeScanner
 import androidx.compose.material.icons.twotone.CreditCard
@@ -54,6 +59,7 @@ import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.enums.SortAttribute
 import de.pawcode.cardstore.data.managers.PreferencesManager
 import de.pawcode.cardstore.data.services.DeeplinkService
+import de.pawcode.cardstore.data.services.ReviewService
 import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.navigation.Screen
 import de.pawcode.cardstore.ui.components.AppBar
@@ -69,10 +75,13 @@ import de.pawcode.cardstore.ui.sheets.OptionSheetInfo
 import de.pawcode.cardstore.ui.sheets.ShareCardSheet
 import de.pawcode.cardstore.ui.sheets.ViewCardSheet
 import de.pawcode.cardstore.ui.utils.BarcodeScanner
+import de.pawcode.cardstore.ui.utils.PkpassFilePicker
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
+import de.pawcode.cardstore.utils.calculateCardScore
 import de.pawcode.cardstore.utils.isLightColor
 import de.pawcode.cardstore.utils.mapBarcodeFormat
 import de.pawcode.cardstore.utils.parseDeeplink
+import de.pawcode.cardstore.utils.parsePkpass
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
@@ -154,6 +163,7 @@ fun CardListScreenComponent(
   var showCardCreateSheet by remember { mutableStateOf(false) }
   var openDeleteDialog by remember { mutableStateOf<CardEntity?>(null) }
   var showBarcodeScanner by remember { mutableStateOf(false) }
+  var showPkpassPicker by remember { mutableStateOf(false) }
   val showCardImportSheet by DeeplinkService.deeplinkFlow.collectAsState(initial = null)
 
   val listState = rememberLazyGridState()
@@ -175,6 +185,7 @@ fun CardListScreenComponent(
   val cardsSorted by
     rememberUpdatedState(
       when (sortBy) {
+        SortAttribute.INTELLIGENT -> cardsFiltered.sortedByDescending { calculateCardScore(it) }
         SortAttribute.ALPHABETICALLY -> cardsFiltered.sortedBy { it.storeName }
         SortAttribute.RECENTLY_USED -> cardsFiltered.sortedByDescending { it.lastUsed }
         SortAttribute.MOST_USED -> cardsFiltered.sortedByDescending { it.useCount }
@@ -199,15 +210,23 @@ fun CardListScreenComponent(
             values =
               listOf(
                 DropdownOption(
+                  title = stringResource(R.string.sort_intelligent),
+                  icon = Icons.Filled.AutoFixHigh,
+                  value = SortAttribute.INTELLIGENT,
+                ),
+                DropdownOption(
                   title = stringResource(R.string.sort_alphabetically),
+                  icon = Icons.Filled.SortByAlpha,
                   value = SortAttribute.ALPHABETICALLY,
                 ),
                 DropdownOption(
                   title = stringResource(R.string.sort_most_used),
+                  icon = Icons.AutoMirrored.Filled.TrendingUp,
                   value = SortAttribute.MOST_USED,
                 ),
                 DropdownOption(
                   title = stringResource(R.string.sort_recently_used),
+                  icon = Icons.Filled.History,
                   value = SortAttribute.RECENTLY_USED,
                 ),
               ),
@@ -274,7 +293,10 @@ fun CardListScreenComponent(
         ModalBottomSheet(
           modifier = Modifier.fillMaxHeight().windowInsetsPadding(WindowInsets.statusBars),
           sheetState = cardShareSheetState,
-          onDismissRequest = { showCardShareSheet = null },
+          onDismissRequest = {
+            showCardShareSheet = null
+            ReviewService.sendReviewRequest()
+          },
         ) {
           ShareCardSheet(it)
         }
@@ -301,6 +323,7 @@ fun CardListScreenComponent(
               onClick = {
                 showCardShareSheet = it
                 showCardOptionSheet = null
+                ReviewService.prepareReviewRequest()
               },
             ),
             Option(
@@ -342,6 +365,14 @@ fun CardListScreenComponent(
               },
             ),
             Option(
+              label = stringResource(R.string.card_create_pkpass),
+              icon = Icons.Outlined.FileOpen,
+              onClick = {
+                showPkpassPicker = true
+                showCardCreateSheet = false
+              },
+            ),
+            Option(
               label = stringResource(R.string.card_create_manual),
               icon = Icons.Filled.Edit,
               onClick = {
@@ -379,6 +410,20 @@ fun CardListScreenComponent(
           onCancel = { showBarcodeScanner = false },
         )
       }
+
+      if (showPkpassPicker) {
+        PkpassFilePicker(
+          onFileRead = { content ->
+            val deeplink = parsePkpass(content)
+            if (deeplink != null) {
+              DeeplinkService.deeplinkReceived(deeplink)
+            }
+
+            showPkpassPicker = false
+          },
+          onCancel = { showPkpassPicker = false },
+        )
+      }
     }
   }
 }
@@ -390,7 +435,7 @@ fun PreviewCardListScreenComponent() {
   CardListScreenComponent(
     cardsFlow = flowOf(listOf(EXAMPLE_CARD_WITH_LABELS)),
     labelsFlow = flowOf(EXAMPLE_LABEL_LIST),
-    sortByFlow = flowOf(SortAttribute.ALPHABETICALLY),
+    sortByFlow = flowOf(SortAttribute.INTELLIGENT),
     onCreateCard = { _, _ -> },
     onImportCard = {},
     onEditCard = {},
@@ -409,7 +454,7 @@ fun PreviewCardListScreenComponentEmpty() {
   CardListScreenComponent(
     cardsFlow = flowOf(emptyList()),
     labelsFlow = flowOf(emptyList()),
-    sortByFlow = flowOf(SortAttribute.ALPHABETICALLY),
+    sortByFlow = flowOf(SortAttribute.INTELLIGENT),
     onCreateCard = { _, _ -> },
     onImportCard = {},
     onEditCard = {},

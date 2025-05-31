@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.pawcode.cardstore.R
@@ -52,6 +53,7 @@ fun AddCardComponent(hasCards: Boolean, onClick: () -> Unit) {
             if (hasCards) stringResource(R.string.cards_new)
             else stringResource(R.string.cards_list_empty),
           style = MaterialTheme.typography.headlineMedium,
+          textAlign = TextAlign.Center,
         )
       }
     }
