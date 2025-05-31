@@ -1,0 +1,14 @@
+---
+interface Props {
+  cells?: number;
+}
+
+const { cells } = Astro.props;
+---
+
+<section
+  class="border-2 border-black shrink-0 h-frame-height w-frame-width grid grid-rows-frame"
+  style=`--frame-cells: ${cells ?? 1}`
+>
+  <slot />
+</section>

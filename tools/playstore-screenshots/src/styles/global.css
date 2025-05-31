@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+:root {
+  --frame-size: 1920px;
+  --frame-rows: repeat(
+    var(--frame-cells, 1),
+    calc(var(--frame-size) / var(--frame-cells, 1))
+  );
+}
+
+@theme {
+  --color-primary-light: #dae2fc;
+  --color-primary-dark: #304574;
+
+  --spacing-frame-height: var(--frame-size);
+  --spacing-frame-width: calc(var(--frame-size) * 9 / 16);
+}
+
+@layer components {
+  .pixel-6a {
+    position: relative;
+
+    &::after {
+      content: " ";
+      background-image: url("./pixel-6a.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      display: block;
+      top: -2.9%;
+      left: -5%;
+      position: absolute;
+      height: 106%;
+      width: 111%;
+    }
+  }
+
+  .laser {
+    @apply border-2 border-red-500;
+  }
+}
+
+.grid-rows-frame {
+  grid-template-rows: repeat(
+    var(--frame-cells, 1),
+    calc(var(--frame-size) / var(--frame-cells, 1))
+  );
+}

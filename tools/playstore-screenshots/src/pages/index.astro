@@ -1,0 +1,122 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Content from "../components/Content.astro";
+import Frame from "../components/Frame.astro";
+import Phone from "../components/Phone.astro";
+import { getLanguage, i18n } from "../i18n";
+import CardStoreCard from "../images/card-store-card.png";
+import CardStoreFiltered from "../images/card-store-filtered.png";
+import CardStoreList from "../images/card-store-list.png";
+import CardStoreScanner from "../images/card-store-scanner.png";
+import LoyaltyCard from "../images/loyalty-card.png";
+import Wallet from "../images/wallet.png";
+import "../styles/global.css";
+
+const language = getLanguage(Astro.currentLocale);
+const currentPath = Astro.url.pathname.replace(`/${Astro.currentLocale}`, "");
+---
+
+<html lang={language}>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>PlayStore screenshot generator</title>
+  </head>
+  <body>
+    <a
+      href={getRelativeLocaleUrl(language === "de" ? "en" : "de", currentPath)}
+      class="text-4xl font-bold"
+    >
+      {i18n("switch", language)}
+    </a>
+
+    <main class="text-center flex gap-160 p-16">
+      <Frame cells={2}>
+        <Content style="white" padding="medium">
+          <h1 class="text-7xl font-black">{i18n("wallet", language)}</h1>
+
+          <div class="w-3/5 h-auto mx-auto mt-16 relative">
+            <img src={Wallet.src} class="absolute w-full h-auto" />
+          </div>
+        </Content>
+        <Content style="light" padding="medium">
+          <h1
+            class="text-7xl font-black"
+            set:html={i18n("card-store-list", language)}
+          />
+
+          <div class="mt-16">
+            <Phone
+              size="w-1/2"
+              screenshot={CardStoreList}
+              rotateX={20}
+              rotateY={5}
+              rotateZ={1}
+            />
+          </div>
+        </Content>
+      </Frame>
+
+      <Frame>
+        <Content style="light" padding="small" grid>
+          <h1 class="text-8xl font-black" set:html={i18n("scan", language)} />
+
+          <Phone
+            size="w-3/5"
+            screenshot={CardStoreScanner}
+            rotateX={5}
+            rotateY={-5}
+            rotateZ={4}
+          >
+            <div
+              slot="before-card"
+              class="absolute w-full -translate-x-1/4 scale-120 rotate-x-20 -rotate-y-2 rotate-z-2"
+            >
+              <img src={LoyaltyCard.src} />
+            </div>
+          </Phone>
+        </Content>
+      </Frame>
+
+      <Frame>
+        <Content style="dark" padding="small" grid>
+          <h1 class="text-8xl font-black" set:html={i18n("card", language)} />
+
+          <Phone
+            size="w-3/5"
+            screenshot={CardStoreCard}
+            rotateX={5}
+            rotateY={-5}
+            rotateZ={4}
+          >
+            <div
+              slot="inner-card"
+              class="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-3/4"
+            >
+              <hr class="laser" />
+              <hr class="laser mt-2" />
+              <hr class="laser mt-3" />
+              <hr class="laser mt-2" />
+            </div>
+          </Phone>
+        </Content>
+      </Frame>
+
+      <Frame>
+        <Content style="light" padding="small" grid>
+          <h1 class="text-8xl font-black" set:html={i18n("labels", language)} />
+
+          <Phone
+            size="w-3/5"
+            screenshot={CardStoreFiltered}
+            rotateX={2}
+            rotateY={7}
+            rotateZ={-4}
+          />
+        </Content>
+      </Frame>
+    </main>
+  </body>
+</html>
