@@ -1,3 +1,21 @@
+# [1.2.0](https://github.com/pawcoding/card-store/compare/v1.1.0...v1.2.0) (2025-05-31)
+
+
+### Bug Fixes
+
+* update UI on larger font sizes ([7f9e578](https://github.com/pawcoding/card-store/commit/7f9e578a3c4d9daace7ca3e5a4bef2ed6a70ecf9))
+
+
+### Features
+
+* **card-list:** add "import pkpass file" option when adding card ([585a879](https://github.com/pawcoding/card-store/commit/585a8796807eee9420cf0517ed94ed781d2aaaed))
+* **sort:** add "intelligent" sort option that scores the cards usage ([27707ad](https://github.com/pawcoding/card-store/commit/27707adf99b7af6a9fd8f4d09fb27221e61ff9d5))
+* **sort:** add icons to sort dropdown ([ab796ff](https://github.com/pawcoding/card-store/commit/ab796ffc3eb68326d6a925e7581b952be4de99df))
+* **review:** add in-app review request ([70dc659](https://github.com/pawcoding/card-store/commit/70dc659f3b40bd1977ad0ecf71e859e5f5309d9c))
+* **import:** animate card to import ([9d182cb](https://github.com/pawcoding/card-store/commit/9d182cb8f2ce9a50b42f320f79573879be19affa))
+* **pkpass:** parse .pkpass content ([79388ef](https://github.com/pawcoding/card-store/commit/79388ef674805bf795fabb029fd30a28f3461d4c))
+* **pkpass:** read content from pkpass file ([8be0446](https://github.com/pawcoding/card-store/commit/8be0446226048b7c7bee7e96c309fe03d07efcc0))
+
 # [1.1.0](https://github.com/pawcoding/card-store/compare/v1.0.0...v1.1.0) (2025-05-21)
 
 
