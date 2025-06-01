@@ -33,16 +33,17 @@ const currentPath = Astro.url.pathname.replace(`/${Astro.currentLocale}`, "");
     </a>
 
     <main class="text-center flex gap-16 p-16">
+      <h1 class="vertical text-6xl font-black">Feature Graphic</h1>
       <Frame type="feature" cells={2} id="feature-graphic">
         <Content style="white" padding="small">
-          <h1 class="text-3xl font-black">{i18n("wallet", language)}</h1>
+          <h2 class="text-3xl font-black">{i18n("wallet", language)}</h2>
 
           <div class="w-4/5 h-auto mx-auto mt-16 relative">
             <img src={Wallet.src} class="absolute w-full h-auto" />
           </div>
         </Content>
         <Content style="light" padding="small">
-          <h1
+          <h2
             class="text-3xl font-black"
             set:html={i18n("card-store-list", language)}
           />
@@ -59,16 +60,17 @@ const currentPath = Astro.url.pathname.replace(`/${Astro.currentLocale}`, "");
         </Content>
       </Frame>
 
+      <h1 class="vertical text-6xl font-black">Phone</h1>
       <Frame type="phone" cells={2} id="phone-1">
         <Content style="white" padding="medium">
-          <h1 class="text-7xl font-black">{i18n("wallet", language)}</h1>
+          <h2 class="text-7xl font-black">{i18n("wallet", language)}</h2>
 
           <div class="w-3/5 h-auto mx-auto mt-16 relative">
             <img src={Wallet.src} class="absolute w-full h-auto" />
           </div>
         </Content>
         <Content style="light" padding="medium">
-          <h1
+          <h2
             class="text-7xl font-black"
             set:html={i18n("card-store-list", language)}
           />
@@ -87,7 +89,7 @@ const currentPath = Astro.url.pathname.replace(`/${Astro.currentLocale}`, "");
 
       <Frame type="phone" id="phone-2">
         <Content style="light" padding="small" grid>
-          <h1 class="text-8xl font-black" set:html={i18n("scan", language)} />
+          <h2 class="text-8xl font-black" set:html={i18n("scan", language)} />
 
           <Phone
             size="w-3/5"
@@ -108,7 +110,7 @@ const currentPath = Astro.url.pathname.replace(`/${Astro.currentLocale}`, "");
 
       <Frame type="phone" id="phone-3">
         <Content style="dark" padding="small" grid>
-          <h1 class="text-8xl font-black" set:html={i18n("card", language)} />
+          <h2 class="text-8xl font-black" set:html={i18n("card", language)} />
 
           <Phone
             size="w-3/5"
@@ -132,7 +134,7 @@ const currentPath = Astro.url.pathname.replace(`/${Astro.currentLocale}`, "");
 
       <Frame type="phone" id="phone-4">
         <Content style="light" padding="small" grid>
-          <h1 class="text-8xl font-black" set:html={i18n("labels", language)} />
+          <h2 class="text-8xl font-black" set:html={i18n("labels", language)} />
 
           <Phone
             size="w-3/5"

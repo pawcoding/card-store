@@ -58,4 +58,10 @@
       calc(var(--frame-width) / var(--frame-cells, 1))
     );
   }
+
+  .vertical {
+    text-align: left;
+    writing-mode: vertical-rl;
+    text-orientation: sideways-right;
+  }
 }

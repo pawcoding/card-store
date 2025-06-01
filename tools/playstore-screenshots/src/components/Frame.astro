@@ -10,7 +10,7 @@ const { id, type, cells } = Astro.props;
 
 <section
   class:list={[
-    "border-2 border-black shrink-0 grow grid frame overflow-clip",
+    "border-2 border-black shrink-0 grid frame overflow-clip",
     `frame-${type}`,
     type === "phone" || type === "phablet"
       ? "grid-rows-frame"
