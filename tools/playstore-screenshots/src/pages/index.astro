@@ -32,8 +32,34 @@ const currentPath = Astro.url.pathname.replace(`/${Astro.currentLocale}`, "");
       {i18n("switch", language)}
     </a>
 
-    <main class="text-center flex gap-160 p-16">
-      <Frame cells={2}>
+    <main class="text-center flex gap-16 p-16">
+      <Frame type="feature" cells={2} id="feature-graphic">
+        <Content style="white" padding="small">
+          <h1 class="text-3xl font-black">{i18n("wallet", language)}</h1>
+
+          <div class="w-4/5 h-auto mx-auto mt-16 relative">
+            <img src={Wallet.src} class="absolute w-full h-auto" />
+          </div>
+        </Content>
+        <Content style="light" padding="small">
+          <h1
+            class="text-3xl font-black"
+            set:html={i18n("card-store-list", language)}
+          />
+
+          <div class="mt-16">
+            <Phone
+              size="w-1/2"
+              screenshot={CardStoreList}
+              rotateX={20}
+              rotateY={5}
+              rotateZ={1}
+            />
+          </div>
+        </Content>
+      </Frame>
+
+      <Frame type="phone" cells={2} id="phone-1">
         <Content style="white" padding="medium">
           <h1 class="text-7xl font-black">{i18n("wallet", language)}</h1>
 
@@ -59,7 +85,7 @@ const currentPath = Astro.url.pathname.replace(`/${Astro.currentLocale}`, "");
         </Content>
       </Frame>
 
-      <Frame>
+      <Frame type="phone" id="phone-2">
         <Content style="light" padding="small" grid>
           <h1 class="text-8xl font-black" set:html={i18n("scan", language)} />
 
@@ -80,7 +106,7 @@ const currentPath = Astro.url.pathname.replace(`/${Astro.currentLocale}`, "");
         </Content>
       </Frame>
 
-      <Frame>
+      <Frame type="phone" id="phone-3">
         <Content style="dark" padding="small" grid>
           <h1 class="text-8xl font-black" set:html={i18n("card", language)} />
 
@@ -104,7 +130,7 @@ const currentPath = Astro.url.pathname.replace(`/${Astro.currentLocale}`, "");
         </Content>
       </Frame>
 
-      <Frame>
+      <Frame type="phone" id="phone-4">
         <Content style="light" padding="small" grid>
           <h1 class="text-8xl font-black" set:html={i18n("labels", language)} />
 

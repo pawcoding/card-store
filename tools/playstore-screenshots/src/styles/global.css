@@ -1,19 +1,8 @@
 @import "tailwindcss";
 
-:root {
-  --frame-size: 1920px;
-  --frame-rows: repeat(
-    var(--frame-cells, 1),
-    calc(var(--frame-size) / var(--frame-cells, 1))
-  );
-}
-
 @theme {
   --color-primary-light: #dae2fc;
   --color-primary-dark: #304574;
-
-  --spacing-frame-height: var(--frame-size);
-  --spacing-frame-width: calc(var(--frame-size) * 9 / 16);
 }
 
 @layer components {
@@ -37,11 +26,36 @@
   .laser {
     @apply border-2 border-red-500;
   }
+
+  .frame-feature {
+    --frame-height: 500px;
+    --frame-width: 1024px;
+
+    height: var(--frame-height);
+    width: var(--frame-width);
+  }
+
+  .frame-phone {
+    --frame-height: 1920px;
+    --frame-width: calc(var(--frame-height) * 9 / 16);
+
+    height: var(--frame-height);
+    width: var(--frame-width);
+  }
 }
 
-.grid-rows-frame {
-  grid-template-rows: repeat(
-    var(--frame-cells, 1),
-    calc(var(--frame-size) / var(--frame-cells, 1))
-  );
+@layer utilities {
+  .grid-rows-frame {
+    grid-template-rows: repeat(
+      var(--frame-cells, 1),
+      calc(var(--frame-height) / var(--frame-cells, 1))
+    );
+  }
+
+  .grid-cols-frame {
+    grid-template-columns: repeat(
+      var(--frame-cells, 1),
+      calc(var(--frame-width) / var(--frame-cells, 1))
+    );
+  }
 }
