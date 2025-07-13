@@ -1,10 +1,11 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
-  id("com.google.devtools.ksp") version "2.1.0-1.0.29"
+  id("com.google.devtools.ksp") version "2.2.0-2.0.2"
   id("com.ncorti.ktfmt.gradle") version "0.22.0"
 }
 
@@ -60,11 +61,15 @@ android {
     targetCompatibility = JavaVersion.VERSION_19
   }
 
-  kotlinOptions { jvmTarget = "19" }
-
   buildFeatures { compose = true }
 
   androidResources { generateLocaleConfig = true }
+}
+
+kotlin {
+  compilerOptions {
+    jvmTarget = JvmTarget.JVM_19
+  }
 }
 
 dependencies {
