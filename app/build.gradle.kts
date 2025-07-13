@@ -6,7 +6,7 @@ plugins {
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
   id("com.google.devtools.ksp") version "2.2.0-2.0.2"
-  id("com.ncorti.ktfmt.gradle") version "0.22.0"
+  id("com.ncorti.ktfmt.gradle") version "0.23.0"
 }
 
 android {
