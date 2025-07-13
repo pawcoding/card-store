@@ -11,12 +11,12 @@ plugins {
 
 android {
   namespace = "de.pawcode.cardstore"
-  compileSdk = 35
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "de.pawcode.cardstore"
     minSdk = 31
-    targetSdk = 35
+    targetSdk = 36
 
     val properties = Properties()
     val propertiesFile = rootProject.file("version.properties")
