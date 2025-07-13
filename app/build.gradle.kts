@@ -1,5 +1,5 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
   alias(libs.plugins.android.application)
@@ -66,11 +66,7 @@ android {
   androidResources { generateLocaleConfig = true }
 }
 
-kotlin {
-  compilerOptions {
-    jvmTarget = JvmTarget.JVM_19
-  }
-}
+kotlin { compilerOptions { jvmTarget = JvmTarget.JVM_19 } }
 
 dependencies {
   implementation(libs.androidx.activity.compose)
