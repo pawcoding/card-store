@@ -1,21 +1,22 @@
 import java.util.Properties
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
-  id("com.google.devtools.ksp") version "2.1.0-1.0.29"
-  id("com.ncorti.ktfmt.gradle") version "0.22.0"
+  id("com.google.devtools.ksp") version "2.2.0-2.0.2"
+  id("com.ncorti.ktfmt.gradle") version "0.23.0"
 }
 
 android {
   namespace = "de.pawcode.cardstore"
-  compileSdk = 35
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "de.pawcode.cardstore"
     minSdk = 31
-    targetSdk = 35
+    targetSdk = 36
 
     val properties = Properties()
     val propertiesFile = rootProject.file("version.properties")
@@ -60,12 +61,12 @@ android {
     targetCompatibility = JavaVersion.VERSION_19
   }
 
-  kotlinOptions { jvmTarget = "19" }
-
   buildFeatures { compose = true }
 
   androidResources { generateLocaleConfig = true }
 }
+
+kotlin { compilerOptions { jvmTarget = JvmTarget.JVM_19 } }
 
 dependencies {
   implementation(libs.androidx.activity.compose)
