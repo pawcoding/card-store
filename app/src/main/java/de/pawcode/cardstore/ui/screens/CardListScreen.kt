@@ -127,9 +127,11 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
         // Update existing card without affecting usage counters
         val existingCard = cards.find { it.card.cardId == card.cardId }?.card
         if (existingCard != null) {
-          val updatedCard = card.copy(
-            useCount = existingCard.useCount,
-            lastUsed = existingCard.lastUsed
+          val updatedCard = existingCard.copy(
+            storeName = card.storeName,
+            cardNumber = card.cardNumber,
+            barcodeFormat = card.barcodeFormat,
+            color = card.color
           )
           viewModel.updateCard(updatedCard)
           SnackbarService.showSnackbar(context.getString(R.string.update_card_success))

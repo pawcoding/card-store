@@ -29,7 +29,7 @@ import de.pawcode.cardstore.ui.components.CardComponent
 import de.pawcode.cardstore.ui.utils.dpToPx
 
 @Composable
-fun ImportCardSheet(card: CardEntity, isUpdate: Boolean = false, onImport: () -> Unit) {
+fun ImportCardSheet(card: CardEntity, isUpdate: Boolean, onImport: () -> Unit) {
   val infiniteTransition = rememberInfiniteTransition(label = "hover")
   val rotation by
     infiniteTransition.animateFloat(
@@ -80,4 +80,10 @@ fun ImportCardSheet(card: CardEntity, isUpdate: Boolean = false, onImport: () ->
 @Composable
 fun PreviewImportCardSheet() {
   ImportCardSheet(card = EXAMPLE_CARD, isUpdate = false, onImport = {})
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewUpdateCardSheet() {
+  ImportCardSheet(card = EXAMPLE_CARD, isUpdate = true, onImport = {})
 }
