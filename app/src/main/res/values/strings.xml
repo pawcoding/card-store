@@ -41,6 +41,9 @@
     <string name="import_card_description">Someone shared this card with you. Click on the card to add it to your collection.</string>
     <string name="import_card_success">Card imported successfully</string>
     <string name="import_card_title">Import this card</string>
+    <string name="update_card_description">Someone shared an updated version of this card with you. Click on the card to update your existing one.</string>
+    <string name="update_card_success">Card updated successfully</string>
+    <string name="update_card_title">Update this card</string>
     <string name="label_add">Add label</string>
     <string name="label_added">Label added</string>
     <string name="label_delete_description">Are you sure you want to delete the label? It cannot be restored.</string>

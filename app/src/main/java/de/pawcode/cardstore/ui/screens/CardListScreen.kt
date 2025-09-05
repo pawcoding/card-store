@@ -122,9 +122,26 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
       }
       navController.navigate(route)
     },
-    onImportCard = { card ->
-      viewModel.insertCard(card)
-      SnackbarService.showSnackbar(context.getString(R.string.import_card_success))
+    onImportCard = { card, isUpdate ->
+      if (isUpdate) {
+        // Update existing card without affecting usage counters
+        val existingCard = cards.find { it.card.cardId == card.cardId }?.card
+        if (existingCard != null) {
+          val updatedCard = card.copy(
+            useCount = existingCard.useCount,
+            lastUsed = existingCard.lastUsed
+          )
+          viewModel.updateCard(updatedCard)
+          SnackbarService.showSnackbar(context.getString(R.string.update_card_success))
+        } else {
+          // Fallback to insert if card not found
+          viewModel.insertCard(card)
+          SnackbarService.showSnackbar(context.getString(R.string.import_card_success))
+        }
+      } else {
+        viewModel.insertCard(card)
+        SnackbarService.showSnackbar(context.getString(R.string.import_card_success))
+      }
       DeeplinkService.clearDeeplink()
     },
     onEditCard = { card ->
@@ -145,7 +162,7 @@ fun CardListScreenComponent(
   labelsFlow: Flow<List<LabelEntity>>,
   sortByFlow: Flow<SortAttribute?>,
   onCreateCard: (cardNumber: String?, barcodeType: BarcodeType?) -> Unit,
-  onImportCard: (CardEntity) -> Unit,
+  onImportCard: (CardEntity, Boolean) -> Unit,
   onEditCard: (CardEntity) -> Unit,
   onShowCard: (CardEntity) -> Unit,
   onDeleteCard: (CardEntity) -> Unit,
@@ -165,6 +182,7 @@ fun CardListScreenComponent(
   var showBarcodeScanner by remember { mutableStateOf(false) }
   var showPkpassPicker by remember { mutableStateOf(false) }
   val showCardImportSheet by DeeplinkService.deeplinkFlow.collectAsState(initial = null)
+  var isCardUpdate by remember { mutableStateOf(false) }
 
   val listState = rememberLazyGridState()
   val cardSheetState = rememberModalBottomSheetState()
@@ -194,6 +212,14 @@ fun CardListScreenComponent(
     )
 
   LaunchedEffect(sortBy, selectedLabel) { listState.scrollToItem(0) }
+
+  // Check if the imported card already exists
+  LaunchedEffect(showCardImportSheet) {
+    showCardImportSheet?.let { card ->
+      val existingCards = cards.map { it.card.cardId }
+      isCardUpdate = existingCards.contains(card.cardId)
+    }
+  }
 
   Scaffold(
     topBar = {
@@ -285,7 +311,7 @@ fun CardListScreenComponent(
           dragHandle = {},
           onDismissRequest = { DeeplinkService.clearDeeplink() },
         ) {
-          ImportCardSheet(card = it, onImport = { onImportCard(it) })
+          ImportCardSheet(card = it, isUpdate = isCardUpdate, onImport = { onImportCard(it, isCardUpdate) })
         }
       }
 

@@ -17,6 +17,10 @@ class CardRepository(context: Context) {
     return cardDao.getById(id)
   }
 
+  suspend fun cardExistsById(id: String): Boolean {
+    return cardDao.existsById(id)
+  }
+
   suspend fun insertCard(card: CardEntity) {
     cardDao.insert(card)
   }

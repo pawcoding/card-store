@@ -20,7 +20,7 @@ object DeeplinkService {
   fun deeplinkReceived(deeplink: Map<String, String?>) {
     val card =
       CardEntity(
-        cardId = Uuid.random().toString(),
+        cardId = deeplink["cardId"] ?: Uuid.random().toString(),
         storeName = deeplink["storeName"] ?: "",
         cardNumber = deeplink["cardNumber"] ?: "",
         barcodeFormat =

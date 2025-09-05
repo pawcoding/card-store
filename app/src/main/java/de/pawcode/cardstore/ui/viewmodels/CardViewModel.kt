@@ -33,6 +33,8 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
 
   fun insertCard(card: CardEntity) = viewModelScope.launch { cardRepository.insertCard(card) }
 
+  suspend fun cardExists(id: String): Boolean = cardRepository.cardExistsById(id)
+
   fun insertLabel(label: LabelEntity) = viewModelScope.launch { labelRepository.insertLabel(label) }
 
   fun addLabelsToCard(cardId: String, labelIds: List<String>) =
