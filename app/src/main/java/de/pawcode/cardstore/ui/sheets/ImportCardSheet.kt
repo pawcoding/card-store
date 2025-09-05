@@ -79,5 +79,5 @@ fun ImportCardSheet(card: CardEntity, isUpdate: Boolean = false, onImport: () ->
 @Preview(showBackground = true)
 @Composable
 fun PreviewImportCardSheet() {
-  ImportCardSheet(card = EXAMPLE_CARD, onImport = {})
+  ImportCardSheet(card = EXAMPLE_CARD, isUpdate = false, onImport = {})
 }
