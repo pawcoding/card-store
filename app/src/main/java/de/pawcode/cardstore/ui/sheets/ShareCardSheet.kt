@@ -26,7 +26,7 @@ import de.pawcode.cardstore.data.database.entities.EXAMPLE_CARD
 @Composable
 fun ShareCardSheet(card: CardEntity) {
   val deeplink =
-    "https://cardstore.apps.pawcode.de/share-card?storeName=${card.storeName}&cardNumber=${card.cardNumber}&barcodeFormat=${card.barcodeFormat}&color=${card.color}"
+    "https://cardstore.apps.pawcode.de/share-card?cardId=${card.cardId}&storeName=${card.storeName}&cardNumber=${card.cardNumber}&barcodeFormat=${card.barcodeFormat}&color=${card.color}"
 
   Column(
     modifier = Modifier.padding(16.dp).fillMaxWidth(),

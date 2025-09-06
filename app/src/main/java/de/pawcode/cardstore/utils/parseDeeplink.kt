@@ -17,6 +17,7 @@ fun parseDeeplink(deeplink: Uri): Map<String, String?>? {
   }
 
   return mapOf(
+    "cardId" to (deeplink.getQueryParameter("cardId")),
     "storeName" to (deeplink.getQueryParameter("storeName")),
     "cardNumber" to (deeplink.getQueryParameter("cardNumber")),
     "barcodeFormat" to (deeplink.getQueryParameter("barcodeFormat")),

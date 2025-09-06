@@ -30,4 +30,7 @@ interface CardDao {
   @Transaction
   @Query("SELECT * FROM cards WHERE card_id = :id")
   fun getById(id: String): Flow<CardWithLabels?>
+
+  @Query("SELECT EXISTS(SELECT 1 FROM cards WHERE card_id = :id)")
+  suspend fun existsById(id: String): Boolean
 }
