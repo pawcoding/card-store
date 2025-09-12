@@ -143,6 +143,20 @@ fun AboutScreenComponent(
         HorizontalDivider()
 
         ListItem(
+          headlineContent = { Text(stringResource(R.string.playstore)) },
+          supportingContent = { Text(stringResource(R.string.playstore_description)) },
+          trailingContent = {
+            Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = null)
+          },
+          modifier =
+            Modifier.clickable {
+              onOpenWebsite("https://play.google.com/store/apps/details?id=de.pawcode.cardstore")
+            },
+        )
+
+        HorizontalDivider()
+
+        ListItem(
           headlineContent = { Text(stringResource(R.string.report_issue)) },
           supportingContent = { Text(stringResource(R.string.github_issues)) },
           trailingContent = {
