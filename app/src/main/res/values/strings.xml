@@ -57,6 +57,8 @@
     <string name="labels_new">Add new label</string>
     <string name="labels_none">No labels</string>
     <string name="labels_options">Options</string>
+    <string name="playstore">View in Play Store</string>
+    <string name="playstore_description">Rate and review the app</string>
     <string name="report_issue">Report an issue</string>
     <string name="scan_barcode">Scan barcode</string>
     <string name="scan_error">Error while trying to scan barcode</string>
