@@ -1,3 +1,12 @@
+# [1.3.0](https://github.com/pawcoding/card-store/compare/v1.2.1...v1.3.0) (2025-09-19)
+
+
+### Features
+
+* **about:** add link to PlayStore page [build] ([f86965c](https://github.com/pawcoding/card-store/commit/f86965c6c4843b95f53b72bb94ca496638234554))
+* **navigation:** opt-in to predictive back gestures on Android 15 and lower ([6582b88](https://github.com/pawcoding/card-store/commit/6582b88ff90803470e87d6c5e428356ef8d535d0))
+* **import:** update card with import when it already exists ([2938037](https://github.com/pawcoding/card-store/commit/29380378b704c03046281d8328dadb7c05b6daf4))
+
 ## [1.2.1](https://github.com/pawcoding/card-store/compare/v1.2.0...v1.2.1) (2025-07-17)
 
 # [1.2.0](https://github.com/pawcoding/card-store/compare/v1.1.0...v1.2.0) (2025-05-31)
