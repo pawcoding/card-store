@@ -122,9 +122,22 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
       }
       navController.navigate(route)
     },
-    onImportCard = { card ->
-      viewModel.insertCard(card)
-      SnackbarService.showSnackbar(context.getString(R.string.import_card_success))
+    onImportCard = { importedCard, existingCard ->
+      if (existingCard != null) {
+        // Update existing card without affecting usage counters
+        val updatedCard =
+          existingCard.copy(
+            storeName = importedCard.storeName,
+            cardNumber = importedCard.cardNumber,
+            barcodeFormat = importedCard.barcodeFormat,
+            color = importedCard.color,
+          )
+        viewModel.updateCard(updatedCard)
+        SnackbarService.showSnackbar(context.getString(R.string.update_card_success))
+      } else {
+        viewModel.insertCard(importedCard)
+        SnackbarService.showSnackbar(context.getString(R.string.import_card_success))
+      }
       DeeplinkService.clearDeeplink()
     },
     onEditCard = { card ->
@@ -145,7 +158,7 @@ fun CardListScreenComponent(
   labelsFlow: Flow<List<LabelEntity>>,
   sortByFlow: Flow<SortAttribute?>,
   onCreateCard: (cardNumber: String?, barcodeType: BarcodeType?) -> Unit,
-  onImportCard: (CardEntity) -> Unit,
+  onImportCard: (importedCard: CardEntity, existingCard: CardEntity?) -> Unit,
   onEditCard: (CardEntity) -> Unit,
   onShowCard: (CardEntity) -> Unit,
   onDeleteCard: (CardEntity) -> Unit,
@@ -192,6 +205,10 @@ fun CardListScreenComponent(
         else -> null
       }
     )
+
+  val existingCardToUpdate by remember {
+    derivedStateOf { cards.find { it.card.cardId == showCardImportSheet?.cardId }?.card }
+  }
 
   LaunchedEffect(sortBy, selectedLabel) { listState.scrollToItem(0) }
 
@@ -285,7 +302,11 @@ fun CardListScreenComponent(
           dragHandle = {},
           onDismissRequest = { DeeplinkService.clearDeeplink() },
         ) {
-          ImportCardSheet(card = it, onImport = { onImportCard(it) })
+          ImportCardSheet(
+            card = it,
+            isUpdate = existingCardToUpdate != null,
+            onImport = { onImportCard(it, existingCardToUpdate) },
+          )
         }
       }
 
@@ -437,7 +458,7 @@ fun PreviewCardListScreenComponent() {
     labelsFlow = flowOf(EXAMPLE_LABEL_LIST),
     sortByFlow = flowOf(SortAttribute.INTELLIGENT),
     onCreateCard = { _, _ -> },
-    onImportCard = {},
+    onImportCard = { _, _ -> },
     onEditCard = {},
     onShowCard = {},
     onDeleteCard = {},
@@ -456,7 +477,7 @@ fun PreviewCardListScreenComponentEmpty() {
     labelsFlow = flowOf(emptyList()),
     sortByFlow = flowOf(SortAttribute.INTELLIGENT),
     onCreateCard = { _, _ -> },
-    onImportCard = {},
+    onImportCard = { _, _ -> },
     onEditCard = {},
     onShowCard = {},
     onDeleteCard = {},

@@ -3,9 +3,9 @@ name: Test
 on:
   push:
     branches:
-      - '**'
-      - '!master'
-      - '!staging'
+      - "**"
+      - "!master"
+      - "!staging"
 
 jobs:
   release:
@@ -20,9 +20,9 @@ jobs:
       - name: 📦 Setup JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '21'
-          cache: 'gradle'
+          distribution: "temurin"
+          java-version: "21"
+          cache: "gradle"
 
       - name: 📦 Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -30,6 +30,10 @@ jobs:
       - name: 🧹 Check format
         run: |
           ./gradlew ktfmtCheck
+
+      - name: 🛠️ Compile the app
+        run: |
+          ./gradlew assembleDebug
 
       - name: 🔎 Check if build is needed
         id: check-build
@@ -42,11 +46,6 @@ jobs:
             echo "No [build] in commit message, skipping build"
             echo "build_apk=false" >> "$GITHUB_OUTPUT"
           fi
-
-      - name: 🛠️ Compile the app
-        if: steps.check-build.outputs.build_apk == 'false'
-        run: |
-          ./gradlew assembleDebug
 
       - name: 🔐 Setup Keystore
         if: steps.check-build.outputs.build_apk == 'true'
