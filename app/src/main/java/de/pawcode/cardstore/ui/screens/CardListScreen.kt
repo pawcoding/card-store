@@ -16,6 +16,7 @@ import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.AutoFixHigh
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.History
@@ -30,8 +31,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.FloatingActionButtonMenu
+import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -189,7 +193,6 @@ fun CardListScreenComponent(
   val cardShareSheetState = rememberModalBottomSheetState()
   val cardImportSheetState = rememberModalBottomSheetState()
   val cardOptionSheetState = rememberModalBottomSheetState()
-  val cardCreateSheetState = rememberModalBottomSheetState()
 
   var selectedLabel by remember { mutableStateOf<String?>(null) }
 
@@ -278,13 +281,58 @@ fun CardListScreenComponent(
       )
     },
     floatingActionButton = {
-      ExtendedFloatingActionButton(
-        onClick = { showCardCreateSheet = true },
-        text = { Text(stringResource(R.string.cards_new)) },
-        icon = {
-          Icon(Icons.Filled.AddCard, contentDescription = stringResource(R.string.cards_new))
+      FloatingActionButtonMenu(
+        expanded = showCardCreateSheet,
+        button = {
+          ExtendedFloatingActionButton(
+            onClick = { showCardCreateSheet = !showCardCreateSheet },
+            text = { Text(stringResource(R.string.cards_new)) },
+            expanded = !showCardCreateSheet,
+            icon = {
+              Icon(
+                imageVector =
+                  if (!showCardCreateSheet) {
+                    Icons.Filled.AddCard
+                  } else {
+                    Icons.Filled.Close
+                  },
+                contentDescription = stringResource(R.string.cards_new),
+              )
+            },
+          )
         },
-      )
+      ) {
+        FloatingActionButtonMenuItem(
+          onClick = {
+            showBarcodeScanner = true
+            showCardCreateSheet = false
+          },
+          text = { Text(stringResource(R.string.scan_barcode)) },
+          icon = { Icon(Icons.Outlined.QrCodeScanner, contentDescription = null) },
+          containerColor = MaterialTheme.colorScheme.primary,
+          contentColor = MaterialTheme.colorScheme.onPrimary,
+        )
+        FloatingActionButtonMenuItem(
+          onClick = {
+            showPkpassPicker = true
+            showCardCreateSheet = false
+          },
+          text = { Text(stringResource(R.string.card_create_pkpass)) },
+          icon = { Icon(Icons.Outlined.FileOpen, contentDescription = null) },
+          containerColor = MaterialTheme.colorScheme.primary,
+          contentColor = MaterialTheme.colorScheme.onPrimary,
+        )
+        FloatingActionButtonMenuItem(
+          onClick = {
+            onCreateCard(null, null)
+            showCardCreateSheet = false
+          },
+          text = { Text(stringResource(R.string.card_create_manual)) },
+          icon = { Icon(Icons.Filled.Edit, contentDescription = null) },
+          containerColor = MaterialTheme.colorScheme.primary,
+          contentColor = MaterialTheme.colorScheme.onPrimary,
+        )
+      }
     },
   ) { innerPadding ->
     Column(modifier = Modifier.padding(innerPadding).padding(horizontal = 8.dp)) {
@@ -392,41 +440,6 @@ fun CardListScreenComponent(
               subtitle = it.cardNumber,
             )
           }
-        }
-      }
-
-      if (showCardCreateSheet) {
-        ModalBottomSheet(
-          sheetState = cardCreateSheetState,
-          dragHandle = {},
-          onDismissRequest = { showCardCreateSheet = false },
-        ) {
-          OptionSheet(
-            Option(
-              label = stringResource(R.string.scan_barcode),
-              icon = Icons.Outlined.QrCodeScanner,
-              onClick = {
-                showBarcodeScanner = true
-                showCardCreateSheet = false
-              },
-            ),
-            Option(
-              label = stringResource(R.string.card_create_pkpass),
-              icon = Icons.Outlined.FileOpen,
-              onClick = {
-                showPkpassPicker = true
-                showCardCreateSheet = false
-              },
-            ),
-            Option(
-              label = stringResource(R.string.card_create_manual),
-              icon = Icons.Filled.Edit,
-              onClick = {
-                onCreateCard(null, null)
-                showCardCreateSheet = false
-              },
-            ),
-          )
         }
       }
 
