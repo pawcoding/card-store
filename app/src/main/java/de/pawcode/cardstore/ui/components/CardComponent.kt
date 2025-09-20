@@ -44,6 +44,7 @@ fun CardComponent(card: CardEntity, onClick: () -> Unit, onLongPress: () -> Unit
         ),
     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
     colors = CardDefaults.cardColors(containerColor = color),
+    shape = MaterialTheme.shapes.large,
   ) {
     Column(
       horizontalAlignment = Alignment.CenterHorizontally,
