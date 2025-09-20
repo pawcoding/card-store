@@ -1,0 +1,30 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:tint="#FFFFFF"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Main card icon -->
+    <group
+        android:scaleX="0.58"
+        android:scaleY="0.58"
+        android:translateX="26.1"
+        android:translateY="26.1">
+        <path
+            android:fillAlpha="0.3"
+            android:fillColor="@android:color/white"
+            android:pathData="M4,12h16v6L4,18zM4,6h16v2L4,8z"
+            android:strokeAlpha="0.3" />
+        <path
+            android:fillColor="@android:color/white"
+            android:pathData="M20,4L4,4c-1.11,0 -1.99,0.89 -1.99,2L2,18c0,1.11 0.89,2 2,2h16c1.11,0 2,-0.89 2,-2L22,6c0,-1.11 -0.89,-2 -2,-2zM20,18L4,18v-6h16v6zM20,8L4,8L4,6h16v2z" />
+    </group>
+    <!-- Debug indicator - red circle in top-right -->
+    <path
+        android:fillColor="#FF4444"
+        android:pathData="M91,8 C98.73,8 105,14.27 105,22 C105,29.73 98.73,36 91,36 C83.27,36 77,29.73 77,22 C77,14.27 83.27,8 91,8 Z" />
+    <!-- Simple "D" shape -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M85,15 L85,29 L89,29 C92,29 94,27 94,22 C94,17 92,15 89,15 Z M87,17 L89,17 C90,17 92,17.5 92,22 C92,26.5 90,27 89,27 L87,27 Z" />
+</vector>
