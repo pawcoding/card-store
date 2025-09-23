@@ -1,6 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ]
+  "baseBranchPatterns": ["staging"],
+  "extends": ["config:recommended", "group:allNonMajor"],
+  "ignorePresets": [":semanticPrefixFixDepsChoreOthers"],
+  "minimumReleaseAge": "1 day",
+  "rangeStrategy": "bump",
+  "reviewers": ["pawcoding"],
+  "schedule": ["before 4am on saturday"],
+  "semanticCommitType": "build",
+  "updateNotScheduled": false
 }
