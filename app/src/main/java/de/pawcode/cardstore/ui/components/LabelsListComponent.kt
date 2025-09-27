@@ -1,5 +1,6 @@
 package de.pawcode.cardstore.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -11,9 +12,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.EditNote
-import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +30,7 @@ import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
 import de.pawcode.cardstore.data.database.entities.LabelEntity
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LabelsListComponent(
   labels: List<LabelEntity>,
@@ -57,15 +61,16 @@ fun LabelsListComponent(
           FilterChip(
             selected = chipSelected,
             onClick = { onLabelClick(label) },
+            shape = MaterialTheme.shapes.medium,
             label = {
               Text(
-                modifier = Modifier.padding(vertical = 8.dp),
+                modifier = Modifier.padding(vertical = 10.dp),
                 text = label.name,
                 style = MaterialTheme.typography.bodyLarge,
               )
             },
             leadingIcon = {
-              if (chipSelected) {
+              AnimatedVisibility(visible = chipSelected) {
                 Icon(Icons.Filled.Check, contentDescription = null)
               }
             },
@@ -74,11 +79,23 @@ fun LabelsListComponent(
       }
     }
 
-    FilledTonalIconButton(shape = MaterialTheme.shapes.small, onClick = { onEdit() }) {
+    FilledIconButton(
+      modifier =
+        Modifier.padding(start = 8.dp)
+          .size(
+            IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Wide)
+          ),
+      shapes =
+        IconButtonDefaults.shapes(
+          shape = IconButtonDefaults.smallSquareShape,
+          pressedShape = IconButtonDefaults.smallPressedShape,
+        ),
+      onClick = { onEdit() },
+    ) {
       Icon(
         imageVector = if (labels.isNotEmpty()) Icons.Filled.EditNote else Icons.Filled.Add,
         contentDescription = stringResource(R.string.labels_edit),
-        modifier = Modifier.size(32.dp),
+        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
       )
     }
   }
