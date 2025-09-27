@@ -31,6 +31,7 @@
     <string name="common_back">Zurück</string>
     <string name="common_cancel">Abbrechen</string>
     <string name="common_delete">Löschen</string>
+    <string name="common_discard">Verwerfen</string>
     <string name="common_required">erforderlich</string>
     <string name="common_save">Speichern</string>
     <string name="common_scan">Scannen</string>
@@ -71,6 +72,8 @@
     <string name="sort_recently_used">Kürzlich verwendet</string>
     <string name="source_code">Quellcode anzeigen</string>
     <string name="technologies">Technologien</string>
+    <string name="unsaved_changes_description">Du hast ungespeicherte Änderungen. Was möchtest du tun?</string>
+    <string name="unsaved_changes_title">Ungespeicherte Änderungen</string>
     <string name="version">Version</string>
     <string name="website">Webseite besuchen</string>
     <string name="website_link"><![CDATA[https://pawcode.de/de/?mtm_campaign=CardStore&mtm_kwd=About&mtm_source=App]]></string>
