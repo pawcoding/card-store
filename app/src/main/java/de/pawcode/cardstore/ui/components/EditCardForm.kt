@@ -22,13 +22,13 @@ import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -180,7 +180,7 @@ fun EditCardForm(
           onValueChange = {},
           label = { Text(stringResource(R.string.card_barcode_type)) },
           trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-          modifier = Modifier.menuAnchor(MenuAnchorType.SecondaryEditable, true),
+          modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.SecondaryEditable, true),
           readOnly = true,
           singleLine = true,
           isError = !formatValid,
