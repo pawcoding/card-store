@@ -43,6 +43,7 @@ import de.pawcode.cardstore.data.database.entities.emptyLabel
 import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.SaveFabComponent
+import de.pawcode.cardstore.ui.dialogs.UnsavedChangesDialog
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 
 @Composable
@@ -82,6 +83,7 @@ fun EditLabelScreenComponent(
   onSave: (LabelEntity) -> Unit,
 ) {
   var label by remember { mutableStateOf(initialLabel ?: emptyLabel()) }
+  var showUnsavedChangesDialog by remember { mutableStateOf(false) }
 
   LaunchedEffect(initialLabel) { label = initialLabel ?: emptyLabel() }
 
@@ -90,13 +92,35 @@ fun EditLabelScreenComponent(
     derivedStateOf { initialLabel == null || initialLabel.name != label.name }
   }
 
+  val handleBack = {
+    if (hasChanges && initialLabel != null) {
+      showUnsavedChangesDialog = true
+    } else {
+      onBack()
+    }
+  }
+
+  if (showUnsavedChangesDialog) {
+    UnsavedChangesDialog(
+      onDismissRequest = { showUnsavedChangesDialog = false },
+      onDiscard = {
+        showUnsavedChangesDialog = false
+        onBack()
+      },
+      onSave = {
+        showUnsavedChangesDialog = false
+        onSave(label)
+      },
+    )
+  }
+
   Scaffold(
     modifier = Modifier.imePadding(),
     topBar = {
       AppBar(
         title =
           stringResource(if (initialLabel != null) R.string.label_edit else R.string.label_add),
-        onBack = { onBack() },
+        onBack = { handleBack() },
       )
     },
     floatingActionButton = {
