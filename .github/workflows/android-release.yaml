@@ -19,13 +19,13 @@ jobs:
           private-key: ${{ secrets.GH_PRIVATE_KEY }}
 
       - name: 📥 Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           token: ${{ steps.app-token.outputs.token }}
 
       - name: 📦 Setup JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '21'
