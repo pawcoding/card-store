@@ -30,10 +30,10 @@ import androidx.compose.material.icons.twotone.DeleteForever
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FloatingActionButtonMenu
 import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -226,7 +226,7 @@ fun CardListScreenComponent(
         title = stringResource(R.string.app_name),
         actions = {
           Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            FilledIconButton(
+            IconButton(
               modifier =
                 Modifier.size(
                   IconButtonDefaults.smallContainerSize(

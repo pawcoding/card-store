@@ -1,5 +1,6 @@
 package de.pawcode.cardstore.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -267,6 +268,7 @@ fun EditCardForm(
           val chipSelected =
             label.labelId == card.labels.find { it.labelId == label.labelId }?.labelId
           FilterChip(
+            modifier = Modifier.padding(bottom = 4.dp),
             selected = chipSelected,
             onClick = {
               onCardUpdate(
@@ -282,13 +284,13 @@ fun EditCardForm(
             },
             label = {
               Text(
-                modifier = Modifier.padding(vertical = 8.dp),
+                modifier = Modifier.padding(vertical = 10.dp),
                 text = label.name,
                 style = MaterialTheme.typography.bodyLarge,
               )
             },
             leadingIcon = {
-              if (chipSelected) {
+              AnimatedVisibility(visible = chipSelected) {
                 Icon(Icons.Filled.Check, contentDescription = null)
               }
             },

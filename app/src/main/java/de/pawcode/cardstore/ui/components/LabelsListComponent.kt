@@ -1,5 +1,6 @@
 package de.pawcode.cardstore.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -63,13 +64,13 @@ fun LabelsListComponent(
             shape = MaterialTheme.shapes.medium,
             label = {
               Text(
-                modifier = Modifier.padding(vertical = 8.dp),
+                modifier = Modifier.padding(vertical = 10.dp),
                 text = label.name,
                 style = MaterialTheme.typography.bodyLarge,
               )
             },
             leadingIcon = {
-              if (chipSelected) {
+              AnimatedVisibility(visible = chipSelected) {
                 Icon(Icons.Filled.Check, contentDescription = null)
               }
             },
@@ -80,12 +81,13 @@ fun LabelsListComponent(
 
     FilledIconButton(
       modifier =
-        Modifier.size(
-          IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Wide)
-        ),
+        Modifier.padding(start = 8.dp)
+          .size(
+            IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Wide)
+          ),
       shapes =
         IconButtonDefaults.shapes(
-          shape = IconButtonDefaults.smallRoundShape,
+          shape = IconButtonDefaults.smallSquareShape,
           pressedShape = IconButtonDefaults.smallPressedShape,
         ),
       onClick = { onEdit() },
