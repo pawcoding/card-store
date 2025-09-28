@@ -54,46 +54,53 @@ fun EditLabelScreen(
 ) {
   rememberCoroutineScope()
 
-  val initialLabel by viewModel.getLabelById(labelId).collectAsState(initial = null)
+  val initialLabel =
+    if (labelId != null) {
+      viewModel.getLabelById(labelId).collectAsState(initial = null).value
+    } else {
+      emptyLabel()
+    }
 
   val snackbarMessage =
-    stringResource(if (initialLabel != null) R.string.label_updated else R.string.label_added)
+    stringResource(if (labelId != null) R.string.label_updated else R.string.label_added)
 
-  EditLabelScreenComponent(
-    initialLabel = initialLabel,
-    onBack = { navController.popBackStack() },
-    onSave = { label ->
-      if (initialLabel != null) {
-        viewModel.updateLabel(label)
-      } else {
-        viewModel.insertLabel(label)
-      }
+  initialLabel?.let {
+    EditLabelScreenComponent(
+      isCreateLabel = labelId == null,
+      initialLabel = initialLabel,
+      onBack = { navController.popBackStack() },
+      onSave = { label ->
+        if (labelId != null) {
+          viewModel.updateLabel(label)
+        } else {
+          viewModel.insertLabel(label)
+        }
 
-      navController.popBackStack()
+        navController.popBackStack()
 
-      SnackbarService.showSnackbar(message = snackbarMessage)
-    },
-  )
+        SnackbarService.showSnackbar(message = snackbarMessage)
+      },
+    )
+  }
 }
 
 @Composable
 fun EditLabelScreenComponent(
-  initialLabel: LabelEntity?,
+  isCreateLabel: Boolean,
+  initialLabel: LabelEntity,
   onBack: () -> Unit,
   onSave: (LabelEntity) -> Unit,
 ) {
-  var label by remember { mutableStateOf(initialLabel ?: emptyLabel()) }
+  var label by remember { mutableStateOf(initialLabel) }
   var showUnsavedChangesDialog by remember { mutableStateOf(false) }
 
-  LaunchedEffect(initialLabel) { label = initialLabel ?: emptyLabel() }
+  LaunchedEffect(initialLabel.labelId) { label = initialLabel }
 
   val isValid by remember { derivedStateOf { label.name.isNotEmpty() } }
-  val hasChanges by remember {
-    derivedStateOf { initialLabel == null || initialLabel.name != label.name }
-  }
+  val hasChanges by remember { derivedStateOf { isCreateLabel || initialLabel.name != label.name } }
 
   val handleBack = {
-    if (hasChanges && initialLabel != null) {
+    if (hasChanges && !isCreateLabel) {
       showUnsavedChangesDialog = true
     } else {
       onBack()
@@ -118,14 +125,13 @@ fun EditLabelScreenComponent(
     modifier = Modifier.imePadding(),
     topBar = {
       AppBar(
-        title =
-          stringResource(if (initialLabel != null) R.string.label_edit else R.string.label_add),
+        title = stringResource(if (!isCreateLabel) R.string.label_edit else R.string.label_add),
         onBack = { handleBack() },
       )
     },
     floatingActionButton = {
       SaveFabComponent(
-        hadInitialValue = initialLabel != null,
+        hadInitialValue = !isCreateLabel,
         hasChanges = hasChanges,
         isValid = isValid,
         onSave = { onSave(label) },
@@ -181,12 +187,22 @@ fun EditLabelScreenComponent(
 @Preview(device = "id:pixel_tablet")
 @Composable
 fun PreviewEditLabelScreenComponent() {
-  EditLabelScreenComponent(initialLabel = EXAMPLE_LABEL, onBack = {}, onSave = {})
+  EditLabelScreenComponent(
+    isCreateLabel = false,
+    initialLabel = EXAMPLE_LABEL,
+    onBack = {},
+    onSave = {},
+  )
 }
 
 @Preview
 @Preview(device = "id:pixel_tablet")
 @Composable
 fun PreviewEditLabelScreenComponentEmpty() {
-  EditLabelScreenComponent(initialLabel = null, onBack = {}, onSave = {})
+  EditLabelScreenComponent(
+    isCreateLabel = true,
+    initialLabel = emptyLabel(),
+    onBack = {},
+    onSave = {},
+  )
 }
