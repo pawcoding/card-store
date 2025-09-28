@@ -26,7 +26,6 @@ import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.QrCodeScanner
 import androidx.compose.material.icons.twotone.CreditCard
-import androidx.compose.material.icons.twotone.DeleteForever
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -453,7 +452,6 @@ fun CardListScreenComponent(
           dialogTitle = stringResource(R.string.card_delete_title),
           dialogText = stringResource(R.string.card_delete_description),
           confirmText = stringResource(R.string.common_delete),
-          Icons.TwoTone.DeleteForever,
         )
       }
 
