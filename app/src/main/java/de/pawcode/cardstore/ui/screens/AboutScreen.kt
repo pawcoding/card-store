@@ -19,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,7 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import androidx.navigation.NavController
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.ui.components.AppBar
 
@@ -49,7 +49,7 @@ val TECHNOLOGIES =
   )
 
 @Composable
-fun AboutScreen(navController: NavController) {
+fun AboutScreen(backStack: SnapshotStateList<Any>) {
   val context = LocalContext.current
 
   var packageInfo = PackageInfo()
@@ -61,7 +61,7 @@ fun AboutScreen(navController: NavController) {
 
   AboutScreenComponent(
     packageInfo = packageInfo,
-    onBack = { navController.popBackStack() },
+    onBack = { backStack.removeLastOrNull() },
     onOpenWebsite = { context.startActivity(Intent(Intent.ACTION_VIEW, it.toUri())) },
   )
 }

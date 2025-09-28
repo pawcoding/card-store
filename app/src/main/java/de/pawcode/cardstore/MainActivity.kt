@@ -16,7 +16,6 @@ import de.pawcode.cardstore.data.managers.PreferencesManager
 import de.pawcode.cardstore.data.services.DeeplinkService
 import de.pawcode.cardstore.data.services.ReviewService
 import de.pawcode.cardstore.data.services.ReviewStatus
-import de.pawcode.cardstore.navigation.Navigation
 import de.pawcode.cardstore.ui.theme.CardStoreTheme
 import de.pawcode.cardstore.utils.parseDeeplink
 import de.pawcode.cardstore.utils.parsePkpass
@@ -51,7 +50,7 @@ class MainActivity : ComponentActivity() {
 
     lifecycleScope.launch { ReviewService.reviewStatus.collect { handleReviewStatus(it) } }
 
-    setContent { CardStoreTheme { Navigation() } }
+    setContent { CardStoreTheme { CardStore() } }
   }
 
   override fun onNewIntent(intent: Intent) {
