@@ -23,7 +23,10 @@ fun ConfirmDialog(
   icon: ImageVector? = null,
 ) {
   AlertDialog(
-    icon = { if (icon != null) Icon(icon, contentDescription = dialogTitle) },
+    icon =
+      if (icon != null) {
+        { Icon(icon, contentDescription = dialogTitle) }
+      } else null,
     title = {
       Text(modifier = Modifier.fillMaxWidth(), text = dialogTitle, textAlign = TextAlign.Start)
     },
