@@ -29,7 +29,7 @@ fun AppBar(
     subtitle = {
       if (subtitle != null) {
         Text(text = subtitle)
-      }
+      } else null
     },
     navigationIcon = {
       if (onBack != null) {

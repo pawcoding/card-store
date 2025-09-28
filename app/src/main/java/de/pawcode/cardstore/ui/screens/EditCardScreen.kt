@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.classes.CardWithLabels
@@ -49,7 +49,7 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 @Composable
 fun EditCardScreen(
-  navController: NavController,
+  backStack: SnapshotStateList<Any>,
   cardId: String? = null,
   storeName: String? = null,
   cardNumber: String? = null,
@@ -83,7 +83,7 @@ fun EditCardScreen(
       isCreateCard = cardId == null,
       initialCard = it,
       labels = labels,
-      onBack = { navController.popBackStack() },
+      onBack = { backStack.removeLastOrNull() },
       onSave = { card ->
         if (cardId != null) {
           viewModel.updateCard(card.card)
@@ -94,12 +94,12 @@ fun EditCardScreen(
           viewModel.addLabelsToCard(initialCard.card.cardId, labelsToAdd)
         } else {
           viewModel.insertCard(card.card)
-          viewModel.addLabelsToCard(card.card.cardId, card.labels.map { it.labelId })
+          viewModel.addLabelsToCard(card.card.cardId, card.labels.map { label -> label.labelId })
         }
 
         SnackbarService.showSnackbar(message = snackbarMessage)
 
-        navController.popBackStack()
+        backStack.removeLastOrNull()
       },
     )
   }

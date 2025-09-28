@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,12 +41,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import de.charlex.compose.RevealSwipe
 import de.pawcode.cardstore.R
+import de.pawcode.cardstore.ScreenLabelEdit
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
 import de.pawcode.cardstore.data.database.entities.LabelEntity
-import de.pawcode.cardstore.navigation.Screen
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.dialogs.ConfirmDialog
 import de.pawcode.cardstore.ui.sheets.Option
@@ -55,21 +55,15 @@ import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun LabelListScreen(navController: NavController, viewModel: CardViewModel = viewModel()) {
+fun LabelListScreen(backStack: SnapshotStateList<Any>, viewModel: CardViewModel = viewModel()) {
   val scope = rememberCoroutineScope()
 
   val labels by viewModel.allLabels.collectAsState(initial = emptyList())
 
   LabelListScreenComponent(
     labels = labels,
-    onBack = { navController.popBackStack() },
-    onEdit = { label ->
-      if (label != null) {
-        navController.navigate(Screen.EditLabel.route + "?labelId=${label.labelId}")
-      } else {
-        navController.navigate(Screen.EditLabel.route)
-      }
-    },
+    onBack = { backStack.removeLastOrNull() },
+    onEdit = { label -> backStack.add(ScreenLabelEdit(label?.labelId)) },
     onDelete = { scope.launch { viewModel.deleteLabel(it) } },
   )
 }

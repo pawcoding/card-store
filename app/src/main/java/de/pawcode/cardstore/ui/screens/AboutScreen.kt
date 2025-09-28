@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import androidx.navigation.NavController
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.managers.PreferencesManager
 import de.pawcode.cardstore.data.services.BiometricAuthService
@@ -89,7 +89,7 @@ val TECHNOLOGIES =
   )
 
 @Composable
-fun AboutScreen(navController: NavController) {
+fun AboutScreen(backStack: SnapshotStateList<Any>) {
   val context = LocalContext.current
   val preferencesManager = PreferencesManager(context)
   val biometricEnabled by preferencesManager.biometricEnabled.collectAsState(initial = false)
@@ -106,7 +106,7 @@ fun AboutScreen(navController: NavController) {
     packageInfo = packageInfo,
     biometricAvailable = BiometricAuthService.isBiometricAvailable(context),
     biometricEnabled = biometricEnabled,
-    onBack = { navController.popBackStack() },
+    onBack = { backStack.removeLastOrNull() },
     onOpenWebsite = { context.startActivity(Intent(Intent.ACTION_VIEW, it.toUri())) },
     onBiometricToggle = { enabled ->
       if (enabled) {

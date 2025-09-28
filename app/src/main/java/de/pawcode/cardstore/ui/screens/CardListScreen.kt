@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -42,9 +43,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.R
+import de.pawcode.cardstore.ScreenAbout
+import de.pawcode.cardstore.ScreenCardEdit
+import de.pawcode.cardstore.ScreenLabelList
 import de.pawcode.cardstore.data.database.classes.CardWithLabels
 import de.pawcode.cardstore.data.database.classes.EXAMPLE_CARD_WITH_LABELS
 import de.pawcode.cardstore.data.database.entities.CardEntity
@@ -55,7 +58,6 @@ import de.pawcode.cardstore.data.managers.PreferencesManager
 import de.pawcode.cardstore.data.services.DeeplinkService
 import de.pawcode.cardstore.data.services.ReviewService
 import de.pawcode.cardstore.data.services.SnackbarService
-import de.pawcode.cardstore.navigation.Screen
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.CardsListComponent
 import de.pawcode.cardstore.ui.components.DropdownOption
@@ -81,7 +83,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 @Composable
-fun CardListScreen(navController: NavController, viewModel: CardViewModel = viewModel()) {
+fun CardListScreen(backStack: SnapshotStateList<Any>, viewModel: CardViewModel = viewModel()) {
   val context = LocalContext.current
   val preferencesManager = remember { PreferencesManager(context) }
   val scope = rememberCoroutineScope()
@@ -99,22 +101,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
         }
       }
 
-      val route = buildString {
-        append(Screen.EditCard.route)
-        if (cardNumber != null || barcodeFormat != null) {
-          append("?")
-          if (cardNumber != null) {
-            append("cardNumber=$cardNumber&")
-          }
-          if (barcodeFormat != null) {
-            append("barcodeFormat=$barcodeFormat&")
-          }
-        }
-        if (endsWith("&")) {
-          deleteCharAt(length - 1)
-        }
-      }
-      navController.navigate(route)
+      backStack.add(ScreenCardEdit(cardNumber = cardNumber, barcodeType = barcodeFormat))
     },
     onImportCard = { importedCard, existingCard ->
       if (existingCard != null) {
@@ -134,14 +121,12 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
       }
       DeeplinkService.clearDeeplink()
     },
-    onEditCard = { card ->
-      navController.navigate(Screen.EditCard.route + "?cardId=${card.cardId}")
-    },
+    onEditCard = { card -> backStack.add(ScreenCardEdit(cardId = card.cardId)) },
     onShowCard = { viewModel.addUsage(it) },
     onDeleteCard = { scope.launch { viewModel.deleteCard(it) } },
-    onViewLabels = { navController.navigate(Screen.LabelList.route) },
+    onViewLabels = { backStack.add(ScreenLabelList) },
     onSortChange = { scope.launch { preferencesManager.saveSortAttribute(it) } },
-    onShowAbout = { navController.navigate(Screen.About.route) },
+    onShowAbout = { backStack.add(ScreenAbout) },
   )
 }
 
@@ -342,8 +327,8 @@ fun CardListScreenComponent(
             onShowCard(card)
             showCardSheet = card
           },
-          onCardLongPressed = { showCardOptionSheet = it },
-          onCardCreate = { showCardCreateSheet = true },
+          onCardLongPressed = { card -> showCardOptionSheet = card },
+          onCardCreate = { showCardCreateSheet = !showCardCreateSheet },
         )
       }
 
