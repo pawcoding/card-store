@@ -1,0 +1,26 @@
+---
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  size: `w-${string}`;
+  screenshot: ImageMetadata;
+  rotateX?: number;
+  rotateY?: number;
+  rotateZ?: number;
+}
+
+const { size, screenshot, rotateX, rotateY, rotateZ } = Astro.props;
+const transform = `rotateX(${rotateX ?? 0}deg) rotateY(${rotateY ?? 0}deg) rotateZ(${rotateZ ?? 0}deg)`;
+---
+
+<article class="flex items-center justify-center perspective-distant">
+  <slot name="before-card" />
+
+  <div class:list={["pixel-6a", size]} style={`transform: ${transform};`}>
+    <img src={screenshot.src} />
+
+    <slot name="inner-card" />
+  </div>
+
+  <slot name="after-card" />
+</article>

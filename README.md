@@ -1,15 +1,17 @@
 # CardStore
 
+![Feature Graphic](/assets/feature-graphic-en.png)
+
 CardStore is a mobile app that allows you to digitally manage all your loyalty cards. No more bulky
 wallets filled with cards!
 
 ## Features
 
-* **Easy Scanning:** Quickly add your loyalty cards using your smartphone's camera.
-* **Digital Wallet:** Keep all your cards organized in one convenient place.
-* **Custom Labels:** Filter your cards by custom labels for quick access.
-* **Always with You:** Never forget a loyalty card again.
-* **Secure Storage:** Your card information is securely stored on your device.
+- **Easy Scanning:** Quickly add your loyalty cards using your smartphone's camera.
+- **Digital Wallet:** Keep all your cards organized in one convenient place.
+- **Custom Labels:** Filter your cards by custom labels for quick access.
+- **Always with You:** Never forget a loyalty card again.
+- **Secure Storage:** Your card information is securely stored on your device.
 
 ## Installation
 
@@ -26,13 +28,13 @@ wallets filled with cards!
 
 ## Technologies
 
-* [Kotlin](https://kotlinlang.org/)
-* [Jetpack Compose](https://developer.android.com/jetpack/compose)
-* [Room](https://developer.android.com/jetpack/androidx/releases/room)
-* [Material Design 3](https://m3.material.io/)
-* [ML Kit](https://developers.google.com/ml-kit)
-* [ColorPickerView](https://github.com/skydoves/ColorPickerView)
-* [ComposedBarcodes](https://github.com/simonsickle/ComposedBarcodes/tree/main)
+- [Kotlin](https://kotlinlang.org/)
+- [Jetpack Compose](https://developer.android.com/jetpack/compose)
+- [Room](https://developer.android.com/jetpack/androidx/releases/room)
+- [Material Design 3](https://m3.material.io/)
+- [ML Kit](https://developers.google.com/ml-kit)
+- [ColorPickerView](https://github.com/skydoves/ColorPickerView)
+- [ComposedBarcodes](https://github.com/simonsickle/ComposedBarcodes/tree/main)
 
 <!--
 ## Contributions
