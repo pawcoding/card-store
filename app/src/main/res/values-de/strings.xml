@@ -2,6 +2,11 @@
 <resources>
     <string name="about">Über</string>
     <string name="app_name">CardStore</string>
+    <string name="biometric_auth_failed">Authentifizierung fehlgeschlagen</string>
+    <string name="biometric_auth_subtitle">Entsperren, um auf Ihre Karten zuzugreifen</string>
+    <string name="biometric_auth_title">Biometrische Authentifizierung</string>
+    <string name="biometric_enable">Biometrische Authentifizierung aktivieren</string>
+    <string name="biometric_not_available">Biometrische Authentifizierung nicht verfügbar</string>
     <string name="card_add">Karte hinzufügen</string>
     <string name="card_added">Karte hinzugefügt</string>
     <string name="card_barcode_type">Barcode Typ</string>

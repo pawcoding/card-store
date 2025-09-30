@@ -17,8 +17,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,7 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavController
 import de.pawcode.cardstore.R
+import de.pawcode.cardstore.data.managers.PreferencesManager
+import de.pawcode.cardstore.data.services.BiometricAuthService
 import de.pawcode.cardstore.ui.components.AppBar
+import kotlinx.coroutines.launch
 
 data class Technology(val name: String, val url: String)
 
@@ -51,6 +58,9 @@ val TECHNOLOGIES =
 @Composable
 fun AboutScreen(navController: NavController) {
   val context = LocalContext.current
+  val preferencesManager = PreferencesManager(context)
+  val biometricEnabled by preferencesManager.biometricEnabled.collectAsState(initial = false)
+  val scope = rememberCoroutineScope()
 
   var packageInfo = PackageInfo()
   try {
@@ -61,6 +71,11 @@ fun AboutScreen(navController: NavController) {
 
   AboutScreenComponent(
     packageInfo = packageInfo,
+    biometricAvailable = BiometricAuthService.isBiometricAvailable(context),
+    biometricEnabled = biometricEnabled,
+    onBiometricToggle = { enabled ->
+      scope.launch { preferencesManager.saveBiometricEnabled(enabled) }
+    },
     onBack = { navController.popBackStack() },
     onOpenWebsite = { context.startActivity(Intent(Intent.ACTION_VIEW, it.toUri())) },
   )
@@ -69,6 +84,9 @@ fun AboutScreen(navController: NavController) {
 @Composable
 fun AboutScreenComponent(
   packageInfo: PackageInfo,
+  biometricAvailable: Boolean = false,
+  biometricEnabled: Boolean = false,
+  onBiometricToggle: (Boolean) -> Unit = {},
   onBack: () -> Unit,
   onOpenWebsite: (String) -> Unit,
 ) {
@@ -92,6 +110,17 @@ fun AboutScreenComponent(
         )
 
         HorizontalDivider()
+
+        if (biometricAvailable) {
+          ListItem(
+            headlineContent = { Text(stringResource(R.string.biometric_enable)) },
+            trailingContent = {
+              Switch(checked = biometricEnabled, onCheckedChange = { onBiometricToggle(it) })
+            },
+          )
+
+          HorizontalDivider()
+        }
 
         ListItem(
           headlineContent = {
@@ -201,5 +230,11 @@ fun PreviewAboutScreenComponent() {
   packageInfo.longVersionCode = 0
   packageInfo.versionName = "0.0.0"
 
-  AboutScreenComponent(packageInfo = packageInfo, onBack = {}, onOpenWebsite = {})
+  AboutScreenComponent(
+    packageInfo = packageInfo,
+    biometricAvailable = true,
+    biometricEnabled = false,
+    onBack = {},
+    onOpenWebsite = {},
+  )
 }

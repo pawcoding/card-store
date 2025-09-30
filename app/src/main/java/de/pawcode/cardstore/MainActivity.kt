@@ -2,10 +2,13 @@ package de.pawcode.cardstore
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.common.moduleinstall.ModuleInstall
 import com.google.android.play.core.review.ReviewInfo
@@ -13,6 +16,7 @@ import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import de.pawcode.cardstore.data.managers.PreferencesManager
+import de.pawcode.cardstore.data.services.BiometricAuthService
 import de.pawcode.cardstore.data.services.DeeplinkService
 import de.pawcode.cardstore.data.services.ReviewService
 import de.pawcode.cardstore.data.services.ReviewStatus
@@ -21,12 +25,14 @@ import de.pawcode.cardstore.ui.theme.CardStoreTheme
 import de.pawcode.cardstore.utils.parseDeeplink
 import de.pawcode.cardstore.utils.parsePkpass
 import de.pawcode.cardstore.utils.readPkpassContentFromUri
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
   private var preferencesManager: PreferencesManager? = null
   private var reviewManager: ReviewManager? = null
   private var reviewInfo: ReviewInfo? = null
+  private var isAuthenticated by mutableStateOf(false)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     preferencesManager = PreferencesManager(applicationContext)
@@ -51,7 +57,22 @@ class MainActivity : ComponentActivity() {
 
     lifecycleScope.launch { ReviewService.reviewStatus.collect { handleReviewStatus(it) } }
 
-    setContent { CardStoreTheme { Navigation() } }
+    lifecycleScope.launch {
+      val biometricEnabled = preferencesManager?.biometricEnabled?.first() ?: false
+      if (biometricEnabled && BiometricAuthService.isBiometricAvailable(this@MainActivity)) {
+        BiometricAuthService.authenticate(
+          activity = this@MainActivity,
+          title = getString(R.string.biometric_auth_title),
+          subtitle = getString(R.string.biometric_auth_subtitle),
+          onSuccess = { isAuthenticated = true },
+          onError = { finish() },
+        )
+      } else {
+        isAuthenticated = true
+      }
+    }
+
+    setContent { CardStoreTheme { if (isAuthenticated) Navigation() } }
   }
 
   override fun onNewIntent(intent: Intent) {

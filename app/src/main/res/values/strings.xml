@@ -1,6 +1,11 @@
 <resources>
     <string name="about">About</string>
     <string name="app_name">CardStore</string>
+    <string name="biometric_auth_failed">Authentication failed</string>
+    <string name="biometric_auth_subtitle">Unlock to access your cards</string>
+    <string name="biometric_auth_title">Biometric authentication</string>
+    <string name="biometric_enable">Enable biometric authentication</string>
+    <string name="biometric_not_available">Biometric authentication not available</string>
     <string name="card_add">Add card</string>
     <string name="card_added">Card added</string>
     <string name="card_barcode_type">Barcode type</string>

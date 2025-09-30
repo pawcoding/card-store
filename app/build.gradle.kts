@@ -70,6 +70,7 @@ kotlin { compilerOptions { jvmTarget = JvmTarget.JVM_19 } }
 
 dependencies {
   implementation(libs.androidx.activity.compose)
+  implementation(libs.androidx.biometric)
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.core.splashscreen)
   implementation(libs.androidx.datastore.preferences)
