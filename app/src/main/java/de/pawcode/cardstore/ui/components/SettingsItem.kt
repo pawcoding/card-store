@@ -36,7 +36,7 @@ fun SettingsItem(
     modifier =
       Modifier.fillMaxWidth()
         .background(
-          color = MaterialTheme.colorScheme.surfaceVariant,
+          color = MaterialTheme.colorScheme.surfaceContainer,
           shape = MaterialTheme.shapes.extraSmall,
         )
         .clickable { onClick?.invoke() }

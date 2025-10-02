@@ -45,7 +45,7 @@ import de.pawcode.cardstore.ui.components.SettingsItem
 data class Technology(val name: String, val url: String, val icon: ImageVector)
 
 val TECHNOLOGIES =
-  listOf<Technology>(
+  listOf(
     Technology(name = "Kotlin", url = "https://kotlinlang.org/", icon = Icons.Filled.DataObject),
     Technology(
       name = "Jetpack Compose",
@@ -126,15 +126,15 @@ fun AboutScreenComponent(
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       Column(
-        modifier = Modifier.widthIn(max = 500.dp).fillMaxWidth().padding(16.dp),
+        modifier = Modifier.widthIn(max = 500.dp).fillMaxWidth().padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp),
       ) {
         // App Information Group
         SettingsGroup(title = stringResource(R.string.about)) {
           SettingsItem(
             icon = Icons.Filled.Info,
-            iconColor = MaterialTheme.colorScheme.primaryContainer,
-            iconBackground = MaterialTheme.colorScheme.onPrimaryContainer,
+            iconColor = MaterialTheme.colorScheme.primaryFixed,
+            iconBackground = MaterialTheme.colorScheme.onPrimaryFixedVariant,
             title = stringResource(R.string.version) + if (isDebug) " (debug)" else "",
             subtitle = versionName + " (${packageInfo.longVersionCode})",
             onClick = {
@@ -146,11 +146,11 @@ fun AboutScreenComponent(
         }
 
         // Links Group
-        SettingsGroup(title = "Links") {
+        SettingsGroup(title = stringResource(R.string.links)) {
           SettingsItem(
             icon = Icons.Filled.Web,
-            iconColor = MaterialTheme.colorScheme.secondaryContainer,
-            iconBackground = MaterialTheme.colorScheme.onSecondaryContainer,
+            iconColor = MaterialTheme.colorScheme.secondaryFixed,
+            iconBackground = MaterialTheme.colorScheme.onSecondaryFixedVariant,
             title = "pawcode Development",
             subtitle = stringResource(R.string.website),
             onClick = { onOpenWebsite(context.getString(R.string.website_link)) },
@@ -158,8 +158,8 @@ fun AboutScreenComponent(
 
           SettingsItem(
             icon = Icons.Filled.Code,
-            iconColor = MaterialTheme.colorScheme.secondaryContainer,
-            iconBackground = MaterialTheme.colorScheme.onSecondaryContainer,
+            iconColor = MaterialTheme.colorScheme.secondaryFixed,
+            iconBackground = MaterialTheme.colorScheme.onSecondaryFixedVariant,
             title = stringResource(R.string.source_code),
             subtitle = stringResource(R.string.github_repository),
             onClick = { onOpenWebsite("https://github.com/pawcoding/card-store") },
@@ -167,8 +167,8 @@ fun AboutScreenComponent(
 
           SettingsItem(
             icon = Icons.Filled.Store,
-            iconColor = MaterialTheme.colorScheme.secondaryContainer,
-            iconBackground = MaterialTheme.colorScheme.onSecondaryContainer,
+            iconColor = MaterialTheme.colorScheme.secondaryFixed,
+            iconBackground = MaterialTheme.colorScheme.onSecondaryFixedVariant,
             title = stringResource(R.string.playstore),
             subtitle = stringResource(R.string.playstore_description),
             onClick = {
@@ -178,8 +178,8 @@ fun AboutScreenComponent(
 
           SettingsItem(
             icon = Icons.Filled.BugReport,
-            iconColor = MaterialTheme.colorScheme.secondaryContainer,
-            iconBackground = MaterialTheme.colorScheme.onSecondaryContainer,
+            iconColor = MaterialTheme.colorScheme.secondaryFixed,
+            iconBackground = MaterialTheme.colorScheme.onSecondaryFixedVariant,
             title = stringResource(R.string.report_issue),
             subtitle = stringResource(R.string.github_issues),
             onClick = { onOpenWebsite("https://github.com/pawcoding/card-store/issues") },
@@ -191,8 +191,8 @@ fun AboutScreenComponent(
           TECHNOLOGIES.forEach { technology ->
             SettingsItem(
               icon = technology.icon,
-              iconColor = MaterialTheme.colorScheme.tertiaryContainer,
-              iconBackground = MaterialTheme.colorScheme.onTertiaryContainer,
+              iconColor = MaterialTheme.colorScheme.tertiaryFixed,
+              iconBackground = MaterialTheme.colorScheme.onTertiaryFixedVariant,
               title = technology.name,
               subtitle = null,
               onClick = { onOpenWebsite(technology.url) },
