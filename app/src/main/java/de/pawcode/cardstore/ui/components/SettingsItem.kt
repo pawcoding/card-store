@@ -30,7 +30,7 @@ fun SettingsItem(
   iconBackground: Color,
   title: String,
   subtitle: String? = null,
-  onClick: (() -> Unit)?,
+  onClick: (() -> Unit)? = null,
 ) {
   Row(
     modifier =
@@ -39,7 +39,7 @@ fun SettingsItem(
           color = MaterialTheme.colorScheme.surfaceContainer,
           shape = MaterialTheme.shapes.extraSmall,
         )
-        .clickable { onClick?.invoke() }
+        .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
         .padding(16.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
@@ -78,27 +78,24 @@ fun PreviewSettingsItem() {
   Column {
     SettingsItem(
       icon = Icons.Default.Web,
-      iconColor = MaterialTheme.colorScheme.onPrimary,
-      iconBackground = MaterialTheme.colorScheme.primary,
+      iconColor = MaterialTheme.colorScheme.primaryFixed,
+      iconBackground = MaterialTheme.colorScheme.onPrimaryFixedVariant,
       title = "pawcode Development",
       subtitle = "View website",
       onClick = {},
     )
     SettingsItem(
       icon = Icons.Default.Web,
-      iconColor = MaterialTheme.colorScheme.onSecondary,
-      iconBackground = MaterialTheme.colorScheme.secondary,
+      iconColor = MaterialTheme.colorScheme.secondaryFixed,
+      iconBackground = MaterialTheme.colorScheme.onSecondaryFixedVariant,
       title = "pawcode Development",
-      subtitle = "View website",
-      onClick = {},
     )
     SettingsItem(
       icon = Icons.Default.Web,
-      iconColor = MaterialTheme.colorScheme.onTertiary,
-      iconBackground = MaterialTheme.colorScheme.tertiary,
+      iconColor = MaterialTheme.colorScheme.tertiaryFixed,
+      iconBackground = MaterialTheme.colorScheme.onTertiaryFixedVariant,
       title = "pawcode Development",
       subtitle = "View website",
-      onClick = {},
     )
   }
 }
