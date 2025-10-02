@@ -1,5 +1,6 @@
 package de.pawcode.cardstore.ui.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -106,6 +107,9 @@ fun EditLabelScreenComponent(
       onBack()
     }
   }
+
+  // Handle Android system back button
+  BackHandler(enabled = hasChanges && !isCreateLabel) { handleBack() }
 
   if (showUnsavedChangesDialog) {
     UnsavedChangesDialog(

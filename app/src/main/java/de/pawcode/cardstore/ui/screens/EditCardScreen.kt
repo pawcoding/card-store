@@ -1,5 +1,6 @@
 package de.pawcode.cardstore.ui.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
@@ -129,6 +130,9 @@ fun EditCardScreenComponent(
       onBack()
     }
   }
+
+  // Handle Android system back button
+  BackHandler(enabled = hasChanges && !isCreateCard) { handleBack() }
 
   if (showUnsavedChangesDialog) {
     UnsavedChangesDialog(
