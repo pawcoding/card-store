@@ -4,26 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
@@ -40,6 +23,7 @@ import de.pawcode.cardstore.data.services.DeeplinkService
 import de.pawcode.cardstore.data.services.ReviewService
 import de.pawcode.cardstore.data.services.ReviewStatus
 import de.pawcode.cardstore.navigation.Navigation
+import de.pawcode.cardstore.ui.components.BiometricPlaceholder
 import de.pawcode.cardstore.ui.theme.CardStoreTheme
 import de.pawcode.cardstore.utils.parseDeeplink
 import de.pawcode.cardstore.utils.parsePkpass
@@ -53,6 +37,7 @@ class MainActivity : FragmentActivity() {
   private var reviewInfo: ReviewInfo? = null
   private var isAuthenticated by mutableStateOf(false)
   private var lastPauseTime: Long = 0
+  private var lastAuthTime: Long = 0
 
   override fun onCreate(savedInstanceState: Bundle?) {
     preferencesManager = PreferencesManager(applicationContext)
@@ -127,7 +112,6 @@ class MainActivity : FragmentActivity() {
     lifecycleScope.launch {
       val biometricEnabled = preferencesManager?.biometricEnabled?.first() ?: false
       if (biometricEnabled && BiometricAuthService.isBiometricAvailable(this@MainActivity)) {
-        val lastAuthTime = preferencesManager?.lastAuthTime() ?: 0L
         val timeSinceAuth = System.currentTimeMillis() - lastAuthTime
         val fiveMinutesInMillis = 5 * 60 * 1000
 
@@ -138,7 +122,7 @@ class MainActivity : FragmentActivity() {
             subtitle = getString(R.string.biometric_auth_subtitle),
             onSuccess = {
               isAuthenticated = true
-              lifecycleScope.launch { preferencesManager?.saveLastAuthTime() }
+              lastAuthTime = System.currentTimeMillis()
             },
             onError = { isAuthenticated = false },
           )
@@ -147,30 +131,6 @@ class MainActivity : FragmentActivity() {
         }
       } else {
         isAuthenticated = true
-      }
-    }
-  }
-
-  @Composable
-  private fun BiometricPlaceholder(onRetry: () -> Unit) {
-    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-      Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(
-          horizontalAlignment = Alignment.CenterHorizontally,
-          verticalArrangement = Arrangement.spacedBy(24.dp),
-          modifier = Modifier.padding(32.dp),
-        ) {
-          Image(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
-            contentDescription = stringResource(R.string.app_name),
-            modifier = Modifier.size(120.dp),
-          )
-          Text(
-            text = stringResource(R.string.biometric_required),
-            style = MaterialTheme.typography.headlineSmall,
-          )
-          Button(onClick = onRetry) { Text(text = stringResource(R.string.biometric_auth_retry)) }
-        }
       }
     }
   }

@@ -23,7 +23,6 @@ class PreferencesManager(private val context: Context) {
     private val SORT_ATTRIBUTE = stringPreferencesKey("sort_attribute")
     private val REVIEW_PROMPT_TIME = longPreferencesKey("review_prompt_time")
     private val BIOMETRIC_ENABLED = booleanPreferencesKey("biometric_enabled")
-    private val LAST_AUTH_TIME = longPreferencesKey("last_auth_time")
   }
 
   val sortAttribute: Flow<SortAttribute> =
@@ -81,25 +80,6 @@ class PreferencesManager(private val context: Context) {
       context.dataStore.edit { preferences -> preferences[BIOMETRIC_ENABLED] = enabled }
     } catch (exception: IOException) {
       Log.e(TAG, "Failed to save biometric preference: ${exception.message}", exception)
-    }
-  }
-
-  suspend fun lastAuthTime(): Long {
-    try {
-      return context.dataStore.data.first()[LAST_AUTH_TIME] ?: 0L
-    } catch (exception: IOException) {
-      Log.e(TAG, "Failed to load last auth time: ${exception.message}", exception)
-      return 0L
-    }
-  }
-
-  suspend fun saveLastAuthTime() {
-    try {
-      context.dataStore.edit { preferences ->
-        preferences[LAST_AUTH_TIME] = System.currentTimeMillis()
-      }
-    } catch (exception: IOException) {
-      Log.e(TAG, "Failed to save last auth time: ${exception.message}", exception)
     }
   }
 }

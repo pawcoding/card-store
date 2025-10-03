@@ -82,12 +82,7 @@ fun AboutScreen(navController: NavController) {
             activity = activity,
             title = context.getString(R.string.biometric_auth_title),
             subtitle = context.getString(R.string.biometric_auth_subtitle),
-            onSuccess = {
-              scope.launch {
-                preferencesManager.saveBiometricEnabled(true)
-                preferencesManager.saveLastAuthTime()
-              }
-            },
+            onSuccess = { scope.launch { preferencesManager.saveBiometricEnabled(true) } },
             onError = {
               // Don't enable if authentication fails
             },
