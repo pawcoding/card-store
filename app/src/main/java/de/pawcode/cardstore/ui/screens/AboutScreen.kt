@@ -2,6 +2,8 @@ package de.pawcode.cardstore.ui.screens
 
 import android.content.Intent
 import android.content.pm.PackageInfo
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Colorize
 import androidx.compose.material.icons.filled.DataObject
 import androidx.compose.material.icons.filled.Gesture
@@ -23,8 +24,6 @@ import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material.icons.filled.Scanner
 import androidx.compose.material.icons.filled.Storage
-import androidx.compose.material.icons.filled.Store
-import androidx.compose.material.icons.filled.Web
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -32,7 +31,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -135,13 +136,14 @@ fun AboutScreenComponent(
       Column(
         modifier = Modifier.widthIn(max = 500.dp).fillMaxWidth().padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
       ) {
         // App Information Group
         SettingsGroup(title = stringResource(R.string.about)) {
           SettingsItem(
             icon = Icons.Filled.Info,
-            iconColor = MaterialTheme.colorScheme.primaryFixed,
-            iconBackground = MaterialTheme.colorScheme.onPrimaryFixedVariant,
+            iconColor = MaterialTheme.colorScheme.onSecondaryFixedVariant,
+            iconBackground = MaterialTheme.colorScheme.primaryFixed,
             title = stringResource(R.string.version) + if (isDebug) " (debug)" else "",
             subtitle = versionName + " (${packageInfo.longVersionCode})",
             onClick = {
@@ -155,27 +157,27 @@ fun AboutScreenComponent(
         // Links Group
         SettingsGroup(title = stringResource(R.string.links)) {
           SettingsItem(
-            icon = Icons.Filled.Web,
-            iconColor = MaterialTheme.colorScheme.secondaryFixed,
-            iconBackground = MaterialTheme.colorScheme.onSecondaryFixedVariant,
+            icon = ImageVector.vectorResource(R.drawable.icon),
+            iconColor = MaterialTheme.colorScheme.onSecondaryFixedVariant,
+            iconBackground = MaterialTheme.colorScheme.secondaryFixed,
             title = "pawcode Development",
             subtitle = stringResource(R.string.website),
             onClick = { onOpenWebsite(context.getString(R.string.website_link)) },
           )
 
           SettingsItem(
-            icon = Icons.Filled.Code,
-            iconColor = MaterialTheme.colorScheme.secondaryFixed,
-            iconBackground = MaterialTheme.colorScheme.onSecondaryFixedVariant,
+            icon = ImageVector.vectorResource(R.drawable.github_mark),
+            iconColor = MaterialTheme.colorScheme.onSecondaryFixedVariant,
+            iconBackground = MaterialTheme.colorScheme.secondaryFixed,
             title = stringResource(R.string.source_code),
             subtitle = stringResource(R.string.github_repository),
             onClick = { onOpenWebsite("https://github.com/pawcoding/card-store") },
           )
 
           SettingsItem(
-            icon = Icons.Filled.Store,
-            iconColor = MaterialTheme.colorScheme.secondaryFixed,
-            iconBackground = MaterialTheme.colorScheme.onSecondaryFixedVariant,
+            icon = ImageVector.vectorResource(R.drawable.google_play),
+            iconColor = MaterialTheme.colorScheme.onSecondaryFixedVariant,
+            iconBackground = MaterialTheme.colorScheme.secondaryFixed,
             title = stringResource(R.string.playstore),
             subtitle = stringResource(R.string.playstore_description),
             onClick = {
@@ -185,8 +187,8 @@ fun AboutScreenComponent(
 
           SettingsItem(
             icon = Icons.Filled.BugReport,
-            iconColor = MaterialTheme.colorScheme.secondaryFixed,
-            iconBackground = MaterialTheme.colorScheme.onSecondaryFixedVariant,
+            iconColor = MaterialTheme.colorScheme.onSecondaryFixedVariant,
+            iconBackground = MaterialTheme.colorScheme.secondaryFixed,
             title = stringResource(R.string.report_issue),
             subtitle = stringResource(R.string.github_issues),
             onClick = { onOpenWebsite("https://github.com/pawcoding/card-store/issues") },
@@ -198,14 +200,22 @@ fun AboutScreenComponent(
           TECHNOLOGIES.forEach { technology ->
             SettingsItem(
               icon = technology.icon,
-              iconColor = MaterialTheme.colorScheme.tertiaryFixed,
-              iconBackground = MaterialTheme.colorScheme.onTertiaryFixedVariant,
+              iconColor = MaterialTheme.colorScheme.onTertiaryFixedVariant,
+              iconBackground = MaterialTheme.colorScheme.tertiaryFixed,
               title = technology.name,
               subtitle = null,
               onClick = { onOpenWebsite(technology.url) },
             )
           }
         }
+
+        Image(
+          painter =
+            if (isSystemInDarkTheme()) painterResource(R.drawable.pawcode_light)
+            else painterResource(R.drawable.pawcode_dark),
+          contentDescription = "pawcode Development",
+          modifier = Modifier.padding(top = 24.dp).padding(12.dp).fillMaxWidth(.5f),
+        )
       }
     }
   }
