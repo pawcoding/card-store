@@ -4,14 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Web
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,44 +31,31 @@ fun SettingsItem(
   subtitle: String? = null,
   onClick: (() -> Unit)? = null,
 ) {
-  Row(
+  ListItem(
     modifier =
-      Modifier.fillMaxWidth()
-        .background(
-          color = MaterialTheme.colorScheme.surfaceContainer,
-          shape = MaterialTheme.shapes.extraSmall,
-        )
-        .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
-        .padding(16.dp),
-    verticalAlignment = Alignment.CenterVertically,
-  ) {
-    Box(
-      modifier = Modifier.size(40.dp).clip(CircleShape).background(iconBackground),
-      contentAlignment = Alignment.Center,
-    ) {
-      Icon(
-        imageVector = icon,
-        contentDescription = null,
-        tint = iconColor,
-        modifier = Modifier.size(20.dp),
-      )
-    }
-
-    Column(modifier = Modifier.weight(1f).padding(horizontal = 16.dp)) {
-      Text(
-        text = title,
-        style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onSurface,
-      )
-      subtitle?.let {
-        Text(
-          text = it,
-          style = MaterialTheme.typography.bodyMedium,
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
+      Modifier.clip(MaterialTheme.shapes.extraSmall)
+        .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier),
+    tonalElevation = 2.dp,
+    headlineContent = { Text(text = title) },
+    supportingContent = { subtitle?.let { Text(text = it) } },
+    leadingContent = {
+      Box(
+        modifier =
+          Modifier.padding(vertical = 8.dp)
+            .size(40.dp)
+            .clip(CircleShape)
+            .background(iconBackground),
+        contentAlignment = Alignment.Center,
+      ) {
+        Icon(
+          imageVector = icon,
+          contentDescription = null,
+          tint = iconColor,
+          modifier = Modifier.size(20.dp),
         )
       }
-    }
-  }
+    },
+  )
 }
 
 @Preview(showBackground = true)
@@ -78,22 +64,22 @@ fun PreviewSettingsItem() {
   Column {
     SettingsItem(
       icon = Icons.Default.Web,
-      iconColor = MaterialTheme.colorScheme.primaryFixed,
-      iconBackground = MaterialTheme.colorScheme.onPrimaryFixedVariant,
+      iconColor = MaterialTheme.colorScheme.onPrimaryFixedVariant,
+      iconBackground = MaterialTheme.colorScheme.primaryFixed,
       title = "pawcode Development",
       subtitle = "View website",
       onClick = {},
     )
     SettingsItem(
       icon = Icons.Default.Web,
-      iconColor = MaterialTheme.colorScheme.secondaryFixed,
-      iconBackground = MaterialTheme.colorScheme.onSecondaryFixedVariant,
+      iconColor = MaterialTheme.colorScheme.onSecondaryFixedVariant,
+      iconBackground = MaterialTheme.colorScheme.secondaryFixed,
       title = "pawcode Development",
     )
     SettingsItem(
       icon = Icons.Default.Web,
-      iconColor = MaterialTheme.colorScheme.tertiaryFixed,
-      iconBackground = MaterialTheme.colorScheme.onTertiaryFixedVariant,
+      iconColor = MaterialTheme.colorScheme.onTertiaryFixedVariant,
+      iconBackground = MaterialTheme.colorScheme.tertiaryFixed,
       title = "pawcode Development",
       subtitle = "View website",
     )
