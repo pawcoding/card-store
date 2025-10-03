@@ -130,6 +130,7 @@ fun EditLabelScreenComponent(
     topBar = {
       AppBar(
         title = stringResource(if (!isCreateLabel) R.string.label_edit else R.string.label_add),
+        subtitle = initialLabel.name,
         onBack = { handleBack() },
       )
     },
@@ -187,8 +188,8 @@ fun EditLabelScreenComponent(
   }
 }
 
-@Preview
-@Preview(device = "id:pixel_tablet")
+@Preview(showSystemUi = true)
+@Preview(device = "id:pixel_tablet", showSystemUi = true)
 @Composable
 fun PreviewEditLabelScreenComponent() {
   EditLabelScreenComponent(
@@ -199,8 +200,8 @@ fun PreviewEditLabelScreenComponent() {
   )
 }
 
-@Preview
-@Preview(device = "id:pixel_tablet")
+@Preview(showSystemUi = true)
+@Preview(device = "id:pixel_tablet", showSystemUi = true)
 @Composable
 fun PreviewEditLabelScreenComponentEmpty() {
   EditLabelScreenComponent(

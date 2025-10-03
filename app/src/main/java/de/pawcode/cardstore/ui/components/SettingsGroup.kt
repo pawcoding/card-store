@@ -24,11 +24,7 @@ fun SettingsGroup(modifier: Modifier = Modifier, title: String, content: @Compos
       modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
     )
 
-    Surface(
-      modifier = Modifier.fillMaxWidth(),
-      color = MaterialTheme.colorScheme.surface,
-      shape = MaterialTheme.shapes.extraLarge,
-    ) {
+    Surface(modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.extraLarge) {
       Column(verticalArrangement = Arrangement.spacedBy(2.dp)) { content() }
     }
   }
@@ -40,27 +36,24 @@ fun PreviewSettingsGroup() {
   SettingsGroup(title = "About") {
     SettingsItem(
       icon = Icons.Default.Web,
-      iconColor = MaterialTheme.colorScheme.primaryContainer,
-      iconBackground = MaterialTheme.colorScheme.onPrimaryContainer,
+      iconColor = MaterialTheme.colorScheme.onPrimaryFixedVariant,
+      iconBackground = MaterialTheme.colorScheme.primaryFixed,
       title = "pawcode Development",
       subtitle = "View website",
       onClick = {},
     )
     SettingsItem(
       icon = Icons.Default.Web,
-      iconColor = MaterialTheme.colorScheme.secondaryContainer,
-      iconBackground = MaterialTheme.colorScheme.onSecondaryContainer,
+      iconColor = MaterialTheme.colorScheme.onSecondaryFixedVariant,
+      iconBackground = MaterialTheme.colorScheme.secondaryFixed,
       title = "pawcode Development",
-      subtitle = "View website",
-      onClick = {},
     )
     SettingsItem(
       icon = Icons.Default.Web,
-      iconColor = MaterialTheme.colorScheme.tertiaryContainer,
-      iconBackground = MaterialTheme.colorScheme.onTertiaryContainer,
+      iconColor = MaterialTheme.colorScheme.onTertiaryFixedVariant,
+      iconBackground = MaterialTheme.colorScheme.tertiaryFixed,
       title = "pawcode Development",
       subtitle = "View website",
-      onClick = {},
     )
   }
 }

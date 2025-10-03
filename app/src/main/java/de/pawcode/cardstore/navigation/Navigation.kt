@@ -55,6 +55,7 @@ fun Navigation(modifier: Modifier = Modifier) {
         snackbar = { snackbarData ->
           Snackbar(
             snackbarData = snackbarData,
+            shape = MaterialTheme.shapes.medium,
             containerColor = MaterialTheme.colorScheme.inverseSurface,
             contentColor = MaterialTheme.colorScheme.inverseOnSurface,
             actionColor = MaterialTheme.colorScheme.inversePrimary,
