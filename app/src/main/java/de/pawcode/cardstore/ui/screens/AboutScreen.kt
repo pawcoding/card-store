@@ -74,7 +74,29 @@ fun AboutScreen(navController: NavController) {
     biometricAvailable = BiometricAuthService.isBiometricAvailable(context),
     biometricEnabled = biometricEnabled,
     onBiometricToggle = { enabled ->
-      scope.launch { preferencesManager.saveBiometricEnabled(enabled) }
+      if (enabled) {
+        // Show authentication prompt before enabling
+        val activity = context as? androidx.fragment.app.FragmentActivity
+        if (activity != null) {
+          BiometricAuthService.authenticate(
+            activity = activity,
+            title = context.getString(R.string.biometric_auth_title),
+            subtitle = context.getString(R.string.biometric_auth_subtitle),
+            onSuccess = {
+              scope.launch {
+                preferencesManager.saveBiometricEnabled(true)
+                preferencesManager.saveLastAuthTime()
+              }
+            },
+            onError = {
+              // Don't enable if authentication fails
+            },
+          )
+        }
+      } else {
+        // Disable without authentication
+        scope.launch { preferencesManager.saveBiometricEnabled(false) }
+      }
     },
     onBack = { navController.popBackStack() },
     onOpenWebsite = { context.startActivity(Intent(Intent.ACTION_VIEW, it.toUri())) },
