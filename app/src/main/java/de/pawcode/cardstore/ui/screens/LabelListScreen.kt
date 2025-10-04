@@ -15,7 +15,6 @@ import androidx.compose.material.icons.automirrored.twotone.Label
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.NewLabel
-import androidx.compose.material.icons.twotone.DeleteForever
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -226,7 +225,6 @@ fun LabelListScreenComponent(
         dialogTitle = stringResource(R.string.label_delete_title),
         dialogText = stringResource(R.string.label_delete_description),
         confirmText = stringResource(R.string.common_delete),
-        Icons.TwoTone.DeleteForever,
       )
     }
   }

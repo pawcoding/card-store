@@ -2,6 +2,13 @@
 <resources>
     <string name="about">Über</string>
     <string name="app_name">CardStore</string>
+    <string name="biometric_activate_subtitle">Bestätige deinen Fingerabdruck, um die biometrische Authentifizierung zu aktivieren</string>
+    <string name="biometric_activate_title">Biometrische Authentifizierung aktivieren</string>
+    <string name="biometric_auth_subtitle">Entsperren, um auf deine Karten zuzugreifen</string>
+    <string name="biometric_auth_title">Entsperren</string>
+    <string name="biometric_not_available">Biometrische Authentifizierung nicht verfügbar</string>
+    <string name="biometric_subtitle">Schütze den Zugriff auf deine Karten mit deinem Fingerabdruck</string>
+    <string name="biometric_title">Biometrische Authentifizierung</string>
     <string name="card_add">Karte hinzufügen</string>
     <string name="card_added">Karte hinzugefügt</string>
     <string name="card_barcode_type">Barcode Typ</string>
@@ -31,6 +38,7 @@
     <string name="common_back">Zurück</string>
     <string name="common_cancel">Abbrechen</string>
     <string name="common_delete">Löschen</string>
+    <string name="common_discard">Verwerfen</string>
     <string name="common_required">erforderlich</string>
     <string name="common_save">Speichern</string>
     <string name="common_scan">Scannen</string>
@@ -58,11 +66,13 @@
     <string name="labels_new">Neues Label hinzufügen</string>
     <string name="labels_none">Keine Labels</string>
     <string name="labels_options">Optionen</string>
+    <string name="links">Links</string>
     <string name="playstore">Im Play Store anzeigen</string>
     <string name="playstore_description">App bewerten und rezensieren</string>
     <string name="report_issue">Ein Problem entdeckt?</string>
     <string name="scan_barcode">Barcode scannen</string>
     <string name="scan_error">Fehler beim Scannen</string>
+    <string name="settings">Einstellungen</string>
     <string name="share_card_description">Lass jemand anderen diesen QR-Code scannen, um diese Karte zu importieren.</string>
     <string name="share_card_title">Teile deine Karte</string>
     <string name="sort_alphabetically">Alphabetisch</string>
@@ -71,6 +81,8 @@
     <string name="sort_recently_used">Kürzlich verwendet</string>
     <string name="source_code">Quellcode anzeigen</string>
     <string name="technologies">Technologien</string>
+    <string name="unsaved_changes_description">Du hast ungespeicherte Änderungen. Was möchtest du tun?</string>
+    <string name="unsaved_changes_title">Ungespeicherte Änderungen</string>
     <string name="version">Version</string>
     <string name="website">Webseite besuchen</string>
     <string name="website_link"><![CDATA[https://pawcode.de/de/?mtm_campaign=CardStore&mtm_kwd=About&mtm_source=App]]></string>

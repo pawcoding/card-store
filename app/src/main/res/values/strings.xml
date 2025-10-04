@@ -1,6 +1,13 @@
 <resources>
     <string name="about">About</string>
     <string name="app_name">CardStore</string>
+    <string name="biometric_activate_subtitle">Confirm your fingerprint once to enable biometric authentication</string>
+    <string name="biometric_activate_title">Enable biometric authentication</string>
+    <string name="biometric_auth_subtitle">Unlock to access your cards</string>
+    <string name="biometric_auth_title">Unlock</string>
+    <string name="biometric_not_available">Biometric authentication not available</string>
+    <string name="biometric_subtitle">Lock access to your cards behind your fingerprint</string>
+    <string name="biometric_title">Biometric authentication</string>
     <string name="card_add">Add card</string>
     <string name="card_added">Card added</string>
     <string name="card_barcode_type">Barcode type</string>
@@ -30,6 +37,7 @@
     <string name="common_back">Back</string>
     <string name="common_cancel">Cancel</string>
     <string name="common_delete">Delete</string>
+    <string name="common_discard">Discard</string>
     <string name="common_required">required</string>
     <string name="common_save">Save</string>
     <string name="common_scan">Scan</string>
@@ -41,9 +49,6 @@
     <string name="import_card_description">Someone shared this card with you. Click on the card to add it to your collection.</string>
     <string name="import_card_success">Card imported successfully</string>
     <string name="import_card_title">Import this card</string>
-    <string name="update_card_description">Someone shared an updated version of this card with you. Click on the card to update your existing one.</string>
-    <string name="update_card_success">Card updated successfully</string>
-    <string name="update_card_title">Update this card</string>
     <string name="label_add">Add label</string>
     <string name="label_added">Label added</string>
     <string name="label_delete_description">Are you sure you want to delete the label? It cannot be restored.</string>
@@ -57,11 +62,13 @@
     <string name="labels_new">Add new label</string>
     <string name="labels_none">No labels</string>
     <string name="labels_options">Options</string>
+    <string name="links">Links</string>
     <string name="playstore">View in Play Store</string>
     <string name="playstore_description">Rate and review the app</string>
     <string name="report_issue">Report an issue</string>
     <string name="scan_barcode">Scan barcode</string>
     <string name="scan_error">Error while trying to scan barcode</string>
+    <string name="settings">App settings</string>
     <string name="share_card_description">Let someone else scan this QR code to import this card.</string>
     <string name="share_card_title">Share your card</string>
     <string name="sort_alphabetically">Alphabetically</string>
@@ -70,6 +77,11 @@
     <string name="sort_recently_used">Recently used</string>
     <string name="source_code">View source code</string>
     <string name="technologies">Technologies</string>
+    <string name="unsaved_changes_description">You have unsaved changes. What would you like to do?</string>
+    <string name="unsaved_changes_title">Unsaved changes</string>
+    <string name="update_card_description">Someone shared an updated version of this card with you. Click on the card to update your existing one.</string>
+    <string name="update_card_success">Card updated successfully</string>
+    <string name="update_card_title">Update this card</string>
     <string name="version">Version</string>
     <string name="website">Visit website</string>
     <string name="website_link"><![CDATA[https://pawcode.de/?mtm_campaign=CardStore&mtm_kwd=About&mtm_source=App]]></string>

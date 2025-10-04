@@ -1,5 +1,6 @@
 package de.pawcode.cardstore.ui.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
@@ -37,6 +38,7 @@ import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.EditCardForm
 import de.pawcode.cardstore.ui.components.SaveFabComponent
+import de.pawcode.cardstore.ui.dialogs.UnsavedChangesDialog
 import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 import de.pawcode.cardstore.utils.classifyLabelsForUpdate
 import de.pawcode.cardstore.utils.hasCardChanged
@@ -112,6 +114,7 @@ fun EditCardScreenComponent(
   onSave: (CardWithLabels) -> Unit,
 ) {
   var card by remember { mutableStateOf(initialCard) }
+  var showUnsavedChangesDialog by remember { mutableStateOf(false) }
 
   LaunchedEffect(initialCard.card.cardId) { card = initialCard }
 
@@ -120,12 +123,37 @@ fun EditCardScreenComponent(
     derivedStateOf { isCreateCard || hasCardChanged(initialCard, card) }
   }
 
+  val handleBack = {
+    if (hasChanges && !isCreateCard) {
+      showUnsavedChangesDialog = true
+    } else {
+      onBack()
+    }
+  }
+
+  // Handle Android system back button
+  BackHandler(enabled = hasChanges && !isCreateCard) { handleBack() }
+
+  if (showUnsavedChangesDialog) {
+    UnsavedChangesDialog(
+      onDismissRequest = { showUnsavedChangesDialog = false },
+      onDiscard = {
+        showUnsavedChangesDialog = false
+        onBack()
+      },
+      onSave = {
+        showUnsavedChangesDialog = false
+        onSave(card)
+      },
+    )
+  }
+
   Scaffold(
     modifier = Modifier.imePadding(),
     topBar = {
       AppBar(
         title = stringResource(if (!isCreateCard) R.string.card_edit else R.string.card_add),
-        onBack = { onBack() },
+        onBack = { handleBack() },
       )
     },
     floatingActionButton = {
