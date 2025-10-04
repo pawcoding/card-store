@@ -36,6 +36,10 @@ class MainActivity : FragmentActivity() {
   private var isAuthenticated by mutableStateOf(false)
   private var lastPauseTime: Long = 0
 
+  companion object {
+    private const val AUTHENTICATION_TIMEOUT_MILLIS = 5 * 60 * 1000L
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     preferencesManager = PreferencesManager(applicationContext)
 
@@ -88,8 +92,7 @@ class MainActivity : FragmentActivity() {
 
     if (lastPauseTime > 0) {
       val timeSincePause = System.currentTimeMillis() - lastPauseTime
-      val fiveMinutesInMillis = 5 * 60 * 1000
-      if (timeSincePause > fiveMinutesInMillis) {
+      if (timeSincePause > AUTHENTICATION_TIMEOUT_MILLIS) {
         lifecycleScope.launch {
           val biometricEnabled = preferencesManager?.biometricEnabled?.first() ?: false
           if (biometricEnabled) {

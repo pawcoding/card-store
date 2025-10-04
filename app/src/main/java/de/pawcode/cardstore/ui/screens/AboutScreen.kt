@@ -199,7 +199,7 @@ fun AboutScreenComponent(
             trailingContent = {
               Switch(
                 checked = biometricEnabled,
-                onCheckedChange = { it -> onBiometricToggle(it) },
+                onCheckedChange = onBiometricToggle,
                 enabled = biometricAvailable,
               )
             },
