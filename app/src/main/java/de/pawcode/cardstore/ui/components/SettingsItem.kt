@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Web
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,6 +32,7 @@ fun SettingsItem(
   title: String,
   subtitle: String? = null,
   onClick: (() -> Unit)? = null,
+  trailingContent: @Composable (() -> Unit)? = null,
 ) {
   ListItem(
     modifier =
@@ -38,6 +41,7 @@ fun SettingsItem(
     tonalElevation = 2.dp,
     headlineContent = { Text(text = title) },
     supportingContent = { subtitle?.let { Text(text = it) } },
+    trailingContent = trailingContent,
     leadingContent = {
       Box(
         modifier =
@@ -77,11 +81,12 @@ fun PreviewSettingsItem() {
       title = "pawcode Development",
     )
     SettingsItem(
-      icon = Icons.Default.Web,
+      icon = Icons.Default.Lock,
       iconColor = MaterialTheme.colorScheme.onTertiaryFixedVariant,
       iconBackground = MaterialTheme.colorScheme.tertiaryFixed,
-      title = "pawcode Development",
-      subtitle = "View website",
+      title = "Restrict app access",
+      subtitle = "Lock app with biometric security",
+      trailingContent = { Switch(checked = false, onCheckedChange = {}) },
     )
   }
 }

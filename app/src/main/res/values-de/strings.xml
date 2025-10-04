@@ -2,6 +2,13 @@
 <resources>
     <string name="about">Über</string>
     <string name="app_name">CardStore</string>
+    <string name="biometric_activate_subtitle">Bestätige deinen Fingerabdruck, um die biometrische Authentifizierung zu aktivieren</string>
+    <string name="biometric_activate_title">Biometrische Authentifizierung aktivieren</string>
+    <string name="biometric_auth_subtitle">Entsperren, um auf deine Karten zuzugreifen</string>
+    <string name="biometric_auth_title">Entsperren</string>
+    <string name="biometric_not_available">Biometrische Authentifizierung nicht verfügbar</string>
+    <string name="biometric_subtitle">Schütze den Zugriff auf deine Karten mit deinem Fingerabdruck</string>
+    <string name="biometric_title">Biometrische Authentifizierung</string>
     <string name="card_add">Karte hinzufügen</string>
     <string name="card_added">Karte hinzugefügt</string>
     <string name="card_barcode_type">Barcode Typ</string>
@@ -65,6 +72,7 @@
     <string name="report_issue">Ein Problem entdeckt?</string>
     <string name="scan_barcode">Barcode scannen</string>
     <string name="scan_error">Fehler beim Scannen</string>
+    <string name="settings">Einstellungen</string>
     <string name="share_card_description">Lass jemand anderen diesen QR-Code scannen, um diese Karte zu importieren.</string>
     <string name="share_card_title">Teile deine Karte</string>
     <string name="sort_alphabetically">Alphabetisch</string>
