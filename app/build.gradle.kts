@@ -5,8 +5,8 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
-  id("com.google.devtools.ksp") version "2.2.10-2.0.2"
-  id("com.ncorti.ktfmt.gradle") version "0.23.0"
+  id("com.google.devtools.ksp") version "2.2.20-2.0.3"
+  id("com.ncorti.ktfmt.gradle") version "0.24.0"
 }
 
 android {
@@ -70,6 +70,7 @@ kotlin { compilerOptions { jvmTarget = JvmTarget.JVM_19 } }
 
 dependencies {
   implementation(libs.androidx.activity.compose)
+  implementation(libs.androidx.biometric)
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.core.splashscreen)
   implementation(libs.androidx.datastore.preferences)
