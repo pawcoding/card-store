@@ -1,17 +1,25 @@
 package de.pawcode.cardstore.ui.screens
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButtonMenu
+import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -137,7 +145,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
   )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CardListScreenComponent(
   cardsFlow: Flow<List<CardWithLabels>>,
@@ -170,7 +178,6 @@ fun CardListScreenComponent(
   val cardShareSheetState = rememberModalBottomSheetState()
   val cardImportSheetState = rememberModalBottomSheetState()
   val cardOptionSheetState = rememberModalBottomSheetState()
-  val cardCreateSheetState = rememberModalBottomSheetState()
 
   var selectedLabel by remember { mutableStateOf<String?>(null) }
 
@@ -203,55 +210,117 @@ fun CardListScreenComponent(
       AppBar(
         title = stringResource(R.string.app_name),
         actions = {
-          IconButton(onClick = { onShowAbout() }) {
-            Icon(
-              painterResource(R.drawable.info),
-              contentDescription = stringResource(R.string.about),
+          Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            IconButton(
+              modifier =
+                Modifier.size(
+                  IconButtonDefaults.smallContainerSize(
+                    IconButtonDefaults.IconButtonWidthOption.Wide
+                  )
+                ),
+              onClick = { onShowAbout() },
+              shapes =
+                IconButtonDefaults.shapes(
+                  shape = IconButtonDefaults.smallRoundShape,
+                  pressedShape = IconButtonDefaults.smallPressedShape,
+                ),
+            ) {
+              Icon(
+                painterResource(R.drawable.info),
+                contentDescription = stringResource(R.string.about),
+                modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+              )
+            }
+
+            SelectDropdownMenu(
+              icon = R.drawable.sort_solid,
+              title = stringResource(R.string.cards_sort),
+              value = sortBy,
+              values =
+                listOf(
+                  DropdownOption(
+                    title = stringResource(R.string.sort_intelligent),
+                    icon = R.drawable.wand_shine_solid,
+                    value = SortAttribute.INTELLIGENT,
+                  ),
+                  DropdownOption(
+                    title = stringResource(R.string.sort_alphabetically),
+                    icon = R.drawable.sort_by_alpha_solid,
+                    value = SortAttribute.ALPHABETICALLY,
+                  ),
+                  DropdownOption(
+                    title = stringResource(R.string.sort_most_used),
+                    icon = R.drawable.trending_up_solid,
+                    value = SortAttribute.MOST_USED,
+                  ),
+                  DropdownOption(
+                    title = stringResource(R.string.sort_recently_used),
+                    icon = R.drawable.history_solid,
+                    value = SortAttribute.RECENTLY_USED,
+                  ),
+                ),
+              onValueChange = { onSortChange(it) },
             )
           }
-          SelectDropdownMenu(
-            icon = R.drawable.sort_solid,
-            title = stringResource(R.string.cards_sort),
-            value = sortBy,
-            values =
-              listOf(
-                DropdownOption(
-                  title = stringResource(R.string.sort_intelligent),
-                  icon = R.drawable.wand_shine_solid,
-                  value = SortAttribute.INTELLIGENT,
-                ),
-                DropdownOption(
-                  title = stringResource(R.string.sort_alphabetically),
-                  icon = R.drawable.sort_by_alpha_solid,
-                  value = SortAttribute.ALPHABETICALLY,
-                ),
-                DropdownOption(
-                  title = stringResource(R.string.sort_most_used),
-                  icon = R.drawable.trending_up_solid,
-                  value = SortAttribute.MOST_USED,
-                ),
-                DropdownOption(
-                  title = stringResource(R.string.sort_recently_used),
-                  icon = R.drawable.history_solid,
-                  value = SortAttribute.RECENTLY_USED,
-                ),
-              ),
-            onValueChange = { onSortChange(it) },
-          )
         },
       )
     },
     floatingActionButton = {
-      ExtendedFloatingActionButton(
-        onClick = { showCardCreateSheet = true },
-        text = { Text(stringResource(R.string.cards_new)) },
-        icon = {
-          Icon(
-            painterResource(R.drawable.add_card),
-            contentDescription = stringResource(R.string.cards_new),
+      FloatingActionButtonMenu(
+        expanded = showCardCreateSheet,
+        button = {
+          ExtendedFloatingActionButton(
+            onClick = { showCardCreateSheet = !showCardCreateSheet },
+            text = { Text(stringResource(R.string.cards_new)) },
+            expanded = !showCardCreateSheet,
+            icon = {
+              Icon(
+                painterResource(
+                  if (!showCardCreateSheet) {
+                    R.drawable.add_card
+                  } else {
+                    R.drawable.close_solid
+                  }
+                ),
+                contentDescription = stringResource(R.string.cards_new),
+              )
+            },
           )
         },
-      )
+      ) {
+        FloatingActionButtonMenuItem(
+          onClick = {
+            showBarcodeScanner = true
+            showCardCreateSheet = false
+          },
+          text = { Text(stringResource(R.string.scan_barcode)) },
+          icon = {
+            Icon(painterResource(R.drawable.barcode_scanner_solid), contentDescription = null)
+          },
+          containerColor = MaterialTheme.colorScheme.primary,
+          contentColor = MaterialTheme.colorScheme.onPrimary,
+        )
+        FloatingActionButtonMenuItem(
+          onClick = {
+            showPkpassPicker = true
+            showCardCreateSheet = false
+          },
+          text = { Text(stringResource(R.string.card_create_pkpass)) },
+          icon = { Icon(painterResource(R.drawable.file_open_solid), contentDescription = null) },
+          containerColor = MaterialTheme.colorScheme.primary,
+          contentColor = MaterialTheme.colorScheme.onPrimary,
+        )
+        FloatingActionButtonMenuItem(
+          onClick = {
+            onCreateCard(null, null)
+            showCardCreateSheet = false
+          },
+          text = { Text(stringResource(R.string.card_create_manual)) },
+          icon = { Icon(painterResource(R.drawable.edit_solid), contentDescription = null) },
+          containerColor = MaterialTheme.colorScheme.primary,
+          contentColor = MaterialTheme.colorScheme.onPrimary,
+        )
+      }
     },
   ) { innerPadding ->
     Column(modifier = Modifier.padding(innerPadding).padding(horizontal = 8.dp)) {
@@ -362,41 +431,6 @@ fun CardListScreenComponent(
         }
       }
 
-      if (showCardCreateSheet) {
-        ModalBottomSheet(
-          sheetState = cardCreateSheetState,
-          dragHandle = {},
-          onDismissRequest = { showCardCreateSheet = false },
-        ) {
-          OptionSheet(
-            Option(
-              label = stringResource(R.string.scan_barcode),
-              icon = R.drawable.barcode_scanner_solid,
-              onClick = {
-                showBarcodeScanner = true
-                showCardCreateSheet = false
-              },
-            ),
-            Option(
-              label = stringResource(R.string.card_create_pkpass),
-              icon = R.drawable.file_open_solid,
-              onClick = {
-                showPkpassPicker = true
-                showCardCreateSheet = false
-              },
-            ),
-            Option(
-              label = stringResource(R.string.card_create_manual),
-              icon = R.drawable.edit_solid,
-              onClick = {
-                onCreateCard(null, null)
-                showCardCreateSheet = false
-              },
-            ),
-          )
-        }
-      }
-
       openDeleteDialog?.let {
         ConfirmDialog(
           onDismissRequest = { openDeleteDialog = null },
@@ -440,8 +474,8 @@ fun CardListScreenComponent(
   }
 }
 
-@Preview
-@Preview(device = "id:pixel_tablet")
+@Preview(showSystemUi = true)
+@Preview(device = "id:pixel_tablet", showSystemUi = true)
 @Composable
 fun PreviewCardListScreenComponent() {
   CardListScreenComponent(
@@ -459,8 +493,8 @@ fun PreviewCardListScreenComponent() {
   )
 }
 
-@Preview
-@Preview(device = "id:pixel_tablet")
+@Preview(showSystemUi = true)
+@Preview(device = "id:pixel_tablet", showSystemUi = true)
 @Composable
 fun PreviewCardListScreenComponentEmpty() {
   CardListScreenComponent(
