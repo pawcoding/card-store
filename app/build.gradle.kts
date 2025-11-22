@@ -75,7 +75,6 @@ dependencies {
   implementation(libs.androidx.core.splashscreen)
   implementation(libs.androidx.datastore.preferences)
   implementation(libs.androidx.lifecycle.runtime.ktx)
-  implementation(libs.androidx.material.icons.extended)
   implementation(libs.androidx.material3)
   implementation(libs.androidx.navigation.compose)
   implementation(libs.androidx.room.common)

@@ -8,20 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Sort
-import androidx.compose.material.icons.automirrored.filled.TrendingUp
-import androidx.compose.material.icons.filled.AddCard
-import androidx.compose.material.icons.filled.AutoFixHigh
-import androidx.compose.material.icons.filled.DeleteForever
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.SortByAlpha
-import androidx.compose.material.icons.outlined.FileOpen
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.QrCodeScanner
-import androidx.compose.material.icons.twotone.CreditCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -43,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -217,32 +204,35 @@ fun CardListScreenComponent(
         title = stringResource(R.string.app_name),
         actions = {
           IconButton(onClick = { onShowAbout() }) {
-            Icon(Icons.Outlined.Info, contentDescription = stringResource(R.string.about))
+            Icon(
+              painterResource(R.drawable.info),
+              contentDescription = stringResource(R.string.about),
+            )
           }
           SelectDropdownMenu(
-            icon = Icons.AutoMirrored.Filled.Sort,
+            icon = R.drawable.sort_solid,
             title = stringResource(R.string.cards_sort),
             value = sortBy,
             values =
               listOf(
                 DropdownOption(
                   title = stringResource(R.string.sort_intelligent),
-                  icon = Icons.Filled.AutoFixHigh,
+                  icon = R.drawable.wand_shine_solid,
                   value = SortAttribute.INTELLIGENT,
                 ),
                 DropdownOption(
                   title = stringResource(R.string.sort_alphabetically),
-                  icon = Icons.Filled.SortByAlpha,
+                  icon = R.drawable.sort_by_alpha_solid,
                   value = SortAttribute.ALPHABETICALLY,
                 ),
                 DropdownOption(
                   title = stringResource(R.string.sort_most_used),
-                  icon = Icons.AutoMirrored.Filled.TrendingUp,
+                  icon = R.drawable.trending_up_solid,
                   value = SortAttribute.MOST_USED,
                 ),
                 DropdownOption(
                   title = stringResource(R.string.sort_recently_used),
-                  icon = Icons.Filled.History,
+                  icon = R.drawable.history_solid,
                   value = SortAttribute.RECENTLY_USED,
                 ),
               ),
@@ -256,7 +246,10 @@ fun CardListScreenComponent(
         onClick = { showCardCreateSheet = true },
         text = { Text(stringResource(R.string.cards_new)) },
         icon = {
-          Icon(Icons.Filled.AddCard, contentDescription = stringResource(R.string.cards_new))
+          Icon(
+            painterResource(R.drawable.add_card),
+            contentDescription = stringResource(R.string.cards_new),
+          )
         },
       )
     },
@@ -331,7 +324,7 @@ fun CardListScreenComponent(
           OptionSheet(
             Option(
               label = stringResource(R.string.card_edit),
-              icon = Icons.Filled.Edit,
+              icon = R.drawable.edit_solid,
               onClick = {
                 onEditCard(it)
                 showCardOptionSheet = null
@@ -339,7 +332,7 @@ fun CardListScreenComponent(
             ),
             Option(
               label = stringResource(R.string.card_share),
-              icon = Icons.Filled.Share,
+              icon = R.drawable.share_solid,
               onClick = {
                 showCardShareSheet = it
                 showCardOptionSheet = null
@@ -348,7 +341,7 @@ fun CardListScreenComponent(
             ),
             Option(
               label = stringResource(R.string.card_delete_title),
-              icon = Icons.Filled.DeleteForever,
+              icon = R.drawable.delete_forever_solid,
               onClick = {
                 openDeleteDialog = it
                 showCardOptionSheet = null
@@ -361,7 +354,7 @@ fun CardListScreenComponent(
             OptionSheetInfo(
               backgroundColor = color,
               iconTint = if (isLightColor) Color.Black else Color.White,
-              icon = Icons.TwoTone.CreditCard,
+              icon = R.drawable.credit_card,
               title = it.storeName,
               subtitle = it.cardNumber,
             )
@@ -378,7 +371,7 @@ fun CardListScreenComponent(
           OptionSheet(
             Option(
               label = stringResource(R.string.scan_barcode),
-              icon = Icons.Outlined.QrCodeScanner,
+              icon = R.drawable.barcode_scanner_solid,
               onClick = {
                 showBarcodeScanner = true
                 showCardCreateSheet = false
@@ -386,7 +379,7 @@ fun CardListScreenComponent(
             ),
             Option(
               label = stringResource(R.string.card_create_pkpass),
-              icon = Icons.Outlined.FileOpen,
+              icon = R.drawable.file_open_solid,
               onClick = {
                 showPkpassPicker = true
                 showCardCreateSheet = false
@@ -394,7 +387,7 @@ fun CardListScreenComponent(
             ),
             Option(
               label = stringResource(R.string.card_create_manual),
-              icon = Icons.Filled.Edit,
+              icon = R.drawable.edit_solid,
               onClick = {
                 onCreateCard(null, null)
                 showCardCreateSheet = false
