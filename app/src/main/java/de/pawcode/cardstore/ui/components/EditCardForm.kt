@@ -12,14 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Label
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Colorize
-import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.QrCode2
-import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -44,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -93,7 +86,7 @@ fun EditCardForm(
       horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
       Icon(
-        Icons.Filled.Storefront,
+        painterResource(R.drawable.storefront_solid),
         contentDescription = null,
         tint = MaterialTheme.colorScheme.primary,
         modifier = Modifier.size(32.dp),
@@ -133,7 +126,7 @@ fun EditCardForm(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
       ) {
         Icon(
-          Icons.Filled.QrCode2,
+          painterResource(R.drawable.qr_code_2_solid),
           contentDescription = null,
           tint = MaterialTheme.colorScheme.primary,
           modifier = Modifier.size(32.dp),
@@ -144,7 +137,7 @@ fun EditCardForm(
 
       OutlinedButton(onClick = { showBarcodeScanner = true }) {
         Icon(
-          Icons.Filled.QrCodeScanner,
+          painterResource(R.drawable.barcode_scanner_solid),
           contentDescription = null,
           modifier = Modifier.padding(end = 4.dp),
         )
@@ -218,7 +211,7 @@ fun EditCardForm(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
       ) {
         Icon(
-          Icons.Filled.Palette,
+          painterResource(R.drawable.palette_solid),
           contentDescription = null,
           tint = MaterialTheme.colorScheme.primary,
           modifier = Modifier.size(32.dp),
@@ -235,7 +228,7 @@ fun EditCardForm(
         contentAlignment = Alignment.Center,
       ) {
         Icon(
-          imageVector = Icons.Filled.Colorize,
+          painterResource(R.drawable.colorize_solid),
           contentDescription = stringResource(R.string.card_pick_color),
           tint = if (isLightColor) Color.Black else Color.White,
         )
@@ -249,7 +242,7 @@ fun EditCardForm(
       horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
       Icon(
-        Icons.AutoMirrored.Filled.Label,
+        painterResource(R.drawable.label_solid),
         contentDescription = null,
         tint = MaterialTheme.colorScheme.primary,
         modifier = Modifier.size(32.dp),
@@ -289,7 +282,7 @@ fun EditCardForm(
             },
             leadingIcon = {
               if (chipSelected) {
-                Icon(Icons.Filled.Check, contentDescription = null)
+                Icon(painterResource(R.drawable.check_solid), contentDescription = null)
               }
             },
           )
