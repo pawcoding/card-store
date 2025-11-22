@@ -1,5 +1,6 @@
 package de.pawcode.cardstore.ui.sheets
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,10 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DeleteForever
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.twotone.CreditCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -28,10 +25,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_CARD
 import de.pawcode.cardstore.utils.isLightColor
 
@@ -40,7 +38,7 @@ data class Option(
   /** Label that is shown to the user. */
   val label: String,
   /** Icons that is shown in front of the label. */
-  val icon: ImageVector,
+  @param:DrawableRes val icon: Int,
   /** Action that is executed when the option is clicked. */
   val onClick: () -> Unit,
 )
@@ -56,7 +54,7 @@ fun OptionSheet(vararg options: Option, content: @Composable (() -> Unit)? = nul
 
     options.forEach { option ->
       ListItem(
-        leadingContent = { Icon(option.icon, contentDescription = null) },
+        leadingContent = { Icon(painterResource(option.icon), contentDescription = null) },
         headlineContent = { Text(option.label) },
         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
         modifier =
@@ -70,7 +68,7 @@ fun OptionSheet(vararg options: Option, content: @Composable (() -> Unit)? = nul
 fun OptionSheetInfo(
   backgroundColor: Color,
   iconTint: Color,
-  icon: ImageVector,
+  @DrawableRes icon: Int,
   title: String,
   subtitle: String? = null,
 ) {
@@ -83,7 +81,12 @@ fun OptionSheetInfo(
       modifier = Modifier.size(64.dp).clip(MaterialTheme.shapes.small).background(backgroundColor),
       contentAlignment = Alignment.Center,
     ) {
-      Icon(icon, contentDescription = null, modifier = Modifier.size(48.dp), tint = iconTint)
+      Icon(
+        painterResource(icon),
+        contentDescription = null,
+        modifier = Modifier.size(48.dp),
+        tint = iconTint,
+      )
     }
 
     Column {
@@ -116,13 +119,13 @@ fun PreviewOptionSheet() {
   val isLightColor by remember { derivedStateOf { isLightColor(color) } }
 
   OptionSheet(
-    Option(label = "Edit card", icon = Icons.Filled.Edit, onClick = {}),
-    Option(label = "Delete card", icon = Icons.Filled.DeleteForever, onClick = {}),
+    Option(label = "Edit card", icon = R.drawable.edit_solid, onClick = {}),
+    Option(label = "Delete card", icon = R.drawable.delete_forever_solid, onClick = {}),
   ) {
     OptionSheetInfo(
       backgroundColor = color,
       iconTint = if (isLightColor) Color.Black else Color.White,
-      icon = Icons.TwoTone.CreditCard,
+      icon = R.drawable.credit_card,
       title = card.storeName,
       subtitle = card.cardNumber,
     )

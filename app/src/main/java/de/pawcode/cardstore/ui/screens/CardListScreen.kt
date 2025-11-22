@@ -11,21 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Sort
-import androidx.compose.material.icons.automirrored.filled.TrendingUp
-import androidx.compose.material.icons.filled.AddCard
-import androidx.compose.material.icons.filled.AutoFixHigh
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.DeleteForever
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.SortByAlpha
-import androidx.compose.material.icons.outlined.FileOpen
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.QrCodeScanner
-import androidx.compose.material.icons.twotone.CreditCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -52,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -240,36 +226,36 @@ fun CardListScreenComponent(
                 ),
             ) {
               Icon(
-                Icons.Outlined.Info,
+                painterResource(R.drawable.info),
                 contentDescription = stringResource(R.string.about),
                 modifier = Modifier.size(IconButtonDefaults.smallIconSize),
               )
             }
 
             SelectDropdownMenu(
-              icon = Icons.AutoMirrored.Filled.Sort,
+              icon = R.drawable.sort_solid,
               title = stringResource(R.string.cards_sort),
               value = sortBy,
               values =
                 listOf(
                   DropdownOption(
                     title = stringResource(R.string.sort_intelligent),
-                    icon = Icons.Filled.AutoFixHigh,
+                    icon = R.drawable.wand_shine_solid,
                     value = SortAttribute.INTELLIGENT,
                   ),
                   DropdownOption(
                     title = stringResource(R.string.sort_alphabetically),
-                    icon = Icons.Filled.SortByAlpha,
+                    icon = R.drawable.sort_by_alpha_solid,
                     value = SortAttribute.ALPHABETICALLY,
                   ),
                   DropdownOption(
                     title = stringResource(R.string.sort_most_used),
-                    icon = Icons.AutoMirrored.Filled.TrendingUp,
+                    icon = R.drawable.trending_up_solid,
                     value = SortAttribute.MOST_USED,
                   ),
                   DropdownOption(
                     title = stringResource(R.string.sort_recently_used),
-                    icon = Icons.Filled.History,
+                    icon = R.drawable.history_solid,
                     value = SortAttribute.RECENTLY_USED,
                   ),
                 ),
@@ -289,12 +275,13 @@ fun CardListScreenComponent(
             expanded = !showCardCreateSheet,
             icon = {
               Icon(
-                imageVector =
+                painterResource(
                   if (!showCardCreateSheet) {
-                    Icons.Filled.AddCard
+                    R.drawable.add_card
                   } else {
-                    Icons.Filled.Close
-                  },
+                    R.drawable.close_solid
+                  }
+                ),
                 contentDescription = stringResource(R.string.cards_new),
               )
             },
@@ -307,7 +294,9 @@ fun CardListScreenComponent(
             showCardCreateSheet = false
           },
           text = { Text(stringResource(R.string.scan_barcode)) },
-          icon = { Icon(Icons.Outlined.QrCodeScanner, contentDescription = null) },
+          icon = {
+            Icon(painterResource(R.drawable.barcode_scanner_solid), contentDescription = null)
+          },
           containerColor = MaterialTheme.colorScheme.primary,
           contentColor = MaterialTheme.colorScheme.onPrimary,
         )
@@ -317,7 +306,7 @@ fun CardListScreenComponent(
             showCardCreateSheet = false
           },
           text = { Text(stringResource(R.string.card_create_pkpass)) },
-          icon = { Icon(Icons.Outlined.FileOpen, contentDescription = null) },
+          icon = { Icon(painterResource(R.drawable.file_open_solid), contentDescription = null) },
           containerColor = MaterialTheme.colorScheme.primary,
           contentColor = MaterialTheme.colorScheme.onPrimary,
         )
@@ -327,7 +316,7 @@ fun CardListScreenComponent(
             showCardCreateSheet = false
           },
           text = { Text(stringResource(R.string.card_create_manual)) },
-          icon = { Icon(Icons.Filled.Edit, contentDescription = null) },
+          icon = { Icon(painterResource(R.drawable.edit_solid), contentDescription = null) },
           containerColor = MaterialTheme.colorScheme.primary,
           contentColor = MaterialTheme.colorScheme.onPrimary,
         )
@@ -404,7 +393,7 @@ fun CardListScreenComponent(
           OptionSheet(
             Option(
               label = stringResource(R.string.card_edit),
-              icon = Icons.Filled.Edit,
+              icon = R.drawable.edit_solid,
               onClick = {
                 onEditCard(it)
                 showCardOptionSheet = null
@@ -412,7 +401,7 @@ fun CardListScreenComponent(
             ),
             Option(
               label = stringResource(R.string.card_share),
-              icon = Icons.Filled.Share,
+              icon = R.drawable.share_solid,
               onClick = {
                 showCardShareSheet = it
                 showCardOptionSheet = null
@@ -421,7 +410,7 @@ fun CardListScreenComponent(
             ),
             Option(
               label = stringResource(R.string.card_delete_title),
-              icon = Icons.Filled.DeleteForever,
+              icon = R.drawable.delete_forever_solid,
               onClick = {
                 openDeleteDialog = it
                 showCardOptionSheet = null
@@ -434,7 +423,7 @@ fun CardListScreenComponent(
             OptionSheetInfo(
               backgroundColor = color,
               iconTint = if (isLightColor) Color.Black else Color.White,
-              icon = Icons.TwoTone.CreditCard,
+              icon = R.drawable.credit_card,
               title = it.storeName,
               subtitle = it.cardNumber,
             )

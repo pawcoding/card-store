@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.AddCard
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,7 +41,7 @@ fun AddCardComponent(hasCards: Boolean, onClick: () -> Unit) {
         verticalArrangement = Arrangement.spacedBy(8.dp),
       ) {
         Icon(
-          Icons.TwoTone.AddCard,
+          painterResource(R.drawable.add_card),
           contentDescription =
             if (hasCards) stringResource(R.string.cards_new)
             else stringResource(R.string.cards_list_empty),

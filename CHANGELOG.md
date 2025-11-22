@@ -1,3 +1,21 @@
+## [1.4.1](https://github.com/pawcoding/card-store/compare/v1.4.0...v1.4.1) (2025-11-22)
+
+# [1.4.0](https://github.com/pawcoding/card-store/compare/v1.3.0...v1.4.0) (2025-10-10)
+
+
+### Bug Fixes
+
+* **edit-label:** correctly detect unsaved changes to a label ([9b47d82](https://github.com/pawcoding/card-store/commit/9b47d822d860be728f654081fee550a253942e6a))
+
+
+### Features
+
+* **edit:** add back button support for unsaved changes dialog ([#42](https://github.com/pawcoding/card-store/issues/42)) ([8d394df](https://github.com/pawcoding/card-store/commit/8d394df870e0bdc2814fa2d60b36202e20506f81))
+* **auth:** add biometric authentication ([6fbfcba](https://github.com/pawcoding/card-store/commit/6fbfcbad68b22701e89b367d5e84ac0a7de15ab8))
+* **edit:** add dialog to handle unsaved changes with dismiss and save options ([a33b5ea](https://github.com/pawcoding/card-store/commit/a33b5ea88f50e2adc659ef512dda3d2347ed0047))
+* **backup:** enable full app backups ([ee80dbc](https://github.com/pawcoding/card-store/commit/ee80dbcfe9dec9dba86d65dd4a276965808f8e95)), closes [#45](https://github.com/pawcoding/card-store/issues/45)
+* **about:** redesign page ([#46](https://github.com/pawcoding/card-store/issues/46)) ([1e19667](https://github.com/pawcoding/card-store/commit/1e196678990358b9454dd13b635fb80a460e8953))
+
 # [1.3.0](https://github.com/pawcoding/card-store/compare/v1.2.1...v1.3.0) (2025-09-19)
 
 

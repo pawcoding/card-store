@@ -1,9 +1,6 @@
 package de.pawcode.cardstore.ui.components
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
@@ -14,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import de.pawcode.cardstore.R
@@ -37,7 +35,7 @@ fun AppBar(
       if (onBack != null) {
         IconButton(onClick = { onBack() }) {
           Icon(
-            Icons.AutoMirrored.Filled.ArrowBack,
+            painterResource(R.drawable.arrow_back_solid),
             contentDescription = stringResource(R.string.common_back),
           )
         }
@@ -71,7 +69,7 @@ fun PreviewAppBarActions() {
     actions = {
       FilledIconButton(onClick = {}) {
         Icon(
-          Icons.AutoMirrored.Filled.Sort,
+          painterResource(R.drawable.sort_solid),
           contentDescription = stringResource(R.string.cards_sort),
         )
       }
