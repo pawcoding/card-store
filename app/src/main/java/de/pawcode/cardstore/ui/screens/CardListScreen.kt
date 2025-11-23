@@ -34,7 +34,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.classes.CardWithLabels
@@ -47,7 +46,10 @@ import de.pawcode.cardstore.data.managers.PreferencesManager
 import de.pawcode.cardstore.data.services.DeeplinkService
 import de.pawcode.cardstore.data.services.ReviewService
 import de.pawcode.cardstore.data.services.SnackbarService
-import de.pawcode.cardstore.navigation.Screen
+import de.pawcode.cardstore.navigation.Navigator
+import de.pawcode.cardstore.navigation.ScreenAbout
+import de.pawcode.cardstore.navigation.ScreenCardEdit
+import de.pawcode.cardstore.navigation.ScreenLabelList
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.CardsListComponent
 import de.pawcode.cardstore.ui.components.DropdownOption
@@ -73,7 +75,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 @Composable
-fun CardListScreen(navController: NavController, viewModel: CardViewModel = viewModel()) {
+fun CardListScreen(navigator: Navigator, viewModel: CardViewModel = viewModel()) {
   val context = LocalContext.current
   val preferencesManager = remember { PreferencesManager(context) }
   val scope = rememberCoroutineScope()
@@ -82,8 +84,8 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     cardsFlow = viewModel.allCards,
     labelsFlow = viewModel.allLabels,
     sortByFlow = preferencesManager.sortAttribute,
-    onCreateCard = { cardNumber, barcodeFormat ->
-      if (cardNumber != null && barcodeFormat != null) {
+    onCreateCard = { cardNumber, barcodeType ->
+      if (cardNumber != null && barcodeType != null) {
         val deeplink = parseDeeplink(cardNumber)
         if (deeplink != null) {
           DeeplinkService.deeplinkReceived(deeplink)
@@ -91,22 +93,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
         }
       }
 
-      val route = buildString {
-        append(Screen.EditCard.route)
-        if (cardNumber != null || barcodeFormat != null) {
-          append("?")
-          if (cardNumber != null) {
-            append("cardNumber=$cardNumber&")
-          }
-          if (barcodeFormat != null) {
-            append("barcodeFormat=$barcodeFormat&")
-          }
-        }
-        if (endsWith("&")) {
-          deleteCharAt(length - 1)
-        }
-      }
-      navController.navigate(route)
+      navigator.navigate(ScreenCardEdit(cardNumber = cardNumber, barcodeType = barcodeType))
     },
     onImportCard = { importedCard, existingCard ->
       if (existingCard != null) {
@@ -126,14 +113,12 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
       }
       DeeplinkService.clearDeeplink()
     },
-    onEditCard = { card ->
-      navController.navigate(Screen.EditCard.route + "?cardId=${card.cardId}")
-    },
+    onEditCard = { card -> navigator.navigate(ScreenCardEdit(card.cardId)) },
     onShowCard = { viewModel.addUsage(it) },
     onDeleteCard = { scope.launch { viewModel.deleteCard(it) } },
-    onViewLabels = { navController.navigate(Screen.LabelList.route) },
+    onViewLabels = { navigator.navigate(ScreenLabelList) },
     onSortChange = { scope.launch { preferencesManager.saveSortAttribute(it) } },
-    onShowAbout = { navController.navigate(Screen.About.route) },
+    onShowAbout = { navigator.navigate(ScreenAbout) },
   )
 }
 
