@@ -35,12 +35,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL
 import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.database.entities.emptyLabel
 import de.pawcode.cardstore.data.services.SnackbarService
+import de.pawcode.cardstore.navigation.Navigator
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.SaveFabComponent
 import de.pawcode.cardstore.ui.dialogs.UnsavedChangesDialog
@@ -48,7 +48,7 @@ import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 
 @Composable
 fun EditLabelScreen(
-  navController: NavController,
+  navigator: Navigator,
   labelId: String? = null,
   viewModel: CardViewModel = viewModel(),
 ) {
@@ -68,7 +68,7 @@ fun EditLabelScreen(
     EditLabelScreenComponent(
       isCreateLabel = labelId == null,
       initialLabel = initialLabel,
-      onBack = { navController.popBackStack() },
+      onBack = { navigator.goBack() },
       onSave = { label ->
         if (labelId != null) {
           viewModel.updateLabel(label)
@@ -76,7 +76,7 @@ fun EditLabelScreen(
           viewModel.insertLabel(label)
         }
 
-        navController.popBackStack()
+        navigator.goBack()
 
         SnackbarService.showSnackbar(message = snackbarMessage)
       },
