@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -49,7 +47,7 @@ fun BiometricPlaceholder(onRetry: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
           ) {
             Icon(
-              Icons.Default.Fingerprint,
+              painterResource(R.drawable.fingerprint_solid),
               contentDescription = null,
               modifier = Modifier.size(40.dp),
             )

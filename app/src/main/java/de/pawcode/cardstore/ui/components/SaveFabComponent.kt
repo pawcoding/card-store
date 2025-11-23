@@ -3,14 +3,13 @@ package de.pawcode.cardstore.ui.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import de.pawcode.cardstore.R
@@ -42,7 +41,7 @@ fun SaveFabComponent(
           Text(stringResource(R.string.common_save))
         }
       },
-      icon = { Icon(Icons.Filled.Save, contentDescription = null) },
+      icon = { Icon(painterResource(R.drawable.save_solid), contentDescription = null) },
       containerColor = if (isValid) MaterialTheme.colorScheme.primary else Color.Gray,
       contentColor =
         if (isValid) MaterialTheme.colorScheme.onPrimary

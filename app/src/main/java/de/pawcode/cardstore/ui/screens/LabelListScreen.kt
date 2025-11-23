@@ -10,11 +10,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.twotone.Label
-import androidx.compose.material.icons.filled.DeleteForever
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.NewLabel
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,17 +34,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import de.charlex.compose.RevealSwipe
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
 import de.pawcode.cardstore.data.database.entities.LabelEntity
-import de.pawcode.cardstore.navigation.Screen
+import de.pawcode.cardstore.navigation.Navigator
+import de.pawcode.cardstore.navigation.ScreenLabelEdit
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.dialogs.ConfirmDialog
 import de.pawcode.cardstore.ui.sheets.Option
@@ -59,19 +55,19 @@ import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun LabelListScreen(navController: NavController, viewModel: CardViewModel = viewModel()) {
+fun LabelListScreen(navigator: Navigator, viewModel: CardViewModel = viewModel()) {
   val scope = rememberCoroutineScope()
 
   val labels by viewModel.allLabels.collectAsState(initial = emptyList())
 
   LabelListScreenComponent(
     labels = labels,
-    onBack = { navController.popBackStack() },
+    onBack = { navigator.goBack() },
     onEdit = { label ->
       if (label != null) {
-        navController.navigate(Screen.EditLabel.route + "?labelId=${label.labelId}")
+        navigator.navigate(ScreenLabelEdit(label.labelId))
       } else {
-        navController.navigate(Screen.EditLabel.route)
+        navigator.navigate(ScreenLabelEdit(null))
       }
     },
     onDelete = { scope.launch { viewModel.deleteLabel(it) } },
@@ -100,7 +96,10 @@ fun LabelListScreenComponent(
         onClick = { onEdit(null) },
         text = { Text(stringResource(R.string.labels_new)) },
         icon = {
-          Icon(Icons.Filled.NewLabel, contentDescription = stringResource(R.string.labels_new))
+          Icon(
+            painterResource(R.drawable.new_label_solid),
+            contentDescription = stringResource(R.string.labels_new),
+          )
         },
       )
     },
@@ -129,7 +128,7 @@ fun LabelListScreenComponent(
               backgroundCardStartColor = MaterialTheme.colorScheme.secondaryContainer,
               hiddenContentStart = {
                 Icon(
-                  Icons.Filled.Edit,
+                  painterResource(R.drawable.edit_solid),
                   contentDescription = stringResource(R.string.label_edit),
                   tint = MaterialTheme.colorScheme.onSecondaryContainer,
                 )
@@ -142,7 +141,7 @@ fun LabelListScreenComponent(
               backgroundCardEndColor = MaterialTheme.colorScheme.errorContainer,
               hiddenContentEnd = {
                 Icon(
-                  Icons.Filled.DeleteForever,
+                  painterResource(R.drawable.delete_forever_solid),
                   contentDescription = stringResource(R.string.label_delete_title),
                   tint = MaterialTheme.colorScheme.onErrorContainer,
                 )
@@ -190,7 +189,7 @@ fun LabelListScreenComponent(
         OptionSheet(
           Option(
             label = stringResource(R.string.label_edit),
-            icon = Icons.Filled.Edit,
+            icon = R.drawable.edit_solid,
             onClick = {
               onEdit(it)
               showLabelOptionSheet = null
@@ -198,7 +197,7 @@ fun LabelListScreenComponent(
           ),
           Option(
             label = stringResource(R.string.label_delete_title),
-            icon = Icons.Filled.DeleteForever,
+            icon = R.drawable.delete_forever_solid,
             onClick = {
               openDeleteDialog = it
               showLabelOptionSheet = null
@@ -208,7 +207,7 @@ fun LabelListScreenComponent(
           OptionSheetInfo(
             backgroundColor = MaterialTheme.colorScheme.primaryContainer,
             iconTint = MaterialTheme.colorScheme.onPrimaryContainer,
-            icon = Icons.AutoMirrored.TwoTone.Label,
+            icon = R.drawable.label,
             title = it.name,
           )
         }

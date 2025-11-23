@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.NewLabel
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -29,6 +27,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -36,12 +35,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL
 import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.database.entities.emptyLabel
 import de.pawcode.cardstore.data.services.SnackbarService
+import de.pawcode.cardstore.navigation.Navigator
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.SaveFabComponent
 import de.pawcode.cardstore.ui.dialogs.UnsavedChangesDialog
@@ -49,7 +48,7 @@ import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 
 @Composable
 fun EditLabelScreen(
-  navController: NavController,
+  navigator: Navigator,
   labelId: String? = null,
   viewModel: CardViewModel = viewModel(),
 ) {
@@ -69,7 +68,7 @@ fun EditLabelScreen(
     EditLabelScreenComponent(
       isCreateLabel = labelId == null,
       initialLabel = initialLabel,
-      onBack = { navController.popBackStack() },
+      onBack = { navigator.goBack() },
       onSave = { label ->
         if (labelId != null) {
           viewModel.updateLabel(label)
@@ -77,7 +76,7 @@ fun EditLabelScreen(
           viewModel.insertLabel(label)
         }
 
-        navController.popBackStack()
+        navigator.goBack()
 
         SnackbarService.showSnackbar(message = snackbarMessage)
       },
@@ -155,7 +154,7 @@ fun EditLabelScreenComponent(
           horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
           Icon(
-            Icons.Filled.NewLabel,
+            painterResource(R.drawable.new_label_solid),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(32.dp),
