@@ -95,6 +95,9 @@ fun CardStore(modifier: Modifier = Modifier) {
       popTransitionSpec = {
         EnterTransition.None togetherWith slideOutHorizontally(targetOffsetX = { it })
       },
+      predictivePopTransitionSpec = {
+        EnterTransition.None togetherWith slideOutHorizontally(targetOffsetX = { it })
+      },
     )
   }
 }

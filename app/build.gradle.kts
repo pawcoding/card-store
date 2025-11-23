@@ -5,6 +5,7 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.jetbrains.kotlin.serialization)
   id("com.google.devtools.ksp") version "2.3.3"
   id("com.ncorti.ktfmt.gradle") version "0.25.0"
 }
