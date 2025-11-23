@@ -46,7 +46,7 @@ fun CardStore(modifier: Modifier = Modifier) {
   LaunchedEffect(hasDeeplink) {
     if (
       hasDeeplink &&
-        navigationState.backStacks[navigationState.topLevelRoute]?.last() == ScreenCardList
+        navigationState.backStacks[navigationState.topLevelRoute]?.last() != ScreenCardList
     ) {
       navigator.navigate(ScreenCardList)
     }
