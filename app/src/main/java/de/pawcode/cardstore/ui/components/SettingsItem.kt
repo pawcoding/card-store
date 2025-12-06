@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Web
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -20,13 +17,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import de.pawcode.cardstore.R
 
 @Composable
 fun SettingsItem(
-  icon: ImageVector,
+  icon: Painter,
   iconColor: Color,
   iconBackground: Color,
   title: String,
@@ -52,7 +51,7 @@ fun SettingsItem(
         contentAlignment = Alignment.Center,
       ) {
         Icon(
-          imageVector = icon,
+          painter = icon,
           contentDescription = null,
           tint = iconColor,
           modifier = Modifier.size(20.dp),
@@ -67,7 +66,7 @@ fun SettingsItem(
 fun PreviewSettingsItem() {
   Column {
     SettingsItem(
-      icon = Icons.Default.Web,
+      icon = painterResource(R.drawable.web_solid),
       iconColor = MaterialTheme.colorScheme.onPrimaryFixedVariant,
       iconBackground = MaterialTheme.colorScheme.primaryFixed,
       title = "pawcode Development",
@@ -75,13 +74,13 @@ fun PreviewSettingsItem() {
       onClick = {},
     )
     SettingsItem(
-      icon = Icons.Default.Web,
+      icon = painterResource(R.drawable.web_solid),
       iconColor = MaterialTheme.colorScheme.onSecondaryFixedVariant,
       iconBackground = MaterialTheme.colorScheme.secondaryFixed,
       title = "pawcode Development",
     )
     SettingsItem(
-      icon = Icons.Default.Lock,
+      icon = painterResource(R.drawable.lock_solid),
       iconColor = MaterialTheme.colorScheme.onTertiaryFixedVariant,
       iconBackground = MaterialTheme.colorScheme.tertiaryFixed,
       title = "Restrict app access",

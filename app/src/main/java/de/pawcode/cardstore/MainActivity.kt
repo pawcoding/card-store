@@ -20,7 +20,7 @@ import de.pawcode.cardstore.data.services.BiometricAuthService
 import de.pawcode.cardstore.data.services.DeeplinkService
 import de.pawcode.cardstore.data.services.ReviewService
 import de.pawcode.cardstore.data.services.ReviewStatus
-import de.pawcode.cardstore.navigation.Navigation
+import de.pawcode.cardstore.ui.CardStore
 import de.pawcode.cardstore.ui.components.BiometricPlaceholder
 import de.pawcode.cardstore.ui.theme.CardStoreTheme
 import de.pawcode.cardstore.utils.parseDeeplink
@@ -68,7 +68,7 @@ class MainActivity : FragmentActivity() {
     setContent {
       CardStoreTheme {
         if (isAuthenticated) {
-          Navigation()
+          CardStore()
         } else {
           BiometricPlaceholder(onRetry = { checkAuthentication() })
         }

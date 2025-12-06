@@ -7,10 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
@@ -19,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -66,7 +63,7 @@ fun LabelsListComponent(
             },
             leadingIcon = {
               if (chipSelected) {
-                Icon(Icons.Filled.Check, contentDescription = null)
+                Icon(painterResource(R.drawable.check_solid), contentDescription = null)
               }
             },
           )
@@ -76,7 +73,10 @@ fun LabelsListComponent(
 
     FilledTonalIconButton(shape = MaterialTheme.shapes.small, onClick = { onEdit() }) {
       Icon(
-        imageVector = if (labels.isNotEmpty()) Icons.Filled.EditNote else Icons.Filled.Add,
+        painter =
+          painterResource(
+            if (labels.isNotEmpty()) R.drawable.edit_note_solid else R.drawable.add_solid
+          ),
         contentDescription = stringResource(R.string.labels_edit),
         modifier = Modifier.size(32.dp),
       )
