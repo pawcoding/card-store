@@ -1,3 +1,5 @@
+## [1.4.2](https://github.com/pawcoding/card-store/compare/v1.4.1...v1.4.2) (2025-12-12)
+
 ## [1.4.1](https://github.com/pawcoding/card-store/compare/v1.4.0...v1.4.1) (2025-11-22)
 
 # [1.4.0](https://github.com/pawcoding/card-store/compare/v1.3.0...v1.4.0) (2025-10-10)
