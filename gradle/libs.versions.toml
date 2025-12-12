@@ -1,10 +1,10 @@
 [versions]
-activityCompose = "1.12.0"
+activityCompose = "1.12.1"
 agp = "8.13.1"
 barcodeScanning = "17.3.0"
 biometric = "1.1.0"
 colorpickerCompose = "1.1.3"
-composeBom = "2025.11.01"
+composeBom = "2025.12.00"
 composedBarcodes = "1.3.0"
 coreKtx = "1.17.0"
 coreSplashscreen = "1.2.0"
@@ -13,10 +13,11 @@ espressoCore = "3.7.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 kotlin = "2.2.21"
-kotlinxSerializationJson = "1.9.0"
+kotlinSerialization = "2.2.21"
+kotlinxSerialization = "1.9.0"
 lifecycleRuntimeKtx = "2.10.0"
-materialIconsExtended = "1.7.8"
-navigationCompose = "2.9.6"
+lifecycleViewmodelNav3 = "2.10.0"
+nav3Core = "1.0.0"
 playServicesCodeScanner = "16.1.0"
 revealswipe = "3.0.0"
 review = "2.0.2"
@@ -32,9 +33,10 @@ androidx-datastore-preferences = { group = "androidx.datastore", name = "datasto
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIconsExtended" }
+androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
@@ -48,7 +50,8 @@ barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning", vers
 colorpicker-compose = { group = "com.github.skydoves", name = "colorpicker-compose", version.ref = "colorpickerCompose" }
 composed-barcodes = { group = "com.simonsickle", name = "composed-barcodes", version.ref = "composedBarcodes" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 play-services-code-scanner = { group = "com.google.android.gms", name = "play-services-code-scanner", version.ref = "playServicesCodeScanner" }
 revealswipe = { group = "de.charlex.compose", name = "revealswipe", version.ref = "revealswipe" }
 review = { group = "com.google.android.play", name = "review", version.ref = "review" }
@@ -56,6 +59,7 @@ review-ktx = { group = "com.google.android.play", name = "review-ktx", version.r
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization"}
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
