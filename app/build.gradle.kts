@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
   alias(libs.plugins.android.application)
-  alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.jetbrains.kotlin.serialization)
   id("com.google.devtools.ksp") version "2.3.4"
@@ -62,7 +61,10 @@ android {
     targetCompatibility = JavaVersion.VERSION_19
   }
 
-  buildFeatures { compose = true }
+  buildFeatures {
+      compose = true
+      resValues = true
+  }
 
   androidResources { generateLocaleConfig = true }
 }
