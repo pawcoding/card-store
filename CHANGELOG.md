@@ -1,3 +1,10 @@
+## [1.4.3](https://github.com/pawcoding/card-store/compare/v1.4.2...v1.4.3) (2026-02-19)
+
+
+### Bug Fixes
+
+* **proguard:** keep mlkit to not crash on startup ([6e962ab](https://github.com/pawcoding/card-store/commit/6e962abb6b9fc3de7f89886e4e673fe0f0def65b))
+
 ## [1.4.2](https://github.com/pawcoding/card-store/compare/v1.4.1...v1.4.2) (2025-12-12)
 
 ## [1.4.1](https://github.com/pawcoding/card-store/compare/v1.4.0...v1.4.1) (2025-11-22)
