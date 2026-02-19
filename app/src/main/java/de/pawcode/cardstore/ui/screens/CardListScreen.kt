@@ -43,6 +43,7 @@ import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
 import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.enums.SortAttribute
 import de.pawcode.cardstore.data.managers.PreferencesManager
+import de.pawcode.cardstore.data.managers.ShortcutManager
 import de.pawcode.cardstore.data.services.DeeplinkService
 import de.pawcode.cardstore.data.services.ReviewService
 import de.pawcode.cardstore.data.services.SnackbarService
@@ -137,6 +138,7 @@ fun CardListScreenComponent(
   onSortChange: (SortAttribute) -> Unit,
   onShowAbout: () -> Unit,
 ) {
+  val context = LocalContext.current
   val cards by cardsFlow.collectAsState(initial = emptyList())
   val labels by labelsFlow.collectAsState(initial = emptyList())
   val sortBy by sortByFlow.collectAsState(initial = null)
@@ -182,6 +184,14 @@ fun CardListScreenComponent(
   }
 
   LaunchedEffect(sortBy, selectedLabel) { listState.scrollToItem(0) }
+
+  // Update app shortcuts when cards or sort order changes
+  val currentContext = context
+  LaunchedEffect(cardsFiltered, sortBy) {
+    sortBy?.let { currentSortBy ->
+      ShortcutManager.updateShortcuts(currentContext, cardsFiltered, currentSortBy)
+    }
+  }
 
   Scaffold(
     topBar = {
