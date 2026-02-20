@@ -66,6 +66,7 @@
     <string name="playstore">View in Play Store</string>
     <string name="playstore_description">Rate and review the app</string>
     <string name="report_issue">Report an issue</string>
+    <string name="quick_settings_tile_label">Open CardStore</string>
     <string name="scan_barcode">Scan barcode</string>
     <string name="scan_error">Error while trying to scan barcode</string>
     <string name="settings">App settings</string>
