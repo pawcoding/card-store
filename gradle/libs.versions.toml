@@ -1,6 +1,6 @@
 [versions]
 activityCompose = "1.12.4"
-agp = "9.0.0"
+agp = "9.0.1"
 barcodeScanning = "17.3.0"
 biometric = "1.1.0"
 colorpickerCompose = "1.1.3"
