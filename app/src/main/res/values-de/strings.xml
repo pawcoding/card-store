@@ -74,6 +74,7 @@
     <string name="scan_barcode">Barcode scannen</string>
     <string name="scan_error">Fehler beim Scannen</string>
     <string name="settings">Einstellungen</string>
+    <string name="shortcut_open_card">Karte öffnen</string>
     <string name="share_card_description">Lass jemand anderen diesen QR-Code scannen, um diese Karte zu importieren.</string>
     <string name="share_card_title">Teile deine Karte</string>
     <string name="sort_alphabetically">Alphabetisch</string>

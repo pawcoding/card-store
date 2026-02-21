@@ -70,6 +70,7 @@
     <string name="scan_barcode">Scan barcode</string>
     <string name="scan_error">Error while trying to scan barcode</string>
     <string name="settings">App settings</string>
+    <string name="shortcut_open_card">Open card</string>
     <string name="share_card_description">Let someone else scan this QR code to import this card.</string>
     <string name="share_card_title">Share your card</string>
     <string name="sort_alphabetically">Alphabetically</string>

@@ -8,6 +8,7 @@ import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.database.repositories.CardRepository
 import de.pawcode.cardstore.data.database.repositories.LabelRepository
+import de.pawcode.cardstore.data.utils.updateShortcuts
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -49,7 +50,8 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
       val updatedCard =
         card.copy(useCount = card.useCount + 1, lastUsed = System.currentTimeMillis())
 
-      updateCard(updatedCard)
+      cardRepository.updateCard(updatedCard)
+      updateShortcuts(getApplication())
     }
 
   fun deleteCard(card: CardEntity) = viewModelScope.launch { cardRepository.deleteCard(card) }
