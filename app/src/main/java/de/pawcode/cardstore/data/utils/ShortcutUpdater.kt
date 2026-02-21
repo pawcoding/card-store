@@ -18,7 +18,9 @@ import de.pawcode.cardstore.utils.calculateCardScore
 import kotlinx.coroutines.flow.first
 
 private const val MAX_SHORTCUTS = 3
-private const val SHORTCUT_ACTION = "de.pawcode.cardstore.ACTION_VIEW_CARD"
+internal const val SHORTCUT_ACTION = "de.pawcode.cardstore.ACTION_VIEW_CARD"
+
+internal fun cardShortcutId(cardId: String) = "card_shortcut_$cardId"
 
 suspend fun updateShortcuts(context: Context) {
     val cardRepository = CardRepository(context)
@@ -37,13 +39,13 @@ suspend fun updateShortcuts(context: Context) {
 
     val topCards = sortedCards.take(MAX_SHORTCUTS)
 
-    val newShortcutIds = topCards.map { "card_shortcut_${it.cardId}" }.toSet()
+    val newShortcutIds = topCards.map { cardShortcutId(it.cardId) }.toSet()
     val existingShortcuts = ShortcutManagerCompat.getDynamicShortcuts(context)
     val staleIds = existingShortcuts.filter { it.id !in newShortcutIds }.map { it.id }
     if (staleIds.isNotEmpty()) ShortcutManagerCompat.removeDynamicShortcuts(context, staleIds)
 
     topCards.forEach { card ->
-        val shortcutId = "card_shortcut_${card.cardId}"
+        val shortcutId = cardShortcutId(card.cardId)
         val icon = createShortcutIcon(card)
 
         val intent =
@@ -64,7 +66,7 @@ suspend fun updateShortcuts(context: Context) {
     }
 }
 
-private fun createShortcutIcon(card: CardEntity): IconCompat {
+internal fun createShortcutIcon(card: CardEntity): IconCompat {
     val size = 108
     val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(bitmap)
