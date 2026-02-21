@@ -70,6 +70,7 @@
     <string name="playstore">Im Play Store anzeigen</string>
     <string name="playstore_description">App bewerten und rezensieren</string>
     <string name="report_issue">Ein Problem entdeckt?</string>
+    <string name="quick_settings_tile_label">CardStore öffnen</string>
     <string name="scan_barcode">Barcode scannen</string>
     <string name="scan_error">Fehler beim Scannen</string>
     <string name="settings">Einstellungen</string>
