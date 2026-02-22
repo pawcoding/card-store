@@ -16,6 +16,7 @@ import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import de.pawcode.cardstore.data.managers.PreferencesManager
+import de.pawcode.cardstore.data.utils.updateShortcuts
 import de.pawcode.cardstore.data.services.BiometricAuthService
 import de.pawcode.cardstore.data.services.DeeplinkService
 import de.pawcode.cardstore.data.services.ReviewService
@@ -64,6 +65,8 @@ class MainActivity : FragmentActivity() {
     lifecycleScope.launch { ReviewService.reviewStatus.collect { handleReviewStatus(it) } }
 
     checkAuthentication()
+
+    lifecycleScope.launch { updateShortcuts(applicationContext) }
 
     setContent {
       CardStoreTheme {

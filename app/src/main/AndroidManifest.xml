@@ -45,6 +45,18 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".CardOverlayActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.CardStore.Overlay">
+            <intent-filter>
+                <action android:name="de.pawcode.cardstore.ACTION_VIEW_CARD" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <service
             android:name=".AppLaunchTileService"
             android:exported="true"
