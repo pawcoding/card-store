@@ -22,9 +22,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import de.pawcode.cardstore.data.database.entities.CardEntity
+import de.pawcode.cardstore.data.database.entities.EXAMPLE_CARD
 import de.pawcode.cardstore.data.database.repositories.CardRepository
 import de.pawcode.cardstore.data.managers.PreferencesManager
 import de.pawcode.cardstore.data.services.BiometricAuthService
@@ -53,17 +55,7 @@ class CardOverlayActivity : FragmentActivity() {
             return
         }
 
-        lifecycleScope.launch {
-            val cardRepository = CardRepository(applicationContext)
-            val cardWithLabels = cardRepository.getCardById(cardId).first()
-            if (cardWithLabels == null) {
-                finish()
-                return@launch
-            }
-            card = cardWithLabels.card
-            isLoading = false
-            checkAuthentication()
-        }
+        loadCard(cardId)
 
         setContent {
             CardStoreTheme {
@@ -95,17 +87,7 @@ class CardOverlayActivity : FragmentActivity() {
         isLoading = true
         isAuthenticated = false
         card = null
-        lifecycleScope.launch {
-            val cardRepository = CardRepository(applicationContext)
-            val cardWithLabels = cardRepository.getCardById(newCardId).first()
-            if (cardWithLabels == null) {
-                finish()
-                return@launch
-            }
-            card = cardWithLabels.card
-            isLoading = false
-            checkAuthentication()
-        }
+        loadCard(newCardId)
     }
 
     private fun checkAuthentication() {
@@ -123,6 +105,20 @@ class CardOverlayActivity : FragmentActivity() {
             } else {
                 isAuthenticated = true
             }
+        }
+    }
+
+    private fun loadCard(cardId: String) {
+        lifecycleScope.launch {
+            val cardRepository = CardRepository(applicationContext)
+            val cardWithLabels = cardRepository.getCardById(cardId).first()
+            if (cardWithLabels == null) {
+                finish()
+                return@launch
+            }
+            card = cardWithLabels.card
+            isLoading = false
+            checkAuthentication()
         }
     }
 }
@@ -146,5 +142,14 @@ private fun CardOverlayContent(card: CardEntity, onDismiss: () -> Unit) {
         ) {
             ViewCardSheet(card)
         }
+    }
+}
+
+@Preview
+@Preview(device = "id:pixel_tablet")
+@Composable
+fun PreviewCardOverlayContent() {
+    CardStoreTheme {
+        CardOverlayContent(card = EXAMPLE_CARD, onDismiss = {})
     }
 }
