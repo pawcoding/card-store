@@ -1,3 +1,17 @@
+# [1.5.0](https://github.com/pawcoding/card-store/compare/v1.4.3...v1.5.0) (2026-02-26)
+
+
+### Bug Fixes
+
+* **biometric:** do not call onError on transient authentication failures ([4ea1765](https://github.com/pawcoding/card-store/commit/4ea17651f712b4dc3b387b8b2440be406f82e556))
+
+
+### Features
+
+* **shortcut:** add dynamic shortcuts ([8cb18c3](https://github.com/pawcoding/card-store/commit/8cb18c363cd5518c9f648a8a1150065a7ef65804))
+* **shortcut:** add shortcut option to card options ([38a5104](https://github.com/pawcoding/card-store/commit/38a51044eab497935f6799a7bba24ec694576daf))
+* **quick-settings:** add tile to launch app ([#74](https://github.com/pawcoding/card-store/issues/74)) ([c426d90](https://github.com/pawcoding/card-store/commit/c426d904de06fe624aa2dc6c22bbc62b8d547516))
+
 ## [1.4.3](https://github.com/pawcoding/card-store/compare/v1.4.2...v1.4.3) (2026-02-19)
 
 
