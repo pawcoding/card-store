@@ -65,7 +65,7 @@ jobs:
 
       - name: 📤 Upload APK as artifact
         if: steps.check-build.outputs.build_apk == 'true'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: app-release.apk
           path: app/build/outputs/apk/release/app-release.apk
