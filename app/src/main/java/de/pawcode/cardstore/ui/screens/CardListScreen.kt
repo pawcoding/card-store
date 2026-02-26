@@ -115,6 +115,7 @@ fun CardListScreen(navigator: Navigator, viewModel: CardViewModel = viewModel())
     },
     onEditCard = { card -> navigator.navigate(ScreenCardEdit(card.cardId)) },
     onShowCard = { viewModel.addUsage(it) },
+    onPinShortcut = { viewModel.pinShortcut(it) },
     onDeleteCard = { scope.launch { viewModel.deleteCard(it) } },
     onViewLabels = { navigator.navigate(ScreenLabelList) },
     onSortChange = { scope.launch { preferencesManager.saveSortAttribute(it) } },
@@ -132,6 +133,7 @@ fun CardListScreenComponent(
   onImportCard: (importedCard: CardEntity, existingCard: CardEntity?) -> Unit,
   onEditCard: (CardEntity) -> Unit,
   onShowCard: (CardEntity) -> Unit,
+  onPinShortcut: (CardEntity) -> Unit,
   onDeleteCard: (CardEntity) -> Unit,
   onViewLabels: () -> Unit,
   onSortChange: (SortAttribute) -> Unit,
@@ -325,6 +327,14 @@ fun CardListScreenComponent(
               },
             ),
             Option(
+              label = stringResource(R.string.shortcut_pin_to_home),
+              icon = R.drawable.keep_solid,
+              onClick = {
+                onPinShortcut(it)
+                showCardOptionSheet = null
+              },
+            ),
+            Option(
               label = stringResource(R.string.card_delete_title),
               icon = R.drawable.delete_forever_solid,
               onClick = {
@@ -437,6 +447,7 @@ fun PreviewCardListScreenComponent() {
     onImportCard = { _, _ -> },
     onEditCard = {},
     onShowCard = {},
+    onPinShortcut = {},
     onDeleteCard = {},
     onViewLabels = {},
     onSortChange = {},
@@ -456,6 +467,7 @@ fun PreviewCardListScreenComponentEmpty() {
     onImportCard = { _, _ -> },
     onEditCard = {},
     onShowCard = {},
+    onPinShortcut = {},
     onDeleteCard = {},
     onViewLabels = {},
     onSortChange = {},

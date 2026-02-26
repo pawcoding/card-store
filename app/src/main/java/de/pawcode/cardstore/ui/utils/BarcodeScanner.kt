@@ -32,7 +32,7 @@ fun BarcodeScanner(onBarcodeDetected: (Barcode) -> Unit, onCancel: () -> Unit) {
   fun handleError(exception: Exception) {
     SnackbarService.showSnackbar(
       message = context.getString(R.string.scan_error),
-      actionLabel = context.getString(R.string.copy_error),
+      actionLabel = context.getString(R.string.common_copy),
       onAction = {
         val clipboardManager =
           context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager

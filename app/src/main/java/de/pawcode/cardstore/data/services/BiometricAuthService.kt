@@ -41,8 +41,9 @@ object BiometricAuthService {
           }
 
           override fun onAuthenticationFailed() {
+            // A single failed scan (e.g. unrecognized finger) — the BiometricPrompt UI
+            // already shows a retry option, so no action is needed here.
             super.onAuthenticationFailed()
-            onError()
           }
         },
       )

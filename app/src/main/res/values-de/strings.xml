@@ -23,7 +23,7 @@
     <string name="card_import">Karte importieren</string>
     <string name="card_invalid_barcode_format">Ungültiges Format</string>
     <string name="card_labels">Labels</string>
-    <string name="card_no_labels">Keine Labels verfügbar</string>
+    <string name="card_no_labels">Keine Labels</string>
     <string name="card_number">Kartennummer</string>
     <string name="card_pick_color">Wähle eine Farbe</string>
     <string name="card_save">Karte speichern</string>
@@ -37,6 +37,7 @@
     <string name="changelog_view">Änderungsprotokoll anzeigen</string>
     <string name="common_back">Zurück</string>
     <string name="common_cancel">Abbrechen</string>
+    <string name="common_copy">Kopieren</string>
     <string name="common_delete">Löschen</string>
     <string name="common_discard">Verwerfen</string>
     <string name="common_required">erforderlich</string>
@@ -44,7 +45,6 @@
     <string name="common_scan">Scannen</string>
     <string name="common_update">Aktualisieren</string>
     <string name="copied_to_clipboard">In Zwischenablage kopiert</string>
-    <string name="copy_error">Kopieren</string>
     <string name="github_issues">Ticket auf GitHub öffnen</string>
     <string name="github_repository">Projekt auf GitHub öffnen</string>
     <string name="import_card_description">Jemand hat diese Karte mit dir geteilt. Klicke auf die Karte, um sie zu deiner Sammlung hinzuzufügen.</string>
@@ -55,7 +55,7 @@
     <string name="update_card_title">Diese Karte aktualisieren</string>
     <string name="label_add">Label hinzufügen</string>
     <string name="label_added">Label hinzugefügt</string>
-    <string name="label_delete_description">Möchtest Du das Label wirklich löschen? Es kann nicht wiederhergestellt werden.</string>
+    <string name="label_delete_description">Möchtest du das Label wirklich löschen? Es kann nicht wiederhergestellt werden.</string>
     <string name="label_delete_title">Label löschen</string>
     <string name="label_edit">Label bearbeiten</string>
     <string name="label_name">Name</string>
@@ -69,10 +69,13 @@
     <string name="links">Links</string>
     <string name="playstore">Im Play Store anzeigen</string>
     <string name="playstore_description">App bewerten und rezensieren</string>
-    <string name="report_issue">Ein Problem entdeckt?</string>
+    <string name="report_issue">Problem melden</string>
+    <string name="quick_settings_tile_label">CardStore öffnen</string>
     <string name="scan_barcode">Barcode scannen</string>
     <string name="scan_error">Fehler beim Scannen</string>
     <string name="settings">Einstellungen</string>
+    <string name="shortcut_open_card">Karte öffnen</string>
+    <string name="shortcut_pin_to_home">Zum Startbildschirm hinzufügen</string>
     <string name="share_card_description">Lass jemand anderen diesen QR-Code scannen, um diese Karte zu importieren.</string>
     <string name="share_card_title">Teile deine Karte</string>
     <string name="sort_alphabetically">Alphabetisch</string>
