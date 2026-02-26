@@ -14,7 +14,7 @@
     <string name="card_code">Code</string>
     <string name="card_color">Color</string>
     <string name="card_color_hex">Hex code</string>
-    <string name="card_create_manual">Create manual</string>
+    <string name="card_create_manual">Create card manually</string>
     <string name="card_create_pkpass">Import digital card</string>
     <string name="card_delete_description">Are you sure you want to delete the card? It cannot be restored.</string>
     <string name="card_delete_title">Delete card</string>
@@ -22,7 +22,7 @@
     <string name="card_import">Import card</string>
     <string name="card_invalid_barcode_format">Invalid format</string>
     <string name="card_labels">Labels</string>
-    <string name="card_no_labels">No labels created yet</string>
+    <string name="card_no_labels">No labels</string>
     <string name="card_number">Card number</string>
     <string name="card_pick_color">Pick a color</string>
     <string name="card_save">Save card</string>
@@ -36,6 +36,7 @@
     <string name="changelog_view">View changelog</string>
     <string name="common_back">Back</string>
     <string name="common_cancel">Cancel</string>
+    <string name="common_copy">Copy</string>
     <string name="common_delete">Delete</string>
     <string name="common_discard">Discard</string>
     <string name="common_required">required</string>
@@ -43,7 +44,6 @@
     <string name="common_scan">Scan</string>
     <string name="common_update">Update</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
-    <string name="copy_error">Copy</string>
     <string name="github_issues">Open an issue on GitHub</string>
     <string name="github_repository">Open project on GitHub</string>
     <string name="import_card_description">Someone shared this card with you. Click on the card to add it to your collection.</string>
