@@ -6,7 +6,7 @@ plugins {
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.jetbrains.kotlin.serialization)
   id("com.google.devtools.ksp") version "2.3.6"
-  id("com.ncorti.ktfmt.gradle") version "0.25.0"
+  id("com.ncorti.ktfmt.gradle") version "0.26.0"
 }
 
 android {
