@@ -62,8 +62,8 @@ android {
   }
 
   buildFeatures {
-      compose = true
-      resValues = true
+    compose = true
+    resValues = true
   }
 
   androidResources { generateLocaleConfig = true }
