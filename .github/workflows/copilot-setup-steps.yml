@@ -1,4 +1,4 @@
-name: "Copilot Setup Steps"
+name: 'Copilot Setup Steps'
 
 # Automatically run the setup steps when they are changed to allow for easy validation
 on:
@@ -29,9 +29,9 @@ jobs:
       - name: 📦 Setup JDK
         uses: actions/setup-java@v5
         with:
-          distribution: "temurin"
-          java-version: "21"
-          cache: "gradle"
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
 
       - name: 📦 Setup Android SDK
         uses: android-actions/setup-android@v3
