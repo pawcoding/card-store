@@ -8,6 +8,8 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 /.idea/copilot.*
+/docs/plans
+/docs/android
 .DS_Store
 /build
 /captures
