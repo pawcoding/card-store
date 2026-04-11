@@ -88,7 +88,7 @@ fun CardStore(modifier: Modifier = Modifier) {
     NavDisplay(
       entries = navigationState.toEntries(entryProvider),
       onBack = { navigator.goBack() },
-      sceneStrategy = remember { DialogSceneStrategy() },
+      sceneStrategies = remember { listOf(DialogSceneStrategy()) },
       transitionSpec = {
         slideInHorizontally(initialOffsetX = { it }) togetherWith ExitTransition.None
       },
