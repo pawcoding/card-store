@@ -19,7 +19,6 @@ import de.pawcode.cardstore.utils.calculateCardScore
 import de.pawcode.cardstore.utils.isLightColor
 import kotlinx.coroutines.flow.first
 
-private const val MAX_SHORTCUTS = 3
 internal const val SHORTCUT_ACTION = "de.pawcode.cardstore.ACTION_VIEW_CARD"
 
 internal fun cardShortcutId(cardId: String) = "card_shortcut_$cardId"
@@ -39,9 +38,10 @@ suspend fun updateShortcuts(context: Context) {
             SortAttribute.MOST_USED -> allCards.sortedByDescending { it.useCount }
         }
 
-    val topCards = sortedCards.take(MAX_SHORTCUTS)
-
+    val maxShortcuts = ShortcutManagerCompat.getMaxShortcutCountPerActivity(context)
+    val topCards = sortedCards.take(maxShortcuts)
     val newShortcutIds = topCards.map { cardShortcutId(it.cardId) }.toSet()
+
     val existingShortcuts = ShortcutManagerCompat.getDynamicShortcuts(context)
     val staleIds = existingShortcuts.filter { it.id !in newShortcutIds }.map { it.id }
     if (staleIds.isNotEmpty()) ShortcutManagerCompat.removeDynamicShortcuts(context, staleIds)
@@ -62,6 +62,11 @@ suspend fun updateShortcuts(context: Context) {
                 .setLongLabel(card.storeName)
                 .setIcon(icon)
                 .setIntent(intent)
+                .addCapabilityBinding(
+                    "actions.intent.OPEN_APP_FEATURE",
+                    "feature.name",
+                    listOf(card.storeName),
+                )
                 .build()
 
         ShortcutManagerCompat.pushDynamicShortcut(context, shortcut)
