@@ -45,7 +45,7 @@ jobs:
           echo $KEYSTORE_BASE64 | base64 --decode > keystore.jks
 
       - name: 🚀 Release APK
-        uses: cycjimmy/semantic-release-action@v4
+        uses: cycjimmy/semantic-release-action@v6.0.0
         id: release
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
