@@ -43,6 +43,10 @@
                 <data android:host="*" />
                 <data android:mimeType="application/vnd.apple.pkpass" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
 
         <activity
