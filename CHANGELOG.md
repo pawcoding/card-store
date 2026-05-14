@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/pawcoding/card-store/compare/v1.5.0...v1.6.0) (2026-05-14)
+
+
+### Features
+
+* **assistant:** add shortcuts.xml with OPEN_APP_FEATURE capability ([0571272](https://github.com/pawcoding/card-store/commit/0571272552a05f4e42ed26e6dcd55d7ab162b497))
+
 # [1.5.0](https://github.com/pawcoding/card-store/compare/v1.4.3...v1.5.0) (2026-02-26)
 
 
