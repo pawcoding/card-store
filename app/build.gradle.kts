@@ -11,7 +11,7 @@ plugins {
 
 android {
   namespace = "de.pawcode.cardstore"
-  compileSdk = 36
+  compileSdk = 37
 
   defaultConfig {
     applicationId = "de.pawcode.cardstore"
