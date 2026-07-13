@@ -1,0 +1,49 @@
+---
+type Style = "dark" | "light" | "white";
+type Padding = "small" | "medium" | "large";
+
+interface Props {
+  style: Style;
+  padding: Padding;
+  grid?: true;
+}
+
+const { style, padding, grid } = Astro.props;
+
+function styleClasses() {
+  switch (style) {
+    case "dark":
+      return "bg-primary-dark text-primary-light";
+    case "light":
+      return "bg-primary-light text-primary-dark";
+    case "white":
+      return "bg-white text-black";
+    default:
+      throw new Error(`Unknown style: ${style}`);
+  }
+}
+
+function paddingClasses() {
+  switch (padding) {
+    case "small":
+      return "p-16";
+    case "medium":
+      return "p-24";
+    case "large":
+      return "p-32";
+    default:
+      throw new Error(`Unknown style: ${style}`);
+  }
+}
+---
+
+<div
+  class:list={[
+    "h-full shrink-0 items-center",
+    styleClasses(),
+    paddingClasses(),
+    grid ? "grid" : ""
+  ]}
+>
+  <slot />
+</div>

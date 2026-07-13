@@ -1,0 +1,23 @@
+---
+interface Props {
+  id: string;
+  type: "phone" | "phablet" | "tablet" | "feature";
+  cells?: number;
+}
+
+const { id, type, cells } = Astro.props;
+---
+
+<section
+  class:list={[
+    "border-2 border-black shrink-0 grid frame overflow-clip",
+    `frame-${type}`,
+    type === "phone" || type === "phablet"
+      ? "grid-rows-frame"
+      : "grid-cols-frame"
+  ]}
+  style=`--frame-cells: ${cells ?? 1}`
+  id={id}
+>
+  <slot />
+</section>
