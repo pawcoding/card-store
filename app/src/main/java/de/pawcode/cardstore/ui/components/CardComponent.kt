@@ -63,13 +63,27 @@ fun CardComponent(card: CardEntity, onClick: () -> Unit, onLongPress: () -> Unit
       verticalArrangement = Arrangement.SpaceBetween,
       modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp).fillMaxSize(),
     ) {
-      Text(
-        text = card.storeName,
-        style = MaterialTheme.typography.headlineMedium,
-        fontWeight = FontWeight.SemiBold,
-        textAlign = TextAlign.Center,
-        color = textColor,
-      )
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Top,
+      ) {
+        Text(
+          text = card.storeName,
+          style = MaterialTheme.typography.headlineMedium,
+          fontWeight = FontWeight.SemiBold,
+          color = textColor,
+          modifier = Modifier.weight(1f),
+        )
+
+        if (card.isFavorite) {
+          Icon(
+            painterResource(R.drawable.favorite_solid),
+            contentDescription = null,
+            tint = textColor,
+          )
+        }
+      }
 
       Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         HorizontalDivider(
@@ -129,8 +143,8 @@ fun PreviewCardComponent() {
   CardComponent(
     card =
       EXAMPLE_CARD.copy(
-        cardNumber =
-          "https://stackoverflow.com/questions/70277204/how-to-resize-an-item-in-a-compose-column-depending-on-another-item"
+        cardNumber = "https://pawcode.de/projects/54t2s46190d30t6",
+        isFavorite = true,
       ),
     onClick = {},
     onLongPress = {},

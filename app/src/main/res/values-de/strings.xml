@@ -31,6 +31,9 @@
     <string name="card_store_name">Name des Geschäfts</string>
     <string name="card_updated">Karte aktualisiert</string>
     <string name="cards_list_empty">Erstelle deine erste Karte</string>
+    <string name="card_favorite_add">Zu Favoriten hinzufügen</string>
+    <string name="card_favorite_remove">Aus Favoriten entfernen</string>
+    <string name="label_favorites">Favoriten</string>
     <string name="cards_list_empty_filtered">Keine Karten mit diesem Label</string>
     <string name="cards_new">Neue Karte hinzufügen</string>
     <string name="cards_sort">Karten sortieren</string>

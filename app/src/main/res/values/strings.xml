@@ -30,6 +30,9 @@
     <string name="card_store_name">Store name</string>
     <string name="card_updated">Card updated</string>
     <string name="cards_list_empty">Create your first card</string>
+    <string name="card_favorite_add">Add to favorites</string>
+    <string name="card_favorite_remove">Remove from favorites</string>
+    <string name="label_favorites">Favorites</string>
     <string name="cards_list_empty_filtered">No cards with this label</string>
     <string name="cards_new">Add new card</string>
     <string name="cards_sort">Sort cards</string>

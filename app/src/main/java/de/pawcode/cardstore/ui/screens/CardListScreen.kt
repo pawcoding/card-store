@@ -53,6 +53,7 @@ import de.pawcode.cardstore.navigation.ScreenLabelList
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.CardsListComponent
 import de.pawcode.cardstore.ui.components.DropdownOption
+import de.pawcode.cardstore.ui.components.FAVORITES_LABEL_ID
 import de.pawcode.cardstore.ui.components.LabelsListComponent
 import de.pawcode.cardstore.ui.components.SelectDropdownMenu
 import de.pawcode.cardstore.ui.dialogs.ConfirmDialog
@@ -119,6 +120,7 @@ fun CardListScreen(navigator: Navigator, viewModel: CardViewModel = viewModel())
     onDeleteCard = { scope.launch { viewModel.deleteCard(it) } },
     onViewLabels = { navigator.navigate(ScreenLabelList) },
     onSortChange = { scope.launch { preferencesManager.saveSortAttribute(it) } },
+    onToggleFavorite = { viewModel.toggleFavorite(it) },
     onShowAbout = { navigator.navigate(ScreenAbout) },
   )
 }
@@ -137,6 +139,7 @@ fun CardListScreenComponent(
   onDeleteCard: (CardEntity) -> Unit,
   onViewLabels: () -> Unit,
   onSortChange: (SortAttribute) -> Unit,
+  onToggleFavorite: (CardEntity) -> Unit,
   onShowAbout: () -> Unit,
 ) {
   val cards by cardsFlow.collectAsState(initial = emptyList())
@@ -161,17 +164,34 @@ fun CardListScreenComponent(
 
   var selectedLabel by remember { mutableStateOf<String?>(null) }
 
+  val hasFavorites by remember { derivedStateOf { cards.any { it.card.isFavorite } } }
+
   val cardsFiltered by remember {
     derivedStateOf {
       cards
-        .filter { selectedLabel == null || it.labels.any { it.labelId == selectedLabel } }
+        .filter {
+          when (selectedLabel) {
+            // No label selected, show all cards
+            null -> true
+            // Only show favorites
+            FAVORITES_LABEL_ID -> it.card.isFavorite
+            // Only show cards that are tagged with the selected label
+            else -> it.labels.any { label -> label.labelId == selectedLabel }
+          }
+        }
         .map { it.card }
     }
   }
   val cardsSorted by
     rememberUpdatedState(
       when (sortBy) {
-        SortAttribute.INTELLIGENT -> cardsFiltered.sortedByDescending { calculateCardScore(it) }
+        SortAttribute.INTELLIGENT ->
+          cardsFiltered.sortedWith(
+            // Keep favorites at the top
+            compareByDescending<CardEntity> { it.isFavorite }
+              // Then compare by dynamic score
+              .thenByDescending { calculateCardScore(it) }
+          )
         SortAttribute.ALPHABETICALLY -> cardsFiltered.sortedBy { it.storeName }
         SortAttribute.RECENTLY_USED -> cardsFiltered.sortedByDescending { it.lastUsed }
         SortAttribute.MOST_USED -> cardsFiltered.sortedByDescending { it.useCount }
@@ -246,7 +266,11 @@ fun CardListScreenComponent(
         LabelsListComponent(
           labels = labels,
           selected = selectedLabel,
+          hasFavorites = hasFavorites,
           onLabelClick = { selectedLabel = if (selectedLabel == it.labelId) null else it.labelId },
+          onFavoritesClick = {
+            selectedLabel = if (selectedLabel == FAVORITES_LABEL_ID) null else FAVORITES_LABEL_ID
+          },
           onEdit = { onViewLabels() },
         )
       }
@@ -324,6 +348,17 @@ fun CardListScreenComponent(
                 showCardShareSheet = it
                 showCardOptionSheet = null
                 ReviewService.prepareReviewRequest()
+              },
+            ),
+            Option(
+              label =
+                if (it.isFavorite) stringResource(R.string.card_favorite_remove)
+                else stringResource(R.string.card_favorite_add),
+              icon =
+                if (it.isFavorite) R.drawable.heart_minus_solid else R.drawable.heart_plus_solid,
+              onClick = {
+                onToggleFavorite(it)
+                showCardOptionSheet = null
               },
             ),
             Option(
@@ -451,6 +486,7 @@ fun PreviewCardListScreenComponent() {
     onDeleteCard = {},
     onViewLabels = {},
     onSortChange = {},
+    onToggleFavorite = {},
     onShowAbout = {},
   )
 }
@@ -471,6 +507,7 @@ fun PreviewCardListScreenComponentEmpty() {
     onDeleteCard = {},
     onViewLabels = {},
     onSortChange = {},
+    onToggleFavorite = {},
     onShowAbout = {},
   )
 }

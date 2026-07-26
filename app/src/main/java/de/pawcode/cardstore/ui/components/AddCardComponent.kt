@@ -30,7 +30,7 @@ fun AddCardComponent(hasCards: Boolean, onClick: () -> Unit) {
     modifier = Modifier.fillMaxWidth().aspectRatio(1.586f).clickable { onClick() },
     colors =
       CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
-    shape = RoundedCornerShape(24.dp)
+    shape = RoundedCornerShape(24.dp),
   ) {
     Column(
       horizontalAlignment = Alignment.CenterHorizontally,
