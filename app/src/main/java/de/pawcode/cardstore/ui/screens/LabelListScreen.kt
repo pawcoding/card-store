@@ -150,7 +150,7 @@ fun LabelListScreenComponent(
               backgroundCardEndColor = MaterialTheme.colorScheme.errorContainer,
               hiddenContentEnd = {
                 Icon(
-                  painterResource(R.drawable.delete_forever_solid),
+                  painterResource(R.drawable.delete_solid),
                   contentDescription = stringResource(R.string.label_delete_title),
                   tint = MaterialTheme.colorScheme.onErrorContainer,
                 )
@@ -206,7 +206,7 @@ fun LabelListScreenComponent(
           ),
           Option(
             label = stringResource(R.string.label_delete_title),
-            icon = R.drawable.delete_forever_solid,
+            icon = R.drawable.delete_solid,
             onClick = {
               openDeleteDialog = it
               showLabelOptionSheet = null

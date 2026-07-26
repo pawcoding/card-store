@@ -387,7 +387,7 @@ fun CardListScreenComponent(
             ),
             Option(
               label = stringResource(R.string.card_delete_title),
-              icon = R.drawable.delete_forever_solid,
+              icon = R.drawable.delete_solid,
               onClick = {
                 openDeleteDialog = it
                 showCardOptionSheet = null
