@@ -6,10 +6,7 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -20,7 +17,6 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import de.pawcode.cardstore.data.services.DeeplinkService
-import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.navigation.Navigator
 import de.pawcode.cardstore.navigation.ScreenAbout
 import de.pawcode.cardstore.navigation.ScreenCardEdit
@@ -71,19 +67,6 @@ fun CardStore(modifier: Modifier = Modifier) {
 
   Scaffold(
     modifier = modifier,
-    snackbarHost = {
-      SnackbarHost(
-        hostState = SnackbarService.snackbarHostState,
-        snackbar = { snackbarData ->
-          Snackbar(
-            snackbarData = snackbarData,
-            containerColor = MaterialTheme.colorScheme.inverseSurface,
-            contentColor = MaterialTheme.colorScheme.inverseOnSurface,
-            actionColor = MaterialTheme.colorScheme.inversePrimary,
-          )
-        },
-      )
-    },
   ) { _ ->
     NavDisplay(
       entries = navigationState.toEntries(entryProvider),

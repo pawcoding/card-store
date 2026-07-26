@@ -39,14 +39,12 @@
     <string name="changelog_view">View changelog</string>
     <string name="common_back">Back</string>
     <string name="common_cancel">Cancel</string>
-    <string name="common_copy">Copy</string>
     <string name="common_delete">Delete</string>
     <string name="common_discard">Discard</string>
     <string name="common_required">required</string>
     <string name="common_save">Save</string>
     <string name="common_scan">Scan</string>
     <string name="common_update">Update</string>
-    <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="github_issues">Open an issue on GitHub</string>
     <string name="github_repository">Open project on GitHub</string>
     <string name="import_card_description">Someone shared this card with you. Click on the card to add it to your collection.</string>
@@ -71,7 +69,7 @@
     <string name="report_issue">Report an issue</string>
     <string name="quick_settings_tile_label">Open CardStore</string>
     <string name="scan_barcode">Scan barcode</string>
-    <string name="scan_error">Error while trying to scan barcode</string>
+    <string name="scan_error">Error while trying to scan barcode. The error was copied to your clipboard.</string>
     <string name="settings">App settings</string>
     <string name="shortcut_open_card">Open card</string>
     <string name="shortcut_pin_to_home">Add to home screen</string>

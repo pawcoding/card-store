@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
@@ -14,7 +15,6 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import de.pawcode.cardstore.R
-import de.pawcode.cardstore.data.services.SnackbarService
 
 @Composable
 fun BarcodeScanner(onBarcodeDetected: (Barcode) -> Unit, onCancel: () -> Unit) {
@@ -30,22 +30,22 @@ fun BarcodeScanner(onBarcodeDetected: (Barcode) -> Unit, onCancel: () -> Unit) {
 
   /** Handles errors during the barcode scanning process. */
   fun handleError(exception: Exception) {
-    SnackbarService.showSnackbar(
-      message = context.getString(R.string.scan_error),
-      actionLabel = context.getString(R.string.common_copy),
-      onAction = {
-        val clipboardManager =
-          context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip =
-          ClipData.newPlainText(
-            "Barcode Scan Error",
-            "${exception.message}\n${Log.getStackTraceString(exception)}",
-          )
-        clipboardManager.setPrimaryClip(clip)
+    // Copy error to clipboard when error occurs
+    val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip =
+      ClipData.newPlainText(
+        "Barcode Scan Error",
+        "${exception.message}\n${Log.getStackTraceString(exception)}",
+      )
+    clipboardManager.setPrimaryClip(clip)
 
-        SnackbarService.showSnackbar(message = context.getString(R.string.copied_to_clipboard))
-      },
-    )
+    Toast.makeText(
+        context,
+        context.getString(R.string.scan_error),
+        Toast.LENGTH_SHORT,
+      )
+      .show()
+
     onCancel()
   }
 

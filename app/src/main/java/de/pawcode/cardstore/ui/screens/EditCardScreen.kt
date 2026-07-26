@@ -21,10 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import android.widget.Toast
 import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.classes.CardWithLabels
@@ -33,7 +35,6 @@ import de.pawcode.cardstore.data.database.classes.emptyCardWithLabels
 import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
 import de.pawcode.cardstore.data.database.entities.LabelEntity
-import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.navigation.Navigator
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.EditCardForm
@@ -57,6 +58,7 @@ fun EditCardScreen(
   color: Int? = null,
   viewModel: CardViewModel = viewModel(),
 ) {
+  val context = LocalContext.current
   val labels by viewModel.allLabels.collectAsState(initial = emptyList())
   val initialCard =
     if (cardId != null) {
@@ -97,7 +99,7 @@ fun EditCardScreen(
           viewModel.addLabelsToCard(card.card.cardId, card.labels.map { it.labelId })
         }
 
-        SnackbarService.showSnackbar(message = snackbarMessage)
+        Toast.makeText(context, snackbarMessage, Toast.LENGTH_SHORT).show()
 
         navigator.goBack()
       },

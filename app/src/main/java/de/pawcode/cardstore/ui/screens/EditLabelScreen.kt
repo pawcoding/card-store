@@ -27,6 +27,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -35,11 +36,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import android.widget.Toast
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL
 import de.pawcode.cardstore.data.database.entities.LabelEntity
 import de.pawcode.cardstore.data.database.entities.emptyLabel
-import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.navigation.Navigator
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.SaveFabComponent
@@ -52,6 +53,7 @@ fun EditLabelScreen(
   labelId: String? = null,
   viewModel: CardViewModel = viewModel(),
 ) {
+  val context = LocalContext.current
   rememberCoroutineScope()
 
   val initialLabel =
@@ -78,7 +80,7 @@ fun EditLabelScreen(
 
         navigator.goBack()
 
-        SnackbarService.showSnackbar(message = snackbarMessage)
+        Toast.makeText(context, snackbarMessage, Toast.LENGTH_SHORT).show()
       },
     )
   }

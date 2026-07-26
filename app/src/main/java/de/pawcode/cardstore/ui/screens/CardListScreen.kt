@@ -34,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import android.widget.Toast
 import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.classes.CardWithLabels
@@ -45,7 +46,6 @@ import de.pawcode.cardstore.data.enums.SortAttribute
 import de.pawcode.cardstore.data.managers.PreferencesManager
 import de.pawcode.cardstore.data.services.DeeplinkService
 import de.pawcode.cardstore.data.services.ReviewService
-import de.pawcode.cardstore.data.services.SnackbarService
 import de.pawcode.cardstore.navigation.Navigator
 import de.pawcode.cardstore.navigation.ScreenAbout
 import de.pawcode.cardstore.navigation.ScreenCardEdit
@@ -107,10 +107,10 @@ fun CardListScreen(navigator: Navigator, viewModel: CardViewModel = viewModel())
             color = importedCard.color,
           )
         viewModel.updateCard(updatedCard)
-        SnackbarService.showSnackbar(context.getString(R.string.update_card_success))
+        Toast.makeText(context, context.getString(R.string.update_card_success), Toast.LENGTH_SHORT).show()
       } else {
         viewModel.insertCard(importedCard)
-        SnackbarService.showSnackbar(context.getString(R.string.import_card_success))
+        Toast.makeText(context, context.getString(R.string.import_card_success), Toast.LENGTH_SHORT).show()
       }
       DeeplinkService.clearDeeplink()
     },
