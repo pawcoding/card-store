@@ -1,5 +1,6 @@
 package de.pawcode.cardstore.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -34,7 +35,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import android.widget.Toast
 import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.classes.CardWithLabels
@@ -107,20 +107,36 @@ fun CardListScreen(navigator: Navigator, viewModel: CardViewModel = viewModel())
             color = importedCard.color,
           )
         viewModel.updateCard(updatedCard)
-        Toast.makeText(context, context.getString(R.string.update_card_success), Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context.getString(R.string.update_card_success), Toast.LENGTH_SHORT)
+          .show()
       } else {
         viewModel.insertCard(importedCard)
-        Toast.makeText(context, context.getString(R.string.import_card_success), Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context.getString(R.string.import_card_success), Toast.LENGTH_SHORT)
+          .show()
       }
       DeeplinkService.clearDeeplink()
     },
     onEditCard = { card -> navigator.navigate(ScreenCardEdit(card.cardId)) },
     onShowCard = { viewModel.addUsage(it) },
-    onPinShortcut = { viewModel.pinShortcut(it) },
-    onDeleteCard = { scope.launch { viewModel.deleteCard(it) } },
+    onPinShortcut = {
+      viewModel.pinShortcut(it)
+      Toast.makeText(context, context.getString(R.string.shortcut_added), Toast.LENGTH_SHORT).show()
+    },
+    onDeleteCard = {
+      scope.launch {
+        viewModel.deleteCard(it)
+        Toast.makeText(context, context.getString(R.string.card_deleted), Toast.LENGTH_SHORT).show()
+      }
+    },
     onViewLabels = { navigator.navigate(ScreenLabelList) },
     onSortChange = { scope.launch { preferencesManager.saveSortAttribute(it) } },
-    onToggleFavorite = { viewModel.toggleFavorite(it) },
+    onToggleFavorite = { card ->
+      viewModel.toggleFavorite(card)
+      val message =
+        if (card.isFavorite) context.getString(R.string.card_favorite_removed)
+        else context.getString(R.string.card_favorite_added)
+      Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    },
     onShowAbout = { navigator.navigate(ScreenAbout) },
   )
 }
