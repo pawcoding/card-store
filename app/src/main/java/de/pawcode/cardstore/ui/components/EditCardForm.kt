@@ -281,9 +281,10 @@ fun EditCardForm(
               )
             },
             leadingIcon = {
-              if (chipSelected) {
-                Icon(painterResource(R.drawable.check_solid), contentDescription = null)
-              }
+              Icon(
+                painterResource(if (chipSelected) R.drawable.check_solid else R.drawable.add_solid),
+                contentDescription = null,
+              )
             },
           )
         }
