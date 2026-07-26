@@ -124,7 +124,7 @@ fun CardListScreen(navigator: Navigator, viewModel: CardViewModel = viewModel())
     },
     onDeleteCard = {
       scope.launch {
-        viewModel.deleteCard(it)
+        viewModel.deleteCard(it).join()
         Toast.makeText(context, context.getString(R.string.card_deleted), Toast.LENGTH_SHORT).show()
       }
     },

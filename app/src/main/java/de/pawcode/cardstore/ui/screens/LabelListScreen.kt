@@ -75,7 +75,7 @@ fun LabelListScreen(navigator: Navigator, viewModel: CardViewModel = viewModel()
     },
     onDelete = {
       scope.launch {
-        viewModel.deleteLabel(it)
+        viewModel.deleteLabel(it).join()
         Toast.makeText(context, context.getString(R.string.label_deleted), Toast.LENGTH_SHORT)
           .show()
       }

@@ -30,6 +30,8 @@ fun BarcodeScanner(onBarcodeDetected: (Barcode) -> Unit, onCancel: () -> Unit) {
 
   /** Handles errors during the barcode scanning process. */
   fun handleError(exception: Exception) {
+    Log.e("BarcodeScanner", "Barcode scan failed", exception)
+
     // Copy error to clipboard when error occurs
     val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clip =

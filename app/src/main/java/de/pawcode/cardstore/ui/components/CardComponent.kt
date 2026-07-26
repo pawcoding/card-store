@@ -126,7 +126,7 @@ fun CardComponent(card: CardEntity, onClick: () -> Unit, onLongPress: () -> Unit
             )
 
             Text(
-              text = card.barcodeFormat.name.replace("_", ""),
+              text = card.barcodeFormat.name.replace("_", " "),
               style = MaterialTheme.typography.bodyMedium,
               color = textColor,
             )
