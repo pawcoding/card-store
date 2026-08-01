@@ -74,7 +74,7 @@ jobs:
 
       - name: 🖥️ Update website
         if: steps.release.outputs.new_release_published == 'true' && !steps.release.outputs.new_release_channel  && steps.release.outputs.new_release_patch_version == '0'
-        uses: pawcoding/update-project-action@v0.0.5
+        uses: pawcoding/update-project-action@v0.1.0
         with:
           pocketbase-url: ${{ vars.PB_URL }}
           collection-id: ${{ vars.PB_COLLECTION }}
