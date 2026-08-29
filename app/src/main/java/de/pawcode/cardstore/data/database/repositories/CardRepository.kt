@@ -6,9 +6,11 @@ import de.pawcode.cardstore.data.database.classes.CardWithLabels
 import de.pawcode.cardstore.data.database.daos.CardDao
 import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.database.entities.CardLabelCrossRef
+import de.pawcode.cardstore.data.database.entities.LabelEntity
 import kotlinx.coroutines.flow.Flow
 
 class CardRepository(context: Context) {
+  private val context = context
   private val cardDao: CardDao = CardDatabase.getDatabase(context).cardDao()
 
   val allCards: Flow<List<CardWithLabels>> = cardDao.getAll()
@@ -41,5 +43,19 @@ class CardRepository(context: Context) {
   suspend fun removeLabelsFromCard(cardId: String, labelIds: List<String>) {
     val cardLabels = labelIds.map { CardLabelCrossRef(cardId, it) }
     cardDao.removeLabelsFromCard(cardLabels)
+  }
+
+  suspend fun restoreBackup(
+    cards: List<CardEntity>,
+    labels: List<LabelEntity>,
+    crossRefs: List<CardLabelCrossRef>,
+  ) {
+    val labelDao = CardDatabase.getDatabase(context).labelDao()
+    cardDao.deleteAllCrossRefs()
+    cardDao.deleteAll()
+    labelDao.deleteAll()
+    labelDao.insertAll(labels)
+    cardDao.insertAll(cards)
+    cardDao.insertAllCrossRefs(crossRefs)
   }
 }
