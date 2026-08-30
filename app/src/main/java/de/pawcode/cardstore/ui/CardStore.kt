@@ -65,9 +65,7 @@ fun CardStore(modifier: Modifier = Modifier) {
     entry<ScreenAbout> { AboutScreen(navigator) }
   }
 
-  Scaffold(
-    modifier = modifier,
-  ) { _ ->
+  Scaffold(modifier = modifier) { _ ->
     NavDisplay(
       entries = navigationState.toEntries(entryProvider),
       onBack = { navigator.goBack() },
