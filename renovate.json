@@ -6,7 +6,8 @@
   "minimumReleaseAge": "7 days",
   "rangeStrategy": "bump",
   "reviewers": ["pawcoding"],
-  "schedule": ["before 4am on saturday"],
+  "schedule": ["0 0 1 * *"],
+  "timezone": "Europe/Berlin",
   "semanticCommitType": "build",
   "updateNotScheduled": false
 }
