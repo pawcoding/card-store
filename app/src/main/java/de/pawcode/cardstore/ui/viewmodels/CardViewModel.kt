@@ -90,4 +90,8 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
   fun removeLabelsFromCard(cardId: String, labelIds: List<String>) = viewModelScope.launch {
     cardRepository.removeLabelsFromCard(cardId, labelIds)
   }
+
+  fun toggleFavorite(card: CardEntity) = viewModelScope.launch {
+    cardRepository.updateCard(card.copy(isFavorite = !card.isFavorite))
+  }
 }

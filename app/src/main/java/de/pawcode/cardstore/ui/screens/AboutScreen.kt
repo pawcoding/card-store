@@ -2,6 +2,7 @@ package de.pawcode.cardstore.ui.screens
 
 import android.content.Intent
 import android.content.pm.PackageInfo
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -117,7 +118,17 @@ fun AboutScreen(navigator: Navigator) {
             activity = activity,
             title = context.getString(R.string.biometric_activate_title),
             subtitle = context.getString(R.string.biometric_activate_subtitle),
-            onSuccess = { scope.launch { preferencesManager.saveBiometricEnabled(true) } },
+            onSuccess = {
+              scope.launch {
+                preferencesManager.saveBiometricEnabled(true)
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.biometric_enabled),
+                    Toast.LENGTH_SHORT,
+                  )
+                  .show()
+              }
+            },
             onError = {
               // Don't enable if authentication fails
             },
