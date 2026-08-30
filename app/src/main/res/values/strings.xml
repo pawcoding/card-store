@@ -1,6 +1,12 @@
 <resources>
     <string name="about">About</string>
     <string name="app_name">CardStore</string>
+    <string name="backup_biometric_subtitle">Authenticate to export your cards</string>
+    <string name="backup_biometric_title">Create backup</string>
+    <string name="backup_create">Create backup</string>
+    <string name="backup_failed">Backup failed</string>
+    <string name="backup_restore">Restore backup</string>
+    <string name="backup_success">Backup created successfully</string>
     <string name="biometric_activate_subtitle">Confirm your fingerprint once to enable biometric authentication</string>
     <string name="biometric_activate_title">Enable biometric authentication</string>
     <string name="biometric_auth_subtitle">Unlock to access your cards</string>
@@ -69,10 +75,16 @@
     <string name="labels_none">No labels</string>
     <string name="labels_options">Options</string>
     <string name="links">Links</string>
+    <string name="manual_backup_subtitle">Your data is automatically backed up — create or restore a local backup here</string>
+    <string name="manual_backup_title">Manual Backup</string>
     <string name="playstore">View in Play Store</string>
     <string name="playstore_description">Rate and review the app</string>
     <string name="quick_settings_tile_label">Open CardStore</string>
     <string name="report_issue">Report an issue</string>
+    <string name="restore_confirm_body">This will replace all current cards and labels. This cannot be undone.</string>
+    <string name="restore_confirm_title">Restore backup?</string>
+    <string name="restore_failed">Invalid or corrupted backup file</string>
+    <string name="restore_success">Backup restored successfully</string>
     <string name="scan_barcode">Scan barcode</string>
     <string name="scan_error">Error while trying to scan barcode. The error was copied to your clipboard.</string>
     <string name="settings">App settings</string>

@@ -20,7 +20,10 @@ import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +39,7 @@ import de.pawcode.cardstore.navigation.Navigator
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.SettingsGroup
 import de.pawcode.cardstore.ui.components.SettingsItem
+import de.pawcode.cardstore.ui.sheets.BackupSheet
 import kotlinx.coroutines.launch
 
 data class Technology(val name: String, val url: String, @param:DrawableRes val icon: Int)
@@ -103,6 +107,10 @@ fun AboutScreen(navigator: Navigator) {
     e.printStackTrace()
   }
 
+  var showBackupSheet by remember { mutableStateOf(false) }
+
+  BackupSheet(visible = showBackupSheet, onDismiss = { showBackupSheet = false })
+
   AboutScreenComponent(
     packageInfo = packageInfo,
     biometricAvailable = BiometricAuthService.isBiometricAvailable(context),
@@ -111,7 +119,6 @@ fun AboutScreen(navigator: Navigator) {
     onOpenWebsite = { context.startActivity(Intent(Intent.ACTION_VIEW, it.toUri())) },
     onBiometricToggle = { enabled ->
       if (enabled) {
-        // Show authentication prompt before enabling
         val activity = context as? androidx.fragment.app.FragmentActivity
         if (activity != null) {
           BiometricAuthService.authenticate(
@@ -135,10 +142,10 @@ fun AboutScreen(navigator: Navigator) {
           )
         }
       } else {
-        // Disable without authentication
         scope.launch { preferencesManager.saveBiometricEnabled(false) }
       }
     },
+    onManualBackupClick = { showBackupSheet = true },
   )
 }
 
@@ -150,6 +157,7 @@ fun AboutScreenComponent(
   onBack: () -> Unit,
   onOpenWebsite: (String) -> Unit,
   onBiometricToggle: (Boolean) -> Unit,
+  onManualBackupClick: () -> Unit,
 ) {
   val context = LocalContext.current
 
@@ -206,6 +214,15 @@ fun AboutScreenComponent(
                 enabled = biometricAvailable,
               )
             },
+          )
+
+          SettingsItem(
+            icon = painterResource(R.drawable.archive_solid),
+            iconColor = MaterialTheme.colorScheme.onSecondaryFixedVariant,
+            iconBackground = MaterialTheme.colorScheme.primaryFixed,
+            title = stringResource(R.string.manual_backup_title),
+            subtitle = stringResource(R.string.manual_backup_subtitle),
+            onClick = onManualBackupClick,
           )
         }
 
@@ -292,5 +309,6 @@ fun PreviewAboutScreenComponent() {
     onBack = {},
     onOpenWebsite = {},
     onBiometricToggle = {},
+    onManualBackupClick = {},
   )
 }

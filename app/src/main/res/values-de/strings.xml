@@ -2,6 +2,12 @@
 <resources>
     <string name="about">Über</string>
     <string name="app_name">CardStore</string>
+    <string name="backup_biometric_subtitle">Authentifiziere dich, um deine Karten zu exportieren</string>
+    <string name="backup_biometric_title">Backup erstellen</string>
+    <string name="backup_create">Backup erstellen</string>
+    <string name="backup_failed">Backup fehlgeschlagen</string>
+    <string name="backup_restore">Backup wiederherstellen</string>
+    <string name="backup_success">Backup erfolgreich erstellt</string>
     <string name="biometric_activate_subtitle">Bestätige deinen Fingerabdruck, um die biometrische Authentifizierung zu aktivieren</string>
     <string name="biometric_activate_title">Biometrische Authentifizierung aktivieren</string>
     <string name="biometric_auth_subtitle">Entsperren, um auf deine Karten zuzugreifen</string>
@@ -70,10 +76,16 @@
     <string name="labels_none">Keine Labels</string>
     <string name="labels_options">Optionen</string>
     <string name="links">Links</string>
+    <string name="manual_backup_subtitle">Deine Daten werden automatisch gesichert — erstelle oder stelle hier ein lokales Backup wieder her</string>
+    <string name="manual_backup_title">Manuelles Backup</string>
     <string name="playstore">Im Play Store anzeigen</string>
     <string name="playstore_description">App bewerten und rezensieren</string>
     <string name="quick_settings_tile_label">CardStore öffnen</string>
     <string name="report_issue">Problem melden</string>
+    <string name="restore_confirm_body">Dadurch werden alle aktuellen Karten und Labels ersetzt. Dies kann nicht rückgängig gemacht werden.</string>
+    <string name="restore_confirm_title">Backup wiederherstellen?</string>
+    <string name="restore_failed">Ungültige oder beschädigte Backup-Datei</string>
+    <string name="restore_success">Backup erfolgreich wiederhergestellt</string>
     <string name="scan_barcode">Barcode scannen</string>
     <string name="scan_error">Fehler beim Scannen. Fehler wurde in die Zwischenablage kopiert.</string>
     <string name="settings">Einstellungen</string>

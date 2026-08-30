@@ -18,13 +18,14 @@ fun ConfirmDialog(
   dialogTitle: String,
   dialogText: String,
   confirmText: String,
+  allowLightDismiss: Boolean = true,
 ) {
   AlertDialog(
     title = {
       Text(modifier = Modifier.fillMaxWidth(), text = dialogTitle, textAlign = TextAlign.Start)
     },
     text = { Text(dialogText) },
-    onDismissRequest = { onDismissRequest() },
+    onDismissRequest = { if (allowLightDismiss) onDismissRequest() },
     confirmButton = { TextButton(onClick = { onConfirmation() }) { Text(confirmText) } },
     dismissButton = {
       TextButton(onClick = { onDismissRequest() }) { Text(stringResource(R.string.common_cancel)) }
