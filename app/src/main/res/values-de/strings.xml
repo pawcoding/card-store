@@ -2,9 +2,6 @@
 <resources>
     <string name="about">Über</string>
     <string name="app_name">CardStore</string>
-    <string name="auto_backup_active">Deine Karten werden automatisch in Google Drive gesichert</string>
-    <string name="auto_backup_inactive">Aktiviere die Google-Kontosicherung in den Systemeinstellungen, um deine Daten zu schützen</string>
-    <string name="auto_backup_title">Auto-Backup</string>
     <string name="backup_biometric_subtitle">Authentifiziere dich, um deine Karten zu exportieren</string>
     <string name="backup_biometric_title">Backup erstellen</string>
     <string name="backup_create">Backup erstellen</string>
@@ -79,7 +76,7 @@
     <string name="labels_none">Keine Labels</string>
     <string name="labels_options">Optionen</string>
     <string name="links">Links</string>
-    <string name="manual_backup_subtitle">Lokales Backup erstellen oder wiederherstellen</string>
+    <string name="manual_backup_subtitle">Deine Daten werden automatisch gesichert — erstelle oder stelle hier ein lokales Backup wieder her</string>
     <string name="manual_backup_title">Manuelles Backup</string>
     <string name="playstore">Im Play Store anzeigen</string>
     <string name="playstore_description">App bewerten und rezensieren</string>
