@@ -9,10 +9,11 @@ import de.pawcode.cardstore.data.database.daos.LabelDao
 import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.database.entities.CardLabelCrossRef
 import de.pawcode.cardstore.data.database.entities.LabelEntity
+import de.pawcode.cardstore.data.database.migrations.ADD_FAVORITE_COLUMN
 
 @Database(
   entities = [CardEntity::class, LabelEntity::class, CardLabelCrossRef::class],
-  version = 1,
+  version = 2,
   exportSchema = false,
 )
 abstract class CardDatabase : RoomDatabase() {
@@ -32,6 +33,7 @@ abstract class CardDatabase : RoomDatabase() {
                 CardDatabase::class.java,
                 "card_database",
               )
+              .addMigrations(ADD_FAVORITE_COLUMN)
               .build()
           INSTANCE = instance
           instance

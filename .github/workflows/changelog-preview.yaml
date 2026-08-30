@@ -1,0 +1,101 @@
+name: Changelog Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  preview:
+    runs-on: ubuntu-slim
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: 🔑 Create token
+        uses: actions/create-github-app-token@v3.2.0
+        id: app-token
+        with:
+          client-id: ${{ secrets.GH_CLIENT_ID }}
+          private-key: ${{ secrets.GH_PRIVATE_KEY }}
+
+      - name: 📥 Checkout code
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ steps.app-token.outputs.token }}
+          fetch-depth: 200
+          fetch-tags: true
+          filter: blob:none
+
+      - name: ⚒️ Build semantic-release branch config
+        id: branch-config
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          branches="$(node -e "
+            const baseRef = process.env.BASE_REF;
+            const headRef = process.env.HEAD_REF;
+
+            process.stdout.write(
+              JSON.stringify(
+                baseRef === 'master'
+                  ? [baseRef, headRef]
+                  : [baseRef, { name: headRef, channel: 'next', prerelease: 'next' }],
+              ),
+            );
+          ")"
+          echo "branches=${branches}" >> "$GITHUB_OUTPUT"
+
+      - name: 🔮 Generate changelog preview
+        uses: cycjimmy/semantic-release-action@v6.0.0
+        id: changelog
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          DRY_RUN: 'true'
+        with:
+          semantic_version: 25
+          extra_plugins: |
+            conventional-changelog-conventionalcommits@9
+            @semantic-release/changelog
+            @semantic-release/git
+            @semantic-release/exec
+          dry_run: true
+          ci: false
+          unset_gha_env: true
+          branches: ${{ steps.branch-config.outputs.branches }}
+
+      # Create or update PR comment with changelog
+      - name: 💬 Post changelog preview
+        uses: marocchino/sticky-pull-request-comment@v3.0.5
+        if: steps.changelog.outputs.new_release_version != ''
+        with:
+          header: changelog-preview
+          message: |
+            ## 📝 Changelog Preview
+
+            ${{ steps.changelog.outputs.new_release_notes }}
+
+      # Post comment if no release will be triggered
+      - name: 💬 Post no release message
+        uses: marocchino/sticky-pull-request-comment@v3.0.5
+        if: steps.changelog.outputs.new_release_version == ''
+        with:
+          header: changelog-preview
+          message: |
+            ## 📝 Changelog Preview
+
+            ℹ️ This PR will **not** trigger a new release.
+
+            To trigger a release, ensure your commits follow the [Conventional Commits](https://www.conventionalcommits.org/) format with types that trigger releases (e.g., `feat:`, `fix:`, `refactor:`, etc.).
+
+      # Post comment if semantic-release fails
+      - name: 💬 Post error message
+        uses: marocchino/sticky-pull-request-comment@v3.0.5
+        if: failure() && steps.changelog.conclusion == 'failure'
+        with:
+          header: changelog-preview
+          message: |
+            ## 📝 Changelog Preview
+
+            ⚠️ Failed to generate changelog preview. Please check the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.

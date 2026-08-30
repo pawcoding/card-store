@@ -45,21 +45,20 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
 
   fun insertLabel(label: LabelEntity) = viewModelScope.launch { labelRepository.insertLabel(label) }
 
-  fun addLabelsToCard(cardId: String, labelIds: List<String>) =
-    viewModelScope.launch { cardRepository.addLabelsToCard(cardId, labelIds) }
+  fun addLabelsToCard(cardId: String, labelIds: List<String>) = viewModelScope.launch {
+    cardRepository.addLabelsToCard(cardId, labelIds)
+  }
 
   fun updateCard(card: CardEntity) = viewModelScope.launch { cardRepository.updateCard(card) }
 
   fun updateLabel(label: LabelEntity) = viewModelScope.launch { labelRepository.updateLabel(label) }
 
-  fun addUsage(card: CardEntity) =
-    viewModelScope.launch {
-      val updatedCard =
-        card.copy(useCount = card.useCount + 1, lastUsed = System.currentTimeMillis())
+  fun addUsage(card: CardEntity) = viewModelScope.launch {
+    val updatedCard = card.copy(useCount = card.useCount + 1, lastUsed = System.currentTimeMillis())
 
-      cardRepository.updateCard(updatedCard)
-      updateShortcuts(getApplication())
-    }
+    cardRepository.updateCard(updatedCard)
+    updateShortcuts(getApplication())
+  }
 
   fun pinShortcut(card: CardEntity) {
     val context = getApplication<Application>()
@@ -88,6 +87,11 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
 
   fun deleteLabel(label: LabelEntity) = viewModelScope.launch { labelRepository.deleteLabel(label) }
 
-  fun removeLabelsFromCard(cardId: String, labelIds: List<String>) =
-    viewModelScope.launch { cardRepository.removeLabelsFromCard(cardId, labelIds) }
+  fun removeLabelsFromCard(cardId: String, labelIds: List<String>) = viewModelScope.launch {
+    cardRepository.removeLabelsFromCard(cardId, labelIds)
+  }
+
+  fun toggleFavorite(card: CardEntity) = viewModelScope.launch {
+    cardRepository.updateCard(card.copy(isFavorite = !card.isFavorite))
+  }
 }

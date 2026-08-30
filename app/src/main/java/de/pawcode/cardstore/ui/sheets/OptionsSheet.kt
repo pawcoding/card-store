@@ -120,7 +120,7 @@ fun PreviewOptionSheet() {
 
   OptionSheet(
     Option(label = "Edit card", icon = R.drawable.edit_solid, onClick = {}),
-    Option(label = "Delete card", icon = R.drawable.delete_forever_solid, onClick = {}),
+    Option(label = "Delete card", icon = R.drawable.delete_solid, onClick = {}),
   ) {
     OptionSheetInfo(
       backgroundColor = color,

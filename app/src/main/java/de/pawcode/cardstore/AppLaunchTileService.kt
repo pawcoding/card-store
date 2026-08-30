@@ -10,9 +10,7 @@ class AppLaunchTileService : TileService() {
     super.onClick()
 
     val launchIntent =
-      Intent(this, MainActivity::class.java).apply {
-        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-      }
+      Intent(this, MainActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
       startActivityAndCollapse(
@@ -21,7 +19,7 @@ class AppLaunchTileService : TileService() {
           0,
           launchIntent,
           PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
-        ),
+        )
       )
     } else {
       @Suppress("DEPRECATION") startActivityAndCollapse(launchIntent)
