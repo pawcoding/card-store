@@ -11,7 +11,9 @@ import de.pawcode.cardstore.data.models.BackupCardData
 import de.pawcode.cardstore.data.models.BackupData
 import de.pawcode.cardstore.data.models.BackupLabelData
 import java.time.Instant
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 
 object BackupService {
@@ -78,7 +80,7 @@ object BackupService {
   ): Result<Unit> = runCatching {
     val cards = cardRepository.allCards.first()
     val labels = labelRepository.allLabels.first()
-    createBackup(context, uri, cards, labels)
+    withContext(Dispatchers.IO) { createBackup(context, uri, cards, labels) }
   }
 
   suspend fun performRestoreBackup(
@@ -86,7 +88,7 @@ object BackupService {
     uri: Uri,
     cardRepository: de.pawcode.cardstore.data.database.repositories.CardRepository,
   ): Result<Unit> = runCatching {
-    val data = readBackup(context, uri)
+    val data = withContext(Dispatchers.IO) { readBackup(context, uri) }
     if (!validateBackup(data)) error("Invalid backup")
     val (cards, labels, crossRefs) = toEntities(data)
     cardRepository.restoreBackup(cards, labels, crossRefs)
