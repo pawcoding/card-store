@@ -39,6 +39,7 @@ object BackupService {
               logo = cwl.card.logo,
               lastUsed = cwl.card.lastUsed,
               useCount = cwl.card.useCount,
+              isFavorite = cwl.card.isFavorite,
               labelIds = cwl.labels.map { it.labelId },
             )
           },
@@ -106,6 +107,7 @@ object BackupService {
           logo = c.logo,
           lastUsed = c.lastUsed,
           useCount = c.useCount,
+          isFavorite = c.isFavorite,
         )
       }
     val crossRefs =

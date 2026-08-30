@@ -26,5 +26,6 @@ data class BackupCardData(
   val logo: String? = null,
   val lastUsed: Long? = null,
   val useCount: Int = 0,
+  val isFavorite: Boolean = false,
   val labelIds: List<String> = emptyList(),
 )

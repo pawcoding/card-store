@@ -1,6 +1,7 @@
 package de.pawcode.cardstore.data.database.repositories
 
 import android.content.Context
+import androidx.room.withTransaction
 import de.pawcode.cardstore.data.database.CardDatabase
 import de.pawcode.cardstore.data.database.classes.CardWithLabels
 import de.pawcode.cardstore.data.database.daos.CardDao
@@ -50,12 +51,15 @@ class CardRepository(context: Context) {
     labels: List<LabelEntity>,
     crossRefs: List<CardLabelCrossRef>,
   ) {
-    val labelDao = CardDatabase.getDatabase(context).labelDao()
-    cardDao.deleteAllCrossRefs()
-    cardDao.deleteAll()
-    labelDao.deleteAll()
-    labelDao.insertAll(labels)
-    cardDao.insertAll(cards)
-    cardDao.insertAllCrossRefs(crossRefs)
+    val db = CardDatabase.getDatabase(context)
+    val labelDao = db.labelDao()
+    db.withTransaction {
+      cardDao.deleteAllCrossRefs()
+      cardDao.deleteAll()
+      labelDao.deleteAll()
+      labelDao.insertAll(labels)
+      cardDao.insertAll(cards)
+      cardDao.insertAllCrossRefs(crossRefs)
+    }
   }
 }
