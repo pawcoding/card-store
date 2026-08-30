@@ -53,8 +53,9 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         with:
-          semantic_version: 24
+          semantic_version: 25
           extra_plugins: |
+            conventional-changelog-conventionalcommits@9
             @semantic-release/changelog
             @semantic-release/git
             @semantic-release/exec
