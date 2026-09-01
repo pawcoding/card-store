@@ -1,10 +1,7 @@
 package de.pawcode.cardstore.ui.screens
 
-<<<<<<< HEAD
-import androidx.compose.foundation.layout.Arrangement
-=======
 import android.widget.Toast
->>>>>>> origin/staging
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

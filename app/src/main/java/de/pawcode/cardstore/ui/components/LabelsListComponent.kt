@@ -27,13 +27,10 @@ import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
 import de.pawcode.cardstore.data.database.entities.LabelEntity
 
-<<<<<<< HEAD
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-=======
 /** Sentinel ID used to represent the virtual "Favorites" label. */
 const val FAVORITES_LABEL_ID = "__FAVORITES__"
 
->>>>>>> origin/staging
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LabelsListComponent(
   labels: List<LabelEntity>,
