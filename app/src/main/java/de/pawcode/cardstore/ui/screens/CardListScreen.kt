@@ -1,6 +1,10 @@
 package de.pawcode.cardstore.ui.screens
 
+<<<<<<< HEAD
 import androidx.compose.foundation.layout.Arrangement
+=======
+import android.widget.Toast
+>>>>>>> origin/staging
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,7 +46,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.classes.CardWithLabels
@@ -54,11 +57,14 @@ import de.pawcode.cardstore.data.enums.SortAttribute
 import de.pawcode.cardstore.data.managers.PreferencesManager
 import de.pawcode.cardstore.data.services.DeeplinkService
 import de.pawcode.cardstore.data.services.ReviewService
-import de.pawcode.cardstore.data.services.SnackbarService
-import de.pawcode.cardstore.navigation.Screen
+import de.pawcode.cardstore.navigation.Navigator
+import de.pawcode.cardstore.navigation.ScreenAbout
+import de.pawcode.cardstore.navigation.ScreenCardEdit
+import de.pawcode.cardstore.navigation.ScreenLabelList
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.CardsListComponent
 import de.pawcode.cardstore.ui.components.DropdownOption
+import de.pawcode.cardstore.ui.components.FAVORITES_LABEL_ID
 import de.pawcode.cardstore.ui.components.LabelsListComponent
 import de.pawcode.cardstore.ui.components.SelectDropdownMenu
 import de.pawcode.cardstore.ui.dialogs.ConfirmDialog
@@ -81,7 +87,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 @Composable
-fun CardListScreen(navController: NavController, viewModel: CardViewModel = viewModel()) {
+fun CardListScreen(navigator: Navigator, viewModel: CardViewModel = viewModel()) {
   val context = LocalContext.current
   val preferencesManager = remember { PreferencesManager(context) }
   val scope = rememberCoroutineScope()
@@ -90,8 +96,8 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
     cardsFlow = viewModel.allCards,
     labelsFlow = viewModel.allLabels,
     sortByFlow = preferencesManager.sortAttribute,
-    onCreateCard = { cardNumber, barcodeFormat ->
-      if (cardNumber != null && barcodeFormat != null) {
+    onCreateCard = { cardNumber, barcodeType ->
+      if (cardNumber != null && barcodeType != null) {
         val deeplink = parseDeeplink(cardNumber)
         if (deeplink != null) {
           DeeplinkService.deeplinkReceived(deeplink)
@@ -99,22 +105,7 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
         }
       }
 
-      val route = buildString {
-        append(Screen.EditCard.route)
-        if (cardNumber != null || barcodeFormat != null) {
-          append("?")
-          if (cardNumber != null) {
-            append("cardNumber=$cardNumber&")
-          }
-          if (barcodeFormat != null) {
-            append("barcodeFormat=$barcodeFormat&")
-          }
-        }
-        if (endsWith("&")) {
-          deleteCharAt(length - 1)
-        }
-      }
-      navController.navigate(route)
+      navigator.navigate(ScreenCardEdit(cardNumber = cardNumber, barcodeType = barcodeType))
     },
     onImportCard = { importedCard, existingCard ->
       if (existingCard != null) {
@@ -127,21 +118,37 @@ fun CardListScreen(navController: NavController, viewModel: CardViewModel = view
             color = importedCard.color,
           )
         viewModel.updateCard(updatedCard)
-        SnackbarService.showSnackbar(context.getString(R.string.update_card_success))
+        Toast.makeText(context, context.getString(R.string.update_card_success), Toast.LENGTH_SHORT)
+          .show()
       } else {
         viewModel.insertCard(importedCard)
-        SnackbarService.showSnackbar(context.getString(R.string.import_card_success))
+        Toast.makeText(context, context.getString(R.string.import_card_success), Toast.LENGTH_SHORT)
+          .show()
       }
       DeeplinkService.clearDeeplink()
     },
-    onEditCard = { card ->
-      navController.navigate(Screen.EditCard.route + "?cardId=${card.cardId}")
-    },
+    onEditCard = { card -> navigator.navigate(ScreenCardEdit(card.cardId)) },
     onShowCard = { viewModel.addUsage(it) },
-    onDeleteCard = { scope.launch { viewModel.deleteCard(it) } },
-    onViewLabels = { navController.navigate(Screen.LabelList.route) },
+    onPinShortcut = {
+      viewModel.pinShortcut(it)
+      Toast.makeText(context, context.getString(R.string.shortcut_added), Toast.LENGTH_SHORT).show()
+    },
+    onDeleteCard = {
+      scope.launch {
+        viewModel.deleteCard(it).join()
+        Toast.makeText(context, context.getString(R.string.card_deleted), Toast.LENGTH_SHORT).show()
+      }
+    },
+    onViewLabels = { navigator.navigate(ScreenLabelList) },
     onSortChange = { scope.launch { preferencesManager.saveSortAttribute(it) } },
-    onShowAbout = { navController.navigate(Screen.About.route) },
+    onToggleFavorite = { card ->
+      viewModel.toggleFavorite(card)
+      val message =
+        if (card.isFavorite) context.getString(R.string.card_favorite_removed)
+        else context.getString(R.string.card_favorite_added)
+      Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    },
+    onShowAbout = { navigator.navigate(ScreenAbout) },
   )
 }
 
@@ -155,9 +162,11 @@ fun CardListScreenComponent(
   onImportCard: (importedCard: CardEntity, existingCard: CardEntity?) -> Unit,
   onEditCard: (CardEntity) -> Unit,
   onShowCard: (CardEntity) -> Unit,
+  onPinShortcut: (CardEntity) -> Unit,
   onDeleteCard: (CardEntity) -> Unit,
   onViewLabels: () -> Unit,
   onSortChange: (SortAttribute) -> Unit,
+  onToggleFavorite: (CardEntity) -> Unit,
   onShowAbout: () -> Unit,
 ) {
   val cards by cardsFlow.collectAsState(initial = emptyList())
@@ -181,17 +190,34 @@ fun CardListScreenComponent(
 
   var selectedLabel by remember { mutableStateOf<String?>(null) }
 
+  val hasFavorites by remember { derivedStateOf { cards.any { it.card.isFavorite } } }
+
   val cardsFiltered by remember {
     derivedStateOf {
       cards
-        .filter { selectedLabel == null || it.labels.any { it.labelId == selectedLabel } }
+        .filter {
+          when (selectedLabel) {
+            // No label selected, show all cards
+            null -> true
+            // Only show favorites
+            FAVORITES_LABEL_ID -> it.card.isFavorite
+            // Only show cards that are tagged with the selected label
+            else -> it.labels.any { label -> label.labelId == selectedLabel }
+          }
+        }
         .map { it.card }
     }
   }
   val cardsSorted by
     rememberUpdatedState(
       when (sortBy) {
-        SortAttribute.INTELLIGENT -> cardsFiltered.sortedByDescending { calculateCardScore(it) }
+        SortAttribute.INTELLIGENT ->
+          cardsFiltered.sortedWith(
+            // Keep favorites at the top
+            compareByDescending<CardEntity> { it.isFavorite }
+              // Then compare by dynamic score
+              .thenByDescending { calculateCardScore(it) }
+          )
         SortAttribute.ALPHABETICALLY -> cardsFiltered.sortedBy { it.storeName }
         SortAttribute.RECENTLY_USED -> cardsFiltered.sortedByDescending { it.lastUsed }
         SortAttribute.MOST_USED -> cardsFiltered.sortedByDescending { it.useCount }
@@ -328,7 +354,11 @@ fun CardListScreenComponent(
         LabelsListComponent(
           labels = labels,
           selected = selectedLabel,
+          hasFavorites = hasFavorites,
           onLabelClick = { selectedLabel = if (selectedLabel == it.labelId) null else it.labelId },
+          onFavoritesClick = {
+            selectedLabel = if (selectedLabel == FAVORITES_LABEL_ID) null else FAVORITES_LABEL_ID
+          },
           onEdit = { onViewLabels() },
         )
       }
@@ -409,8 +439,27 @@ fun CardListScreenComponent(
               },
             ),
             Option(
+              label =
+                if (it.isFavorite) stringResource(R.string.card_favorite_remove)
+                else stringResource(R.string.card_favorite_add),
+              icon =
+                if (it.isFavorite) R.drawable.heart_minus_solid else R.drawable.heart_plus_solid,
+              onClick = {
+                onToggleFavorite(it)
+                showCardOptionSheet = null
+              },
+            ),
+            Option(
+              label = stringResource(R.string.shortcut_pin_to_home),
+              icon = R.drawable.keep_solid,
+              onClick = {
+                onPinShortcut(it)
+                showCardOptionSheet = null
+              },
+            ),
+            Option(
               label = stringResource(R.string.card_delete_title),
-              icon = R.drawable.delete_forever_solid,
+              icon = R.drawable.delete_solid,
               onClick = {
                 openDeleteDialog = it
                 showCardOptionSheet = null
@@ -486,9 +535,11 @@ fun PreviewCardListScreenComponent() {
     onImportCard = { _, _ -> },
     onEditCard = {},
     onShowCard = {},
+    onPinShortcut = {},
     onDeleteCard = {},
     onViewLabels = {},
     onSortChange = {},
+    onToggleFavorite = {},
     onShowAbout = {},
   )
 }
@@ -505,9 +556,11 @@ fun PreviewCardListScreenComponentEmpty() {
     onImportCard = { _, _ -> },
     onEditCard = {},
     onShowCard = {},
+    onPinShortcut = {},
     onDeleteCard = {},
     onViewLabels = {},
     onSortChange = {},
+    onToggleFavorite = {},
     onShowAbout = {},
   )
 }

@@ -36,6 +36,9 @@ data class CardEntity(
 
   /** Number of times the card was used. */
   @ColumnInfo(name = "use_count") val useCount: Int = 0,
+
+  /** Whether the card is marked as a favorite. */
+  @ColumnInfo(name = "is_favorite") val isFavorite: Boolean = false,
 )
 
 /** Example card used to preview components. */

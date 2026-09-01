@@ -27,12 +27,20 @@ import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
 import de.pawcode.cardstore.data.database.entities.LabelEntity
 
+<<<<<<< HEAD
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
+=======
+/** Sentinel ID used to represent the virtual "Favorites" label. */
+const val FAVORITES_LABEL_ID = "__FAVORITES__"
+
+>>>>>>> origin/staging
 @Composable
 fun LabelsListComponent(
   labels: List<LabelEntity>,
   selected: String?,
+  hasFavorites: Boolean,
   onLabelClick: (LabelEntity) -> Unit,
+  onFavoritesClick: () -> Unit,
   onEdit: () -> Unit,
 ) {
   val scrollState = rememberScrollState()
@@ -47,12 +55,29 @@ fun LabelsListComponent(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-      if (labels.isEmpty()) {
+      if (labels.isEmpty() && !hasFavorites) {
         Text(
           text = stringResource(R.string.labels_none),
           style = MaterialTheme.typography.bodyLarge,
         )
       } else {
+        if (hasFavorites) {
+          val favSelected = selected == FAVORITES_LABEL_ID
+          FilterChip(
+            selected = favSelected,
+            onClick = { onFavoritesClick() },
+            label = {
+              Icon(
+                painterResource(
+                  if (favSelected) R.drawable.favorite_solid else R.drawable.favorite
+                ),
+                contentDescription = stringResource(R.string.label_favorites),
+                modifier = Modifier.padding(vertical = 5.dp),
+              )
+            },
+          )
+        }
+
         labels.forEach { label ->
           val chipSelected = label.labelId == selected
           FilterChip(
@@ -107,7 +132,9 @@ fun PreviewLabelsListComponent() {
   LabelsListComponent(
     labels = EXAMPLE_LABEL_LIST,
     selected = EXAMPLE_LABEL.labelId,
+    hasFavorites = true,
     onLabelClick = {},
+    onFavoritesClick = {},
     onEdit = {},
   )
 }
@@ -115,5 +142,12 @@ fun PreviewLabelsListComponent() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewLabelsListComponentEmpty() {
-  LabelsListComponent(labels = listOf(), selected = null, onLabelClick = {}, onEdit = {})
+  LabelsListComponent(
+    labels = listOf(),
+    selected = null,
+    hasFavorites = false,
+    onLabelClick = {},
+    onFavoritesClick = {},
+    onEdit = {},
+  )
 }

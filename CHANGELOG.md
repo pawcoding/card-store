@@ -1,3 +1,33 @@
+# [1.6.0](https://github.com/pawcoding/card-store/compare/v1.5.0...v1.6.0) (2026-05-14)
+
+
+### Features
+
+* **assistant:** add shortcuts.xml with OPEN_APP_FEATURE capability ([0571272](https://github.com/pawcoding/card-store/commit/0571272552a05f4e42ed26e6dcd55d7ab162b497))
+
+# [1.5.0](https://github.com/pawcoding/card-store/compare/v1.4.3...v1.5.0) (2026-02-26)
+
+
+### Bug Fixes
+
+* **biometric:** do not call onError on transient authentication failures ([4ea1765](https://github.com/pawcoding/card-store/commit/4ea17651f712b4dc3b387b8b2440be406f82e556))
+
+
+### Features
+
+* **shortcut:** add dynamic shortcuts ([8cb18c3](https://github.com/pawcoding/card-store/commit/8cb18c363cd5518c9f648a8a1150065a7ef65804))
+* **shortcut:** add shortcut option to card options ([38a5104](https://github.com/pawcoding/card-store/commit/38a51044eab497935f6799a7bba24ec694576daf))
+* **quick-settings:** add tile to launch app ([#74](https://github.com/pawcoding/card-store/issues/74)) ([c426d90](https://github.com/pawcoding/card-store/commit/c426d904de06fe624aa2dc6c22bbc62b8d547516))
+
+## [1.4.3](https://github.com/pawcoding/card-store/compare/v1.4.2...v1.4.3) (2026-02-19)
+
+
+### Bug Fixes
+
+* **proguard:** keep mlkit to not crash on startup ([6e962ab](https://github.com/pawcoding/card-store/commit/6e962abb6b9fc3de7f89886e4e673fe0f0def65b))
+
+## [1.4.2](https://github.com/pawcoding/card-store/compare/v1.4.1...v1.4.2) (2025-12-12)
+
 ## [1.4.1](https://github.com/pawcoding/card-store/compare/v1.4.0...v1.4.1) (2025-11-22)
 
 # [1.4.0](https://github.com/pawcoding/card-store/compare/v1.3.0...v1.4.0) (2025-10-10)

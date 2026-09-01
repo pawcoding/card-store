@@ -1,5 +1,6 @@
 package de.pawcode.cardstore.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,12 +42,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import de.charlex.compose.RevealSwipe
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
 import de.pawcode.cardstore.data.database.entities.LabelEntity
-import de.pawcode.cardstore.navigation.Screen
+import de.pawcode.cardstore.navigation.Navigator
+import de.pawcode.cardstore.navigation.ScreenLabelEdit
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.dialogs.ConfirmDialog
 import de.pawcode.cardstore.ui.sheets.Option
@@ -55,22 +57,29 @@ import de.pawcode.cardstore.ui.viewmodels.CardViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun LabelListScreen(navController: NavController, viewModel: CardViewModel = viewModel()) {
+fun LabelListScreen(navigator: Navigator, viewModel: CardViewModel = viewModel()) {
+  val context = LocalContext.current
   val scope = rememberCoroutineScope()
 
   val labels by viewModel.allLabels.collectAsState(initial = emptyList())
 
   LabelListScreenComponent(
     labels = labels,
-    onBack = { navController.popBackStack() },
+    onBack = { navigator.goBack() },
     onEdit = { label ->
       if (label != null) {
-        navController.navigate(Screen.EditLabel.route + "?labelId=${label.labelId}")
+        navigator.navigate(ScreenLabelEdit(label.labelId))
       } else {
-        navController.navigate(Screen.EditLabel.route)
+        navigator.navigate(ScreenLabelEdit(null))
       }
     },
-    onDelete = { scope.launch { viewModel.deleteLabel(it) } },
+    onDelete = {
+      scope.launch {
+        viewModel.deleteLabel(it).join()
+        Toast.makeText(context, context.getString(R.string.label_deleted), Toast.LENGTH_SHORT)
+          .show()
+      }
+    },
   )
 }
 
@@ -141,7 +150,7 @@ fun LabelListScreenComponent(
               backgroundCardEndColor = MaterialTheme.colorScheme.errorContainer,
               hiddenContentEnd = {
                 Icon(
-                  painterResource(R.drawable.delete_forever_solid),
+                  painterResource(R.drawable.delete_solid),
                   contentDescription = stringResource(R.string.label_delete_title),
                   tint = MaterialTheme.colorScheme.onErrorContainer,
                 )
@@ -197,7 +206,7 @@ fun LabelListScreenComponent(
           ),
           Option(
             label = stringResource(R.string.label_delete_title),
-            icon = R.drawable.delete_forever_solid,
+            icon = R.drawable.delete_solid,
             onClick = {
               openDeleteDialog = it
               showLabelOptionSheet = null

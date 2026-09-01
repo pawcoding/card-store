@@ -1,5 +1,6 @@
 package de.pawcode.cardstore.ui.screens
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,11 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.simonsickle.compose.barcodes.BarcodeType
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.database.classes.CardWithLabels
@@ -34,7 +35,7 @@ import de.pawcode.cardstore.data.database.classes.emptyCardWithLabels
 import de.pawcode.cardstore.data.database.entities.CardEntity
 import de.pawcode.cardstore.data.database.entities.EXAMPLE_LABEL_LIST
 import de.pawcode.cardstore.data.database.entities.LabelEntity
-import de.pawcode.cardstore.data.services.SnackbarService
+import de.pawcode.cardstore.navigation.Navigator
 import de.pawcode.cardstore.ui.components.AppBar
 import de.pawcode.cardstore.ui.components.EditCardForm
 import de.pawcode.cardstore.ui.components.SaveFabComponent
@@ -49,7 +50,7 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 @Composable
 fun EditCardScreen(
-  navController: NavController,
+  navigator: Navigator,
   cardId: String? = null,
   storeName: String? = null,
   cardNumber: String? = null,
@@ -57,6 +58,7 @@ fun EditCardScreen(
   color: Int? = null,
   viewModel: CardViewModel = viewModel(),
 ) {
+  val context = LocalContext.current
   val labels by viewModel.allLabels.collectAsState(initial = emptyList())
   val initialCard =
     if (cardId != null) {
@@ -83,7 +85,7 @@ fun EditCardScreen(
       isCreateCard = cardId == null,
       initialCard = it,
       labels = labels,
-      onBack = { navController.popBackStack() },
+      onBack = { navigator.goBack() },
       onSave = { card ->
         if (cardId != null) {
           viewModel.updateCard(card.card)
@@ -97,9 +99,9 @@ fun EditCardScreen(
           viewModel.addLabelsToCard(card.card.cardId, card.labels.map { it.labelId })
         }
 
-        SnackbarService.showSnackbar(message = snackbarMessage)
+        Toast.makeText(context, snackbarMessage, Toast.LENGTH_SHORT).show()
 
-        navController.popBackStack()
+        navigator.goBack()
       },
     )
   }

@@ -25,6 +25,15 @@ interface CardDao {
 
   @Delete suspend fun removeLabelsFromCard(cardLabels: List<CardLabelCrossRef>)
 
+  @Query("DELETE FROM cards") suspend fun deleteAll()
+
+  @Query("DELETE FROM card_labels") suspend fun deleteAllCrossRefs()
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertAll(cards: List<CardEntity>)
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun insertAllCrossRefs(crossRefs: List<CardLabelCrossRef>)
+
   @Transaction @Query("SELECT * FROM cards") fun getAll(): Flow<List<CardWithLabels>>
 
   @Transaction
