@@ -155,6 +155,7 @@ fun EditCardScreenComponent(
     topBar = {
       AppBar(
         title = stringResource(if (!isCreateCard) R.string.card_edit else R.string.card_add),
+        subtitle = if (!isCreateCard) initialCard.card.storeName else null,
         onBack = { handleBack() },
       )
     },
@@ -181,8 +182,8 @@ fun EditCardScreenComponent(
   }
 }
 
-@Preview
-@Preview(device = "id:pixel_tablet")
+@Preview(showSystemUi = true)
+@Preview(device = "id:pixel_tablet", showSystemUi = true)
 @Composable
 fun PreviewEditCardScreenComponent() {
   EditCardScreenComponent(
@@ -194,8 +195,8 @@ fun PreviewEditCardScreenComponent() {
   )
 }
 
-@Preview
-@Preview(device = "id:pixel_tablet")
+@Preview(showSystemUi = true)
+@Preview(device = "id:pixel_tablet", showSystemUi = true)
 @Composable
 fun PreviewEditCardScreenComponentEmpty() {
   EditCardScreenComponent(

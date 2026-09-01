@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +29,7 @@ fun AddCardComponent(hasCards: Boolean, onClick: () -> Unit) {
     modifier = Modifier.fillMaxWidth().aspectRatio(1.586f).clickable { onClick() },
     colors =
       CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
-    shape = RoundedCornerShape(24.dp),
+    shape = MaterialTheme.shapes.large,
   ) {
     Column(
       horizontalAlignment = Alignment.CenterHorizontally,
