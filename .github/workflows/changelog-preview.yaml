@@ -54,7 +54,7 @@ jobs:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           DRY_RUN: 'true'
         with:
-          semantic_version: 25
+          semantic_version: 25.0.9
           extra_plugins: |
             conventional-changelog-conventionalcommits@9
             @semantic-release/changelog
