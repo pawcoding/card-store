@@ -67,7 +67,7 @@ jobs:
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: de.pawcode.cardstore
-          track: ${{ github.ref == 'refs/heads/master' && 'production' || 'beta' }}
+          tracks: ${{ github.ref == 'refs/heads/master' && 'production' || 'beta' }}
           releaseName: ${{ steps.release.outputs.new_release_version }}
           status: draft
           mappingFile: app/build/outputs/mapping/release/mapping.txt
