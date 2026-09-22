@@ -57,7 +57,7 @@ fun CardComponent(card: CardEntity, onClick: () -> Unit, onLongPress: () -> Unit
         ),
     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
     colors = CardDefaults.cardColors(containerColor = color),
-    shape = RoundedCornerShape(24.dp),
+    shape = MaterialTheme.shapes.large,
   ) {
     Column(
       verticalArrangement = Arrangement.SpaceBetween,

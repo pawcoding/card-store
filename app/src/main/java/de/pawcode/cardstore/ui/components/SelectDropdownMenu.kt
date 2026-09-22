@@ -1,20 +1,30 @@
 package de.pawcode.cardstore.ui.components
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.dp
 import de.pawcode.cardstore.R
 import de.pawcode.cardstore.data.enums.SortAttribute
 
@@ -24,6 +34,7 @@ data class DropdownOption<TValue : Enum<TValue>>(
   val value: TValue,
 )
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun <TValue : Enum<TValue>> SelectDropdownMenu(
   @DrawableRes icon: Int,
@@ -35,26 +46,53 @@ fun <TValue : Enum<TValue>> SelectDropdownMenu(
 ) {
   var dropdownExpanded by remember { mutableStateOf(initiallyExpanded) }
 
-  IconButton(onClick = { dropdownExpanded = !dropdownExpanded }) {
-    Icon(painterResource(icon), contentDescription = title)
-  }
-  DropdownMenu(expanded = dropdownExpanded, onDismissRequest = { dropdownExpanded = false }) {
-    values.forEach { option ->
-      DropdownMenuItem(
-        text = { Text(text = option.title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-        leadingIcon = {
-          Icon(painter = painterResource(option.icon), contentDescription = option.title)
-        },
-        trailingIcon = {
-          if (value == option.value) {
-            Icon(painterResource(R.drawable.check_solid), contentDescription = null)
-          }
-        },
-        onClick = {
-          onValueChange(option.value)
-          dropdownExpanded = false
-        },
+  Box {
+    IconButton(
+      modifier =
+        Modifier.size(
+          IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Wide)
+        ),
+      onClick = { dropdownExpanded = !dropdownExpanded },
+      shapes =
+        IconButtonDefaults.shapes(
+          shape = IconButtonDefaults.smallRoundShape,
+          pressedShape = IconButtonDefaults.smallPressedShape,
+        ),
+    ) {
+      Icon(
+        painterResource(icon),
+        contentDescription = title,
+        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
       )
+    }
+    DropdownMenu(
+      expanded = dropdownExpanded,
+      onDismissRequest = { dropdownExpanded = false },
+      offset = DpOffset(0.dp, 4.dp),
+      shape = MaterialTheme.shapes.medium,
+      containerColor = MaterialTheme.colorScheme.surfaceVariant,
+    ) {
+      values.forEach { option ->
+        DropdownMenuItem(
+          text = {
+            Text(
+              modifier = Modifier.padding(4.dp),
+              text = option.title,
+              maxLines = 1,
+              overflow = TextOverflow.Ellipsis,
+            )
+          },
+          leadingIcon = {
+            Icon(painter = painterResource(option.icon), contentDescription = option.title)
+          },
+          trailingIcon = {
+            AnimatedVisibility(visible = value === option.value) {
+              Icon(painterResource(R.drawable.check_solid), contentDescription = null)
+            }
+          },
+          onClick = { onValueChange(option.value) },
+        )
+      }
     }
   }
 }
