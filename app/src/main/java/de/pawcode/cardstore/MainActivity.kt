@@ -16,11 +16,11 @@ import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import de.pawcode.cardstore.data.managers.PreferencesManager
-import de.pawcode.cardstore.data.utils.updateShortcuts
 import de.pawcode.cardstore.data.services.BiometricAuthService
 import de.pawcode.cardstore.data.services.DeeplinkService
 import de.pawcode.cardstore.data.services.ReviewService
 import de.pawcode.cardstore.data.services.ReviewStatus
+import de.pawcode.cardstore.data.utils.updateShortcuts
 import de.pawcode.cardstore.ui.CardStore
 import de.pawcode.cardstore.ui.components.BiometricPlaceholder
 import de.pawcode.cardstore.ui.theme.CardStoreTheme

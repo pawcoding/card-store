@@ -17,6 +17,10 @@ interface LabelDao {
 
   @Delete suspend fun delete(label: LabelEntity)
 
+  @Query("DELETE FROM labels") suspend fun deleteAll()
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertAll(labels: List<LabelEntity>)
+
   @Query("SELECT * FROM labels ORDER BY name ASC") fun getAll(): Flow<List<LabelEntity>>
 
   @Query("SELECT * FROM labels WHERE label_id = :id") fun getById(id: String): Flow<LabelEntity?>

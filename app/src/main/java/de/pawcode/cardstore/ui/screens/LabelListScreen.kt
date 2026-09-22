@@ -1,5 +1,6 @@
 package de.pawcode.cardstore.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -56,6 +58,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LabelListScreen(navigator: Navigator, viewModel: CardViewModel = viewModel()) {
+  val context = LocalContext.current
   val scope = rememberCoroutineScope()
 
   val labels by viewModel.allLabels.collectAsState(initial = emptyList())
@@ -70,7 +73,13 @@ fun LabelListScreen(navigator: Navigator, viewModel: CardViewModel = viewModel()
         navigator.navigate(ScreenLabelEdit(null))
       }
     },
-    onDelete = { scope.launch { viewModel.deleteLabel(it) } },
+    onDelete = {
+      scope.launch {
+        viewModel.deleteLabel(it).join()
+        Toast.makeText(context, context.getString(R.string.label_deleted), Toast.LENGTH_SHORT)
+          .show()
+      }
+    },
   )
 }
 
@@ -141,7 +150,7 @@ fun LabelListScreenComponent(
               backgroundCardEndColor = MaterialTheme.colorScheme.errorContainer,
               hiddenContentEnd = {
                 Icon(
-                  painterResource(R.drawable.delete_forever_solid),
+                  painterResource(R.drawable.delete_solid),
                   contentDescription = stringResource(R.string.label_delete_title),
                   tint = MaterialTheme.colorScheme.onErrorContainer,
                 )
@@ -197,7 +206,7 @@ fun LabelListScreenComponent(
           ),
           Option(
             label = stringResource(R.string.label_delete_title),
-            icon = R.drawable.delete_forever_solid,
+            icon = R.drawable.delete_solid,
             onClick = {
               openDeleteDialog = it
               showLabelOptionSheet = null
