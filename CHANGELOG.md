@@ -1,3 +1,45 @@
+## [1.7.0](https://github.com/pawcoding/[secure]/compare/v1.6.0...v1.7.0) (2026-09-22)
+
+### 🚀 Features
+
+* **backup:** add manual backup and restore functionality ([#118](https://github.com/pawcoding/[secure]/issues/118)) ([636b586](https://github.com/pawcoding/[secure]/commit/636b58626a7a54edc26eb75b7535b7f9e63ccbe7))
+* **cards:** add option to favorite card ([27bec96](https://github.com/pawcoding/[secure]/commit/27bec961dbd6a2aadb17db263bf22799363f097a))
+* **card:** update card design ([485980a](https://github.com/pawcoding/[secure]/commit/485980ae08399b485c6c8a05528fb7ec0d17081b))
+* **toast:** add more toast messages for clearer user feedback ([09feabf](https://github.com/pawcoding/[secure]/commit/09feabf0d93a911420ae3fa820e3b384aaafdc69))
+* **toast:** replace snackbar with simple toasts ([fbdf316](https://github.com/pawcoding/[secure]/commit/fbdf3166f706c45c771c1dd52f509a7f3afc8c45))
+
+### 🛠️ Code Refactoring
+
+* **edit-card:** show plus icon for labels ([05d1e13](https://github.com/pawcoding/[secure]/commit/05d1e13774122e74a674091eaa80fc85dc3eaa40))
+* implement review suggestions ([b24440f](https://github.com/pawcoding/[secure]/commit/b24440f4fad8dad552901760ab377ec8c6e88eb3))
+* update delete icon ([1c8dc0e](https://github.com/pawcoding/[secure]/commit/1c8dc0e00bc969e507620581d64b1409447604c9))
+
+### 🏗 Dependency updates
+
+* **deps:** update actions/checkout action to v7 ([#106](https://github.com/pawcoding/[secure]/issues/106)) ([2a636da](https://github.com/pawcoding/[secure]/commit/2a636da26c575c35ad69191c06181c34de98e897))
+* **deps:** update all non-major dependencies ([a1fca44](https://github.com/pawcoding/[secure]/commit/a1fca446d9f2b51ca19844283a6c8da2d7dddecd))
+* **deps:** update all non-major dependencies ([#102](https://github.com/pawcoding/[secure]/issues/102)) ([fdb9793](https://github.com/pawcoding/[secure]/commit/fdb97936d06a64710752f6bb206131d3a918e7fd))
+* **deps:** update all non-major dependencies ([#105](https://github.com/pawcoding/[secure]/issues/105)) ([937e77b](https://github.com/pawcoding/[secure]/commit/937e77bcd93fe82d79edea1457062181f8d1af41))
+* **deps:** update all non-major dependencies ([#107](https://github.com/pawcoding/[secure]/issues/107)) ([c2df4de](https://github.com/pawcoding/[secure]/commit/c2df4de4eceefd4d5706607e3ff151c1c8004bd9))
+* **deps:** update all non-major dependencies ([#109](https://github.com/pawcoding/[secure]/issues/109)) ([2e5a77f](https://github.com/pawcoding/[secure]/commit/2e5a77f9cbb9bd72330eae18ad51d437ff8f3985))
+* **deps:** update all non-major dependencies ([#112](https://github.com/pawcoding/[secure]/issues/112)) ([cac1eb9](https://github.com/pawcoding/[secure]/commit/cac1eb989aebeb5108403e5599cbabe041a24aeb))
+* **deps:** update all non-major dependencies ([#113](https://github.com/pawcoding/[secure]/issues/113)) ([f7f1bf3](https://github.com/pawcoding/[secure]/commit/f7f1bf36eff7bbd30d8852d0e19af7e4584e7d77))
+* **deps:** update all non-major dependencies ([#114](https://github.com/pawcoding/[secure]/issues/114)) ([bc7d036](https://github.com/pawcoding/[secure]/commit/bc7d03612cc34f5f9f795632f7a07831dd31db4d))
+* **deps:** update all non-major dependencies ([#115](https://github.com/pawcoding/[secure]/issues/115)) ([4c341cc](https://github.com/pawcoding/[secure]/commit/4c341cc8ab8261e83310200d67bb60e2264d841e))
+* **deps:** update all non-major dependencies ([#94](https://github.com/pawcoding/[secure]/issues/94)) ([fdbb351](https://github.com/pawcoding/[secure]/commit/fdbb351ce3ec8cf98385042b56b82291cb790817))
+* **deps:** update all non-major dependencies to v1.2.0 ([#104](https://github.com/pawcoding/[secure]/issues/104)) ([50af56d](https://github.com/pawcoding/[secure]/commit/50af56d483dfd344b0e1e863ede4a75912279e45))
+* **deps:** update dependency com.android.application to v9.3.1 ([#110](https://github.com/pawcoding/[secure]/issues/110)) ([586c4d8](https://github.com/pawcoding/[secure]/commit/586c4d8fc371c4abbccb4709586abc63f21a97f2))
+* **deps:** update plugin com.google.devtools.ksp to v2.3.10 ([#108](https://github.com/pawcoding/[secure]/issues/108)) ([ed25e87](https://github.com/pawcoding/[secure]/commit/ed25e876f8ebb2491734a4d2851e5d883d0389e7))
+* **deps:** update plugin com.google.devtools.ksp to v2.3.9 ([#101](https://github.com/pawcoding/[secure]/issues/101)) ([831114c](https://github.com/pawcoding/[secure]/commit/831114c550ec0bd8db11e0f0cb6809887415c433))
+
+### 🔧 Continuous Integration
+
+* **changelog:** update changelog generation and add preview to PRs ([a382c8c](https://github.com/pawcoding/[secure]/commit/a382c8c926addaa580da1e20ba2f4e285469621a))
+* **release:** update google-play step ([edc4ce4](https://github.com/pawcoding/[secure]/commit/edc4ce4565dfa7d746f13ebea965925902d66c16))
+* **renovate:** bump min-release-age to 1 week ([add6f29](https://github.com/pawcoding/[secure]/commit/add6f29765e4e849f77e03768bd8799f82dc80e9))
+* **renovate:** update schedule to monthly ([6a1fdda](https://github.com/pawcoding/[secure]/commit/6a1fdda11945295812e7f8b8c210ed85d1df069f))
+* update actions ([53378a6](https://github.com/pawcoding/[secure]/commit/53378a601f40e6bf5bc1938cd73a2b8a6d7eb1ed))
+
 # [1.6.0](https://github.com/pawcoding/card-store/compare/v1.5.0...v1.6.0) (2026-05-14)
 
 
